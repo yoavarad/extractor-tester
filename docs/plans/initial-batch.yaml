@@ -1,0 +1,768 @@
+# Stage 02 initial batch for extractor-tester.
+# Create with: PYTHONUTF8=1 ydk task create-batch --from docs/plans/initial-batch.yaml
+# Package: src/extractor_tester (module paths from .ydk/components/core-module/*).
+# Models live in extractor_tester.models (one module, plain pydantic v2 data).
+
+epics:
+  - id: E-foundation
+    title: "Foundation: scaffolding, models, config"
+    description: "Project skeleton, shared data models and validated config. Everything else builds on this."
+    spec_refs: architecture.md,config.md,testing-strategy.md
+
+  - id: E-thin-slice
+    title: "Thin slice: load, match by name, field diff, report.json"
+    description: "First demo-able increment: `extractor-tester compare OLD NEW --config C` writes pairs.jsonl, items.jsonl and report.json with metadata differences per type family, matching by file name only, sequential in-process runner."
+    spec_refs: overview.md,matching.md,metrics.md,outputs.md,errors-and-edge-cases.md
+
+  - id: E-text
+    title: "Text metrics"
+    description: "Full and buffered text comparison, relation labels, hints, identical flag, text aggregates."
+    spec_refs: metrics.md
+
+  - id: E-matching
+    title: "Remaining matching tiers"
+    description: "Text-hash and type-family tiers behind the MatchTier contract."
+    spec_refs: matching.md
+
+  - id: E-scale
+    title: "Scale: parallel runner, timeout, profiling, benchmarks"
+    description: "Worker processes with per-item timeout and crash recovery, progress, interrupts, stage timers, profiling and NFR benchmarks."
+    spec_refs: architecture.md,errors-and-edge-cases.md,outputs.md
+
+  - id: E-html
+    title: "HTML report"
+    description: "Self-contained HTML rendered from report.json on disk, escaped input content."
+    spec_refs: outputs.md
+
+  - id: E-quality-docs
+    title: "Golden tests and documentation"
+    description: "Golden corpus, example-presence and metrics-key checks, README and reference docs."
+    spec_refs: testing-strategy.md,scope.md,glossary.md
+
+stories:
+  - id: S-scaffold
+    title: "Project scaffolding"
+    epic: E-foundation
+    spec_refs: architecture.md,testing-strategy.md,docs/adrs/006-tech-stack-and-scale.md
+    component_refs: ydk:cli-command:cli/compare
+    acceptance:
+      - "`uv sync` then `uv run extractor-tester --help` exits 0 and lists the compare command"
+      - "`uv run pytest`, `uv run ruff check .` and `uv run ty check` all exit 0 on the skeleton"
+      - "Every module_path named in .ydk/components/core-module/* is importable"
+
+  - id: S-models-config
+    title: "Shared models and validated config"
+    epic: E-foundation
+    spec_refs: architecture.md,config.md
+    component_refs: ydk:entity:model/CompareConfig,ydk:entity:model/Report,ydk:config-file:config/compare-config,ydk:config-file:config/type-families
+    acceptance:
+      - "Every entity manifest has a pydantic model whose fields, types and enums match the manifest"
+      - "A valid compare-config yields a CompareConfig with every documented default applied"
+      - "Each invalid-config case in config.md stops the run with INVALID_CONFIG naming the file and reason"
+
+  - id: S-load-and-tree
+    title: "Load items and build file trees"
+    epic: E-thin-slice
+    spec_refs: matching.md,errors-and-edge-cases.md,metrics.md
+    component_refs: ydk:core-module:core/loader,ydk:core-module:core/decoder,ydk:core-module:core/type-family,ydk:core-module:core/field-flattener,ydk:core-module:core/tree-builder
+    acceptance:
+      - "Folder mode pairs items by id; items on one side only become only-in-old / only-in-new item results"
+      - "Every text is decoded (base64, UTF-8 with replacement counted) before any other use"
+      - "Each item/file-level tree and load error in errors-and-edge-cases.md is recorded with its code and the run continues"
+      - "Tree paths are unique and mark repeated sibling names with an occurrence number"
+
+  - id: S-match-by-name
+    title: "Match files by tree walk and name tier"
+    epic: E-thin-slice
+    spec_refs: matching.md,docs/adrs/001-file-matching-by-tree-path.md
+    component_refs: ydk:core-module:core/matcher,ydk:contract:core/MatchTier,ydk:core-module:core/tier-name
+    acceptance:
+      - "Roots always pair with tier root; children are only matched under a paired parent"
+      - "Descendants of an unpaired file are one-sided with reason 'parent unpaired'; leftovers have reason 'no candidate'"
+      - "Same-name siblings tie-break by text hash + family, then position, and record how the tie was broken"
+
+  - id: S-field-diff-report
+    title: "Field differences end to end into report.json"
+    epic: E-thin-slice
+    spec_refs: metrics.md,outputs.md,overview.md,errors-and-edge-cases.md
+    component_refs: ydk:core-module:core/field-differ,ydk:core-module:core/pair-comparer,ydk:core-module:core/report-writer,ydk:core-module:core/aggregator,ydk:core-module:core/runner,ydk:cli-command:cli/compare
+    acceptance:
+      - "`extractor-tester compare OLD NEW --config C` on two folders writes pairs.jsonl, items.jsonl and report.json and exits 0"
+      - "report.json shows per type family the pair count, one-sided counts, change rate per metadata field and tier breakdown, each with examples"
+      - "A malformed item among good ones is listed with INVALID_JSON and the other items are compared"
+      - "Run-level fatal errors exit 1; usage errors exit 2"
+
+  - id: S-text-metrics
+    title: "Text comparison metrics"
+    epic: E-text
+    spec_refs: metrics.md,docs/adrs/002-comparison-metrics.md,docs/adrs/003-buffered-text-comparison.md,docs/research/text-compare-benchmark.md
+    component_refs: ydk:core-module:core/text-comparer,ydk:entity:model/TextFacts,ydk:core-module:core/pair-comparer,ydk:core-module:core/aggregator
+    acceptance:
+      - "Each relation label (equal, old-within-new, new-within-old, overlapping, disjoint) is produced by a dedicated test input"
+      - "Buffered edit similarity is within 0.02 of full on 50,000-character texts with line-level edits"
+      - "report.json shows per family median, p10 and min of both similarities, relation counts, method counts and cut-line warning"
+      - "Identical flag and directional hints follow the rules in metrics.md"
+
+  - id: S-match-tiers
+    title: "Text-hash and type-family tiers"
+    epic: E-matching
+    spec_refs: matching.md
+    component_refs: ydk:core-module:core/tier-text-hash,ydk:core-module:core/tier-type-family,ydk:req:rules/matcher-pluggable
+    acceptance:
+      - "The matching.md worked example produces exactly the pairs and tiers it describes"
+      - "Empty text never pairs in the text-hash tier"
+      - "Reordering or removing tiers needs no change outside the matching package"
+
+  - id: S-parallel-runner
+    title: "Parallel runner with timeout and crash recovery"
+    epic: E-scale
+    spec_refs: architecture.md,errors-and-edge-cases.md,outputs.md,docs/adrs/006-tech-stack-and-scale.md
+    component_refs: ydk:core-module:core/runner,ydk:req:rules/deterministic-output,ydk:tool-error:errors/item-timeout,ydk:tool-error:errors/worker-crashed
+    acceptance:
+      - "Outputs are byte-identical for --workers 1 and --workers 4 on the same inputs"
+      - "A hung item is recorded as ITEM_TIMEOUT and a killed worker's item as WORKER_CRASHED; the run completes"
+      - "Ctrl-C exits 130 with no report.json written; a progress line is shown on stderr"
+
+  - id: S-profiling
+    title: "Run statistics and profiling"
+    epic: E-scale
+    spec_refs: outputs.md,docs/adrs/007-profiling.md
+    component_refs: ydk:core-module:core/timers,ydk:entity:model/RunStats
+    acceptance:
+      - "report.json RunStats holds per-stage totals, text time per family, ten slowest items and replaced worker count"
+      - "--profile writes one .prof file per worker under <out>/profile/, loadable by pstats"
+
+  - id: S-benchmarks
+    title: "Performance benchmarks"
+    epic: E-scale
+    spec_refs: testing-strategy.md,docs/research/text-compare-benchmark.md
+    component_refs: ydk:nfr:perf/run-time-100k,ydk:nfr:perf/peak-memory,ydk:nfr:perf/html-size,ydk:nfr:perf/full-compare-pair
+    acceptance:
+      - "Each of the four NFR targets has a slow-marked test that asserts it"
+      - "Slow tests are excluded from the default pytest run"
+
+  - id: S-html-report
+    title: "HTML report"
+    epic: E-html
+    spec_refs: outputs.md,docs/adrs/004-report-format.md
+    component_refs: ydk:core-module:core/html-renderer,ydk:req:rules/json-is-source-of-truth,ydk:req:rules/escape-untrusted-content
+    acceptance:
+      - "report.html is rendered from report.json read from disk, with the sections in outputs.md"
+      - "The file loads no external resource"
+      - "Script tags in names, values and text render as visible text"
+
+  - id: S-golden
+    title: "Golden corpus and completeness checks"
+    epic: E-quality-docs
+    spec_refs: testing-strategy.md,overview.md
+    component_refs: ydk:req:rules/examples-on-every-result,ydk:req:rules/deterministic-output,ydk:req:rules/never-abort-on-bad-input
+    acceptance:
+      - "The 12-item golden corpus reproduces checked-in pairs, items and report files exactly with 1 and 4 workers"
+      - "Every non-zero MetricResult in the golden report has examples"
+      - "Every result key of the golden report is defined in metrics.md"
+      - "Every tool-error manifest is triggered by at least one test"
+
+  - id: S-docs
+    title: "User documentation"
+    epic: E-quality-docs
+    spec_refs: scope.md,config.md,outputs.md,glossary.md
+    component_refs: ydk:config-file:config/compare-config,ydk:config-file:config/type-families,ydk:entity:model/Report
+    acceptance:
+      - "README covers install, one example run and how to read the report"
+      - "Config reference lists every key of both config manifests with type, default and constraint"
+      - "JSON report structure doc names every Report field"
+
+tasks:
+  # ---------------- Foundation ----------------
+  - id: T-scaffold
+    title: "Scaffold project: uv pyproject, package layout, typer stub, test/lint config"
+    story: S-scaffold
+    component_refs: ydk:cli-command:cli/compare
+    spec_refs: architecture.md,testing-strategy.md,scope.md,docs/adrs/006-tech-stack-and-scale.md
+    description: |
+      First task; every other task depends on it.
+      - pyproject.toml managed by uv: Python 3.12, deps typer, pydantic>=2, PyYAML, rapidfuzz, Jinja2;
+        dev deps pytest, ruff, ty. Console script `extractor-tester = extractor_tester.cli:app`.
+      - src/extractor_tester/ with empty modules for every module_path in .ydk/components/core-module:
+        config, loader, decode, families, fields, tree, matching/{matcher,tiers}, compare/{fields,text,item},
+        aggregate, output, render, runner, profiling, plus models and cli.
+      - cli.py: typer app with a `compare` command accepting the arguments/options of
+        ydk:cli-command:cli/compare and exiting 0 with "not implemented yet" (no behaviour yet).
+      - pytest config (testpaths=tests, marker `slow` excluded by default via addopts `-m "not slow"`),
+        ruff config (line length, rule set), ty config.
+      - tests/fixtures/ dir and tests/helpers.py with `write_item(dir, item_id, files, **fields)` that
+        writes hand-built item JSON with base64-encoded text (testing-strategy.md rules).
+    acceptance:
+      - "`uv run extractor-tester compare --help` exits 0 and lists OLD, NEW, --config, --out, --overwrite, --workers, --profile"
+      - "`uv run pytest` passes with at least one smoke test that imports every module"
+      - "`uv run ruff check .` and `uv run ty check` exit 0"
+      - "write_item helper output round-trips: decoding its text field returns the original string"
+    test_strategy: "Smoke tests: module import, CLI --help via typer CliRunner, helper round-trip."
+    depends_on: []
+
+  - id: T-models-core
+    title: "Pydantic models: Item, FileRecord, FilePair, FieldDiff, TextFacts, PairFacts, ItemResult, ErrorRecord"
+    story: S-models-config
+    component_refs: ydk:entity:model/Item,ydk:entity:model/FileRecord,ydk:entity:model/FilePair,ydk:entity:model/FieldDiff,ydk:entity:model/TextFacts,ydk:entity:model/PairFacts,ydk:entity:model/ItemResult,ydk:entity:model/ErrorRecord
+    spec_refs: architecture.md,metrics.md,errors-and-edge-cases.md
+    description: |
+      In extractor_tester.models, define plain pydantic v2 models matching each entity manifest field by
+      field (names, types, enums, required/optional, defaults). ErrorRecord carries an error-code enum with
+      every `code` from .ydk/components/tool-error/* plus scope and severity. Models are frozen data, no logic.
+      JSON serialization (model_dump_json) must be stable: field order as declared.
+    acceptance:
+      - "Each model's field set equals the manifest's field set (test reads the manifest YAML and compares)"
+      - "The error-code enum contains exactly the 20 tool-error codes"
+      - "model_dump_json of the same model instance is identical across two calls"
+    test_strategy: "Unit test comparing model fields to manifest YAML; round-trip validate/dump tests."
+    depends_on:
+      - "T-scaffold:blocks"
+
+  - id: T-models-report
+    title: "Pydantic models: Example, MetricResult, FamilyAggregate, RunStats, Report"
+    story: S-models-config
+    component_refs: ydk:entity:model/Example,ydk:entity:model/MetricResult,ydk:entity:model/FamilyAggregate,ydk:entity:model/RunStats,ydk:entity:model/Report
+    spec_refs: outputs.md,metrics.md
+    description: |
+      Add the report-side models to extractor_tester.models matching their manifests. Report must be loadable
+      from report.json alone (the HTML renderer depends only on this). Report embeds the effective config as
+      a plain mapping so the renderer needs no config module.
+    acceptance:
+      - "Each model's field set equals the manifest's field set"
+      - "Report.model_validate_json(report.model_dump_json()) equals the original"
+    test_strategy: "Manifest-vs-model field test; JSON round-trip test."
+    depends_on:
+      - "T-scaffold:blocks"
+
+  - id: T-config-loader
+    title: "Config loader: compare-config + type-families into CompareConfig"
+    story: S-models-config
+    component_refs: ydk:core-module:core/config-loader,ydk:entity:model/CompareConfig,ydk:config-file:config/compare-config,ydk:config-file:config/type-families,ydk:tool-error:errors/invalid-config
+    spec_refs: config.md,errors-and-edge-cases.md,docs/adrs/005-compare-config.md
+    description: |
+      extractor_tester.config: CompareConfig pydantic model (every key, type, default, constraint from the
+      compare-config manifest; unknown keys rejected). load_config(path) reads YAML (encoding utf-8), resolves
+      type_families_file relative to the config file, builds the MIME->family map (lowercased), and raises
+      the INVALID_CONFIG error naming file and reason for: missing file, bad YAML, unknown key, wrong type,
+      out-of-range value, one MIME type in two families. fileId/parentId/rootId and text_field are always
+      added to the ignored-as-metadata set.
+    acceptance:
+      - "A minimal config (only required keys) yields every documented default"
+      - "Each of the six invalid cases raises INVALID_CONFIG and the message names the file"
+      - "type_families_file path is resolved relative to the config file, not the cwd"
+      - "A MIME type listed in two families is rejected"
+    test_strategy: "Unit tests with config files in tmp_path, one per invalid case."
+    depends_on:
+      - "T-scaffold:blocks"
+
+  # ---------------- Thin slice ----------------
+  - id: T-decoder
+    title: "Decoder: base64 + UTF-8 decode, whitespace normalization, text hash"
+    story: S-load-and-tree
+    component_refs: ydk:core-module:core/decoder,ydk:req:rules/decode-first,ydk:tool-error:errors/invalid-base64
+    spec_refs: metrics.md,errors-and-edge-cases.md,matching.md
+    description: |
+      extractor_tester.decode: decode(value) -> (text, decode_error_count) or INVALID_BASE64 error when the
+      value is not a string or not valid base64; invalid UTF-8 bytes replaced and counted. normalize(text)
+      collapses whitespace. text_hash(text, chars) hashes the first `chars` chars of normalized text;
+      empty text returns None (never matches). Only this module decodes or normalizes text.
+    acceptance:
+      - "Valid base64 UTF-8 decodes to the original string with zero decode errors"
+      - "Invalid UTF-8 bytes are replaced and the count equals the number of invalid sequences"
+      - "A non-string or malformed base64 value yields INVALID_BASE64"
+      - "text_hash of empty text is None; two texts differing only in whitespace hash equal"
+    test_strategy: "Unit tests, one file test_decode.py."
+    depends_on:
+      - "T-models-core:blocks"
+
+  - id: T-families-fields
+    title: "Type family lookup and field flattener/classifier"
+    story: S-load-and-tree
+    component_refs: ydk:core-module:core/type-family,ydk:core-module:core/field-flattener
+    spec_refs: matching.md,metrics.md,config.md
+    description: |
+      extractor_tester.families: mime(primary, secondary) joins with '/' lowercased; family(mime, config)
+      returns the configured family, the MIME itself when unlisted, or "unknown" when no MIME.
+      extractor_tester.fields: iterative flatten(obj) to dotted paths (lists are one value, nested objects
+      flattened, no recursion limit); classify(path, config) -> generic | specific | ignored, where a listed
+      generic path covers everything below it.
+    acceptance:
+      - "mime('Application','PDF') == 'application/pdf'; missing MIME gives family 'unknown'"
+      - "An unlisted MIME forms its own family"
+      - "Flattening a 2,000-level nested object succeeds without RecursionError"
+      - "A generic path 'meta' classifies 'meta.author.name' as generic; ignored and structural fields classify as ignored"
+    test_strategy: "Unit tests test_families.py and test_fields.py."
+    depends_on:
+      - "T-config-loader:blocks"
+
+  - id: T-loader
+    title: "Loader: input discovery, item pairing by id, JSON parsing, size limit"
+    story: S-load-and-tree
+    component_refs: ydk:core-module:core/loader,ydk:tool-error:errors/input-not-found,ydk:tool-error:errors/mixed-input-kinds,ydk:tool-error:errors/empty-input,ydk:tool-error:errors/invalid-json,ydk:tool-error:errors/item-too-large,ydk:tool-error:errors/item-id-mismatch
+    spec_refs: errors-and-edge-cases.md,overview.md
+    description: |
+      extractor_tester.loader: discover(old, new) -> sorted list of item ids with old/new paths or one-sided
+      status; file mode (two files, one item) and folder mode (top-level *.json only; count of ignored
+      entries returned for a report warning). Fatal: INPUT_NOT_FOUND, MIXED_INPUT_KINDS. Empty folders give
+      EMPTY_INPUT warning. load_item(path, config): size check before parsing (ITEM_TOO_LARGE), JSON parse
+      with utf-8 (INVALID_JSON also for missing item id or file list), ITEM_ID_MISMATCH when the id differs
+      from the file name, or in file mode when old and new ids differ.
+    acceptance:
+      - "Discovery output is sorted by item id; items on one side only are marked only-in-old / only-in-new"
+      - "Subfolders and non-.json files are ignored and counted"
+      - "Each of the six error codes is produced by a dedicated test"
+      - "A file above max_item_bytes is rejected without being parsed"
+    test_strategy: "Unit tests with tmp_path folders built by tests/helpers.write_item."
+    depends_on:
+      - "T-models-core:blocks"
+      - "T-config-loader:blocks"
+
+  - id: T-tree-builder
+    title: "Tree builder: root rule, tree paths, tree errors"
+    story: S-load-and-tree
+    component_refs: ydk:core-module:core/tree-builder,ydk:tool-error:errors/root-not-found,ydk:tool-error:errors/multiple-roots,ydk:tool-error:errors/duplicate-file-id,ydk:tool-error:errors/parent-cycle,ydk:tool-error:errors/orphan-file,ydk:tool-error:errors/missing-field
+    spec_refs: matching.md,errors-and-edge-cases.md
+    description: |
+      extractor_tester.tree: build(item_json, config) -> Item with FileRecord tree. Root = the file whose
+      fileId, parentId and rootId equal the item id. Children keep file-list order. Tree path = names from
+      root down with occurrence marker for repeated sibling names. Each FileRecord carries decoded text
+      (via decoder), decode-error count, MIME, family and flattened fields. Errors: ROOT_NOT_FOUND,
+      MULTIPLE_ROOTS, DUPLICATE_FILE_ID, PARENT_CYCLE (item errors); ORPHAN_FILE (file and subtree dropped,
+      rest kept); MISSING_FIELD warning when name/MIME part/text absent or null (treated as empty).
+      Building and cycle detection are iterative.
+    acceptance:
+      - "Two siblings named 'a.png' get distinct readable tree paths with occurrence numbers"
+      - "Each of the six error codes is produced by a dedicated test; orphan keeps the rest of the item"
+      - "A 5,000-deep parent chain builds without RecursionError"
+    test_strategy: "Unit tests test_tree.py with hand-built items."
+    depends_on:
+      - "T-decoder:blocks"
+      - "T-families-fields:blocks"
+
+  - id: T-matcher-name
+    title: "Matcher walk, MatchTier contract, name tier"
+    story: S-match-by-name
+    component_refs: ydk:core-module:core/matcher,ydk:contract:core/MatchTier,ydk:core-module:core/tier-name,ydk:req:rules/matcher-pluggable
+    spec_refs: matching.md,docs/adrs/001-file-matching-by-tree-path.md
+    description: |
+      extractor_tester.matching: MatchTier protocol (name, pair(old_children, new_children) -> pairs,
+      old_rest, new_rest). matcher.match(old_item, new_item, tiers) pairs roots (tier 'root'), then walks
+      top-down iteratively per paired parent, running the tier list over unpaired children; leftovers
+      one-sided with 'no candidate'; descendants of unpaired files one-sided with 'parent unpaired'.
+      NameTier: case-sensitive equal names; empty names never pair; same-name ties broken by text hash +
+      family, then position; extra files pass on; each pair records tie_break. Single pass with lookup
+      tables. Default tier list = [NameTier] for now. Matcher imports nothing from compare or render.
+    acceptance:
+      - "Roots pair with tier 'root'"
+      - "Two same-name empty-text siblings per side pair first-with-first by position and record the position tie-break"
+      - "A child under an unpaired parent is one-sided with reason 'parent unpaired'"
+      - "The matcher accepts a custom tier list (test passes a fake tier and sees its label on pairs)"
+    test_strategy: "Unit tests per tier and for the walk with a custom tier list; import check that matching does not import compare."
+    depends_on:
+      - "T-tree-builder:blocks"
+
+  - id: T-field-differ
+    title: "Field differ: FieldDiff status per flattened field"
+    story: S-field-diff-report
+    component_refs: ydk:core-module:core/field-differ,ydk:entity:model/FieldDiff
+    spec_refs: metrics.md
+    description: |
+      extractor_tester.compare.fields: diff(old_fields, new_fields, config) -> list[FieldDiff] with status
+      same | changed | only-in-old | only-in-new and class generic | specific, skipping ignored fields.
+      Rules: type change counts as changed and records both types; 1 == 1.0; True never equals 1;
+      explicit null is a value; lists compared whole. Also returns filled/emptied flags for the hints
+      (empty = absent, null, '', [], {}).
+    acceptance:
+      - "1 vs 1.0 is same; true vs 1 is changed; null vs absent is only-in-old/only-in-new"
+      - "A number becoming a string is changed and the FieldDiff records both type names"
+      - "Ignored and structural fields never appear in the output"
+      - "Output order is deterministic (sorted by path)"
+    test_strategy: "Unit tests test_compare_fields.py."
+    depends_on:
+      - "T-families-fields:blocks"
+
+  - id: T-pair-comparer-basic
+    title: "Pair comparer (thin): PairFacts and ItemResult without text metrics"
+    story: S-field-diff-report
+    component_refs: ydk:core-module:core/pair-comparer,ydk:tool-error:errors/item-processing-failed
+    spec_refs: metrics.md,overview.md,errors-and-edge-cases.md
+    description: |
+      extractor_tester.compare.item: compare_item(old_path, new_path, config) -> (ItemResult, list[PairFacts]).
+      Loads both sides (loader), builds trees, matches, and per pair records MIME/family equality, field
+      diffs, child counts and unpaired-child counts, tier and tie-break, report family (old family for
+      paired/only-in-old, new family for only-in-new). ItemResult: item-level metadata diffs (all top-level
+      fields except item id and file list), counts of identical/changed/one-sided files, errors. Any
+      unexpected exception becomes ITEM_PROCESSING_FAILED with type and message. Text facts are left
+      unset here (added by T-pair-comparer-text). Workers return compact facts, never full texts.
+    acceptance:
+      - "One item end to end yields one PairFacts per paired and one-sided file"
+      - "A metadata change shows as one changed FieldDiff on the right pair"
+      - "An exception inside comparison yields ITEM_PROCESSING_FAILED with the exception type in the message"
+      - "PairFacts never contain full texts"
+    test_strategy: "Integration test through compare_item with hand-built items; no mocks."
+    depends_on:
+      - "T-loader:blocks"
+      - "T-matcher-name:blocks"
+      - "T-field-differ:blocks"
+
+  - id: T-report-writer
+    title: "Report writer: pairs.jsonl, items.jsonl, report.json, output folder rules"
+    story: S-field-diff-report
+    component_refs: ydk:core-module:core/report-writer,ydk:tool-error:errors/output-exists,ydk:tool-error:errors/output-write-failed
+    spec_refs: outputs.md,errors-and-edge-cases.md
+    description: |
+      extractor_tester.output: prepare_out(out, overwrite) refuses a non-empty folder without overwrite
+      (OUTPUT_EXISTS). Streaming writers append one PairFacts / ItemResult per line (utf-8) as results
+      arrive; write_report(report) writes report.json atomically (temp file then rename) so a report on
+      disk always describes a complete run. Permission/disk errors -> OUTPUT_WRITE_FAILED. Output file
+      names never come from input content.
+    acceptance:
+      - "A non-empty out folder without --overwrite raises OUTPUT_EXISTS; with overwrite it proceeds"
+      - "pairs.jsonl has one JSON object per line, parseable as PairFacts"
+      - "An unwritable out folder raises OUTPUT_WRITE_FAILED"
+      - "An item id like '../../evil' creates no file outside the out folder"
+    test_strategy: "Unit tests in tmp_path; read-only directory for the write-failure case."
+    depends_on:
+      - "T-models-core:blocks"
+      - "T-models-report:blocks"
+
+  - id: T-aggregator-basic
+    title: "Aggregator (basic): counts, field change rates, tier breakdown, first-occurrence examples"
+    story: S-field-diff-report
+    component_refs: ydk:core-module:core/aggregator,ydk:entity:model/FamilyAggregate,ydk:req:rules/examples-on-every-result
+    spec_refs: metrics.md,outputs.md
+    description: |
+      extractor_tester.aggregate: Aggregator.add_pair(PairFacts), add_item(ItemResult), finish() -> Report.
+      Streams with bounded memory: counters plus capped example lists (examples_per_result). Per family:
+      pair count, only-in-old/new, share identical (placeholder until text facts exist), MIME and family
+      changes, per-field change rate split by status, tier breakdown, file-error counts. Top level: item
+      totals, one-sided items, item metadata change rates, errors by code, warnings, effective config.
+      Examples: first occurrences in item-id then tree-path order, values cut to snippet_chars.
+      Every number is a MetricResult with examples.
+    acceptance:
+      - "Feeding the same facts in the same order twice yields identical Report JSON"
+      - "A field changed in 1 of 4 pairs has change rate 0.25 with exactly one example"
+      - "Example lists never exceed examples_per_result"
+      - "Errors are counted by code with examples"
+    test_strategy: "Unit tests feeding hand-built PairFacts/ItemResults."
+    depends_on:
+      - "T-models-report:blocks"
+      - "T-models-core:blocks"
+
+  - id: T-runner-thin
+    title: "Thin runner + CLI wiring: end-to-end compare writing report.json (sequential)"
+    story: S-field-diff-report
+    component_refs: ydk:core-module:core/runner,ydk:cli-command:cli/compare,ydk:tool-error:errors/internal-failure,ydk:req:rules/never-abort-on-bad-input
+    spec_refs: overview.md,architecture.md,errors-and-edge-cases.md,outputs.md
+    description: |
+      extractor_tester.runner.run(...) in-process and sequential for this slice: load config, discover,
+      prepare out folder, for each item in id order call compare_item, stream to writer and aggregator,
+      write report.json. One-sided items become item results. Unexpected main-process failures ->
+      INTERNAL_FAILURE exit 1; run-level fatal errors exit 1 with the error printed; typer usage errors
+      exit 2; folder-mode ignored-entry count added to report warnings. Wire cli.compare to runner.run.
+      Worker processes, timeout and HTML come in later tasks; keep the per-item call behind one function
+      so T-runner-parallel can swap the loop.
+    acceptance:
+      - "compare on two folders of 3 items writes pairs.jsonl, items.jsonl, report.json and exits 0"
+      - "A malformed item among good ones appears with INVALID_JSON and the good items are compared"
+      - "Missing input path exits 1 with INPUT_NOT_FOUND; unknown option exits 2"
+      - "File mode (two item JSON files) works and reports one item"
+    test_strategy: "Integration tests via typer CliRunner on tmp_path folders."
+    depends_on:
+      - "T-pair-comparer-basic:blocks"
+      - "T-report-writer:blocks"
+      - "T-aggregator-basic:blocks"
+
+  # ---------------- Text ----------------
+  - id: T-text-full
+    title: "Text comparer: fast path, full method, relation labels, snippets"
+    story: S-text-metrics
+    component_refs: ydk:core-module:core/text-comparer,ydk:entity:model/TextFacts,ydk:nfr:perf/full-compare-pair
+    spec_refs: metrics.md,docs/adrs/002-comparison-metrics.md,docs/research/text-compare-benchmark.md
+    description: |
+      extractor_tester.compare.text.compare_text(old, new, config) -> TextFacts. Fast path when normalized
+      texts are equal (relation equal, similarities 1, exact flag still recorded). Full method when both
+      texts <= full_compare_max_chars: edit similarity via rapidfuzz Indel, word-set similarity, length
+      difference, containment both ways, relation label with containment_pct, one-side-empty handling,
+      up to three diff snippets cut to snippet_chars. Records method used. Buffered method is a separate task;
+      for now longer texts raise NotImplementedError behind the method switch.
+    acceptance:
+      - "Whitespace-only change: relation equal, exact flag false, similarities 1"
+      - "Old text plus appended text: relation old-within-new; truncated text: new-within-old"
+      - "Partially shared texts: overlapping; no shared content: disjoint"
+      - "Empty old, non-empty new: old-within-new"
+      - "Up to three snippets, each side at most snippet_chars"
+    test_strategy: "Unit tests per relation label and per fast/full path."
+    depends_on:
+      - "T-decoder:blocks"
+      - "T-config-loader:blocks"
+
+  - id: T-text-buffered
+    title: "Text comparer: buffered method for long texts"
+    story: S-text-metrics
+    component_refs: ydk:core-module:core/text-comparer
+    spec_refs: metrics.md,docs/adrs/003-buffered-text-comparison.md,docs/research/text-compare-benchmark.md
+    description: |
+      Implement the buffered method of metrics.md: split into line blocks, cut lines longer than
+      max_block_chars (count cut lines), hash blocks, align with difflib.SequenceMatcher(autojunk=False),
+      compare characters only inside replaced runs, block-by-block when a run exceeds full_compare_max_chars
+      (count such runs), edit similarity and containment from run counts, word-set in one pass per text,
+      snippets from the alignment. Record method 'buffered'.
+    acceptance:
+      - "On 50,000-char texts with line-level edits and full_compare_max_chars lowered to force buffering, edit similarity differs from the full method by <= 0.02"
+      - "A text with no line breaks is cut into blocks and the cut-line count is recorded"
+      - "An oversized replaced run is compared block by block and counted"
+    test_strategy: "Unit tests comparing buffered vs full on generated texts."
+    depends_on:
+      - "T-text-full:blocks"
+
+  - id: T-pair-comparer-text
+    title: "Pair comparer: text facts, invalid-base64 handling, hints, identical flag"
+    story: S-text-metrics
+    component_refs: ydk:core-module:core/pair-comparer,ydk:tool-error:errors/invalid-base64
+    spec_refs: metrics.md,errors-and-edge-cases.md
+    description: |
+      Wire compare_text into compare_item for paired files. A file with INVALID_BASE64 skips text metrics
+      for its pair but metadata is still compared. Directional hints: new text longer/shorter, field filled/
+      emptied, more/fewer subfiles. Identical = equal MIME, no differing field, relation equal, no unpaired
+      child. Item counts of identical/changed files use this flag.
+    acceptance:
+      - "A pair with an invalid-base64 text has no text facts, an INVALID_BASE64 file error and still has field diffs"
+      - "A pair where only whitespace changed is identical"
+      - "new-more-text hint raised when new text appears where old had none"
+      - "more-subfiles hint raised when new has an extra child"
+    test_strategy: "Integration tests through compare_item."
+    depends_on:
+      - "T-pair-comparer-basic:blocks"
+      - "T-text-full:blocks"
+
+  - id: T-aggregator-text
+    title: "Aggregator: text percentiles, relations, methods, cut-line warning, hints, lowest-similarity examples"
+    story: S-text-metrics
+    component_refs: ydk:core-module:core/aggregator,ydk:entity:model/MetricResult
+    spec_refs: metrics.md,outputs.md
+    description: |
+      Extend Aggregator: per family median, 10th percentile and minimum of edit and word-set similarity,
+      count per relation label, per method, cut-line share with warning above cut_lines_warn_pct, hint
+      counts, decode-error counts, share identical. Similarity examples = lowest-similarity pairs, ties by
+      item id then tree path, kept bounded while streaming. Percentiles must be computed without keeping
+      unbounded per-pair data beyond one float per pair per family (document the memory cost) or via a
+      bounded method agreed in review.
+    acceptance:
+      - "Median/p10/min match statistics.quantiles results on a known list of similarities"
+      - "Similarity examples are the lowest-similarity pairs with item-id/tree-path tie order"
+      - "A family with cut-line share above the threshold carries the warning"
+    test_strategy: "Unit tests feeding hand-built PairFacts with text facts."
+    depends_on:
+      - "T-aggregator-basic:blocks"
+      - "T-pair-comparer-text:blocks"
+
+  # ---------------- Matching tiers ----------------
+  - id: T-tiers-hash-family
+    title: "Text-hash tier and type-family tier; default tier list"
+    story: S-match-tiers
+    component_refs: ydk:core-module:core/tier-text-hash,ydk:core-module:core/tier-type-family,ydk:req:rules/matcher-pluggable
+    spec_refs: matching.md,docs/adrs/001-file-matching-by-tree-path.md
+    description: |
+      In extractor_tester.matching.tiers add TextHashTier (same normalized-text hash and same family,
+      exactly one candidate per side, empty text never matches) and TypeFamilyTier (exactly one unpaired
+      file of a family on each side). Default tier list = [NameTier, TextHashTier, TypeFamilyTier]. No
+      change outside the matching package.
+    acceptance:
+      - "The matching.md worked example yields: roots root; image001 pairs by name/position; invoice pdfs by text-hash; logo.png only-in-new"
+      - "Two empty-text files never pair in TextHashTier"
+      - "Two candidates of the same family on one side are not paired by TypeFamilyTier"
+      - "git diff of this task touches no module outside extractor_tester/matching and tests"
+    test_strategy: "Unit tests per tier; matcher test with the worked example."
+    depends_on:
+      - "T-matcher-name:blocks"
+
+  # ---------------- Scale ----------------
+  - id: T-runner-parallel
+    title: "Runner: worker processes, ordered writes, bounded dispatch window"
+    story: S-parallel-runner
+    component_refs: ydk:core-module:core/runner,ydk:req:rules/deterministic-output
+    spec_refs: architecture.md,docs/adrs/006-tech-stack-and-scale.md
+    description: |
+      Replace the sequential loop with runner-managed worker processes (not ProcessPoolExecutor), each
+      fed one item at a time from a queue, used for every --workers value including 1. Track which item
+      each worker holds and since when. Buffer results and write them in item-id order; dispatch at most
+      workers x 32 items ahead of the oldest unfinished item. --workers default CPU count, must be >= 1.
+    acceptance:
+      - "pairs.jsonl, items.jsonl and report.json are byte-identical for --workers 1 and --workers 4"
+      - "With --workers 1 the comparison still runs in a separate process (worker pid != main pid)"
+      - "--workers 0 exits 2"
+    test_strategy: "Integration tests with two and four real worker processes on tmp_path corpora."
+    depends_on:
+      - "T-runner-thin:blocks"
+
+  - id: T-runner-timeout-crash
+    title: "Runner: per-item timeout and worker crash recovery"
+    story: S-parallel-runner
+    component_refs: ydk:core-module:core/runner,ydk:tool-error:errors/item-timeout,ydk:tool-error:errors/worker-crashed
+    spec_refs: errors-and-edge-cases.md,testing-strategy.md
+    description: |
+      A worker past item_timeout_seconds is killed and replaced; its item is recorded ITEM_TIMEOUT. A worker
+      process that exits while holding an item is replaced; only that item is recorded WORKER_CRASHED. No
+      restart cap. Replaced-worker count kept for RunStats.
+    acceptance:
+      - "With a 1 s timeout, a raised full_compare_max_chars and one item of two different 300,000-char texts, that item is ITEM_TIMEOUT and all others are compared"
+      - "A worker killed mid-item (test hook that calls os._exit for a marked item) yields WORKER_CRASHED for that item only"
+      - "The run completes with exit 0 and a complete report.json in both cases"
+    test_strategy: "Integration tests with real slow work and a real dying worker; two workers."
+    depends_on:
+      - "T-runner-parallel:blocks"
+
+  - id: T-runner-progress-interrupt
+    title: "Runner: stderr progress line and Ctrl-C handling"
+    story: S-parallel-runner
+    component_refs: ydk:core-module:core/runner,ydk:cli-command:cli/compare
+    spec_refs: outputs.md,errors-and-edge-cases.md
+    description: |
+      Keep one progress line on stderr (items done / total, elapsed), updated in place. On KeyboardInterrupt
+      stop workers, keep already-written jsonl lines, write no report.json/report.html, exit 130.
+    acceptance:
+      - "stderr contains a progress line with done/total counts after a run"
+      - "Sending SIGINT (CTRL_C_EVENT on Windows) mid-run exits 130 and leaves no report.json"
+    test_strategy: "Integration test launching the CLI as a subprocess and interrupting it."
+    depends_on:
+      - "T-runner-parallel:blocks"
+
+  - id: T-timers-runstats
+    title: "Stage timers and RunStats"
+    story: S-profiling
+    component_refs: ydk:core-module:core/timers,ydk:entity:model/RunStats
+    spec_refs: outputs.md,docs/adrs/007-profiling.md
+    description: |
+      extractor_tester.profiling: lightweight stage timer (one clock read per stage per item) for load,
+      decode, tree, match, field compare, text compare split by fast/full/buffered. pair-comparer records
+      timings in compact facts; aggregator folds them into RunStats: totals, text time per family, ten
+      slowest items (timed-out items included), replaced workers; main process adds aggregation and
+      rendering time.
+    acceptance:
+      - "report.json RunStats has a non-negative total for every stage"
+      - "The ten slowest items are listed in descending time order, including a timed-out item"
+      - "replaced_workers equals the number of timeouts plus crashes in the run"
+    test_strategy: "Integration test on a small corpus; unit test of timer accumulation."
+    depends_on:
+      - "T-runner-timeout-crash:blocks"
+      - "T-aggregator-text:blocks"
+
+  - id: T-profiling-flag
+    title: "--profile: cProfile output per worker"
+    story: S-profiling
+    component_refs: ydk:core-module:core/timers,ydk:cli-command:cli/compare
+    spec_refs: outputs.md,docs/adrs/007-profiling.md
+    description: |
+      With --profile each worker runs under cProfile and writes <out>/profile/worker-<n>.prof when it ends
+      (including replaced workers). Off by default.
+    acceptance:
+      - "--profile with 2 workers writes at least two .prof files loadable by pstats.Stats"
+      - "Without --profile no profile folder is created"
+    test_strategy: "Integration test via CLI."
+    depends_on:
+      - "T-runner-parallel:blocks"
+
+  - id: T-benchmarks
+    title: "Benchmark corpus generator and slow NFR tests"
+    story: S-benchmarks
+    component_refs: ydk:nfr:perf/run-time-100k,ydk:nfr:perf/peak-memory,ydk:nfr:perf/html-size,ydk:nfr:perf/full-compare-pair
+    spec_refs: testing-strategy.md,docs/research/text-compare-benchmark.md
+    description: |
+      tests/bench/: deterministic generator for the run-time-100k corpus (100,000 file pairs, median decoded
+      text <= 20,000 chars). Slow-marked tests: run time <= 30 min at 8 workers; peak RSS summed over main
+      and workers <= 2 GB; report.html <= 20 MB (render time recorded); one full comparison of two
+      100,000-char texts with 1% edits <= 0.3 s.
+    acceptance:
+      - "`uv run pytest -m slow` runs the four NFR tests; default `uv run pytest` skips them"
+      - "The generator produces the same corpus for the same seed"
+      - "Each test asserts the numeric target from its NFR manifest"
+    test_strategy: "Slow-marked benchmark tests; run manually or in nightly CI."
+    depends_on:
+      - "T-timers-runstats:blocks"
+      - "T-text-buffered:blocks"
+      - "T-runner-html:blocks"
+
+  # ---------------- HTML ----------------
+  - id: T-html-renderer
+    title: "HTML renderer: Jinja2 template from report.json"
+    story: S-html-report
+    component_refs: ydk:core-module:core/html-renderer,ydk:req:rules/json-is-source-of-truth,ydk:req:rules/escape-untrusted-content
+    spec_refs: outputs.md,docs/adrs/004-report-format.md
+    description: |
+      extractor_tester.render.render(report_json_path, html_path): read report.json from disk into Report,
+      render one Jinja2 template (autoescape on) with the sections of outputs.md: header, totals, warnings,
+      sortable family table with warning mark, collapsible per-family sections (fields, text, tiers, hints,
+      file errors, examples), item metadata changes, errors by code, run statistics. Inline CSS/JS only.
+      Imports only models (Report) and jinja2; nothing from compare, matching or aggregate.
+    acceptance:
+      - "Rendering a hand-written report.json fixture matches a checked-in golden HTML file"
+      - "The output contains no http(s):// src or href attributes"
+      - "An import check asserts extractor_tester.render imports no comparison, matching or aggregation module"
+      - "'<script>alert(1)</script>' in a field value appears escaped in the HTML"
+    test_strategy: "Golden test from a hand-written JSON fixture; import-graph test."
+    depends_on:
+      - "T-models-report:blocks"
+
+  - id: T-runner-html
+    title: "Runner renders report.html from written report.json; end-to-end security tests"
+    story: S-html-report
+    component_refs: ydk:core-module:core/runner,ydk:req:rules/escape-untrusted-content
+    spec_refs: outputs.md,errors-and-edge-cases.md,testing-strategy.md
+    description: |
+      After report.json is written, the runner calls render on the file on disk (never in-memory state).
+      Add end-to-end security tests: script tags in names, values and text render as visible text; item ids
+      shaped like paths create no file outside the output folder.
+    acceptance:
+      - "A compare run writes report.html next to report.json"
+      - "Deleting report.html and re-rendering from report.json gives the same bytes"
+      - "Script tags from input names/values/text are escaped in report.html"
+      - "Path-shaped item ids create no file outside --out"
+    test_strategy: "Integration tests via CLI on tmp_path."
+    depends_on:
+      - "T-html-renderer:blocks"
+      - "T-runner-thin:blocks"
+
+  # ---------------- Quality & docs ----------------
+  - id: T-golden
+    title: "Golden corpus, example-presence, metrics-key and tool-error coverage checks"
+    story: S-golden
+    component_refs: ydk:req:rules/examples-on-every-result,ydk:req:rules/deterministic-output,ydk:req:rules/never-abort-on-bad-input
+    spec_refs: testing-strategy.md,metrics.md
+    description: |
+      tests/golden/: the 12-item corpus of testing-strategy.md (identical, metadata change, type change,
+      text extension, text loss, rewritten text, renamed file, same-name siblings, one-sided subfile,
+      invalid base64, malformed JSON, one-sided item) with expected pairs.jsonl, items.jsonl and report.json
+      checked in (regenerate script documented). Run timings are excluded from the byte comparison. Checks:
+      exact reproduction with 1 and 4 workers; every non-zero MetricResult has examples; every result key
+      is defined in metrics.md; a test that lists tool-error manifest codes and fails if any code is
+      never asserted by a test.
+    acceptance:
+      - "Golden outputs match exactly with --workers 1 and --workers 4"
+      - "The example-presence check fails if an example list is emptied in a copy of the report"
+      - "The metrics-key check fails if an undefined key is added to a copy of the report"
+      - "The tool-error coverage check lists zero untested codes"
+    test_strategy: "Golden tests; meta-tests over manifests."
+    depends_on:
+      - "T-aggregator-text:blocks"
+      - "T-tiers-hash-family:blocks"
+      - "T-runner-timeout-crash:blocks"
+      - "T-runner-html:blocks"
+
+  - id: T-docs
+    title: "Docs: README, config reference, JSON report structure"
+    story: S-docs
+    component_refs: ydk:config-file:config/compare-config,ydk:config-file:config/type-families,ydk:entity:model/Report
+    spec_refs: scope.md,config.md,outputs.md,glossary.md,overview.md
+    description: |
+      README: install with uv, one example run, how to read the HTML/JSON report, using the glossary terms.
+      docs/reference/config.md written from the two config manifests (every key, type, default, constraint)
+      with a test that fails if a manifest key is missing from it. docs/reference/report-json.md naming
+      every Report field and nested model.
+    acceptance:
+      - "A test asserts every key in both config manifests appears in docs/reference/config.md"
+      - "A test asserts every Report model field appears in docs/reference/report-json.md"
+      - "The README example command runs successfully on tests/golden inputs"
+    test_strategy: "Doc-consistency tests."
+    depends_on:
+      - "T-golden:blocks"

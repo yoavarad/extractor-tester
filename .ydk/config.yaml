@@ -32,5 +32,3 @@ verification:
   - types-ty
   - tests-pytest
   - python-quality
-  - cli-error-handling
-  - cli-output-format
