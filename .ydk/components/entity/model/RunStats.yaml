@@ -22,11 +22,11 @@ fields:
   slowest_items:
     type: list[map]
     required: true
-    description: item_id and seconds, 10 slowest items
-  pool_restarts:
+    description: item_id and seconds, 10 slowest items, timed-out items included
+  workers_replaced:
     type: integer
     required: true
-    description: Worker pool restarts after crashes
+    description: Worker processes replaced after a crash or timeout
   profile_dir:
     type: string
     nullable: true

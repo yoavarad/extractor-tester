@@ -6,9 +6,7 @@ scope: item
 severity: error
 detail_template: 'item ${item_id}: worker process crashed'
 triggers:
-- process pool reports broken pool
-behavior: Items whose results were not received are marked with this error; pool is recreated and the
-  remaining items continue. After 3 restarts, every remaining item is marked with this error and the run
-  finishes with a report.
+- worker process exits while holding an item
+behavior: The item the worker held is marked with this error; a new worker replaces it; the run continues.
 related:
 - ydk:core-module:core/runner

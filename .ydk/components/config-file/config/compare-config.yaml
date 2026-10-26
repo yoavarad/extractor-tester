@@ -76,6 +76,12 @@ keys:
     default: 52428800
     constraints: '>= 1'
     description: Item JSON files larger than this are skipped with item-too-large
+  item_timeout_seconds:
+    type: integer
+    default: 600
+    constraints: '>= 1'
+    description: Max wall time one worker may spend on one item before it is killed and the item recorded
+      as item-timeout
 validation_error: ydk:tool-error:errors/invalid-config
 related:
 - ydk:core-module:core/config-loader

@@ -29,7 +29,7 @@ options:
     type: integer
     default: CPU count
     constraints: '>= 1'
-    description: Worker processes; 1 = run in-process
+    description: Worker processes (always separate processes, also for 1)
   --profile:
     type: boolean
     default: false

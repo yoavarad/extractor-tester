@@ -34,7 +34,7 @@ Names in the diagram are the modules and models linked in the tables below.
 | Concern | Owner |
 |---|---|
 | Command-line parsing, exit codes | [ydk:cli-command:cli/compare] |
-| Run orchestration, worker pool, crash recovery, progress line | [ydk:core-module:core/runner] |
+| Run orchestration, worker processes, crash and timeout recovery, progress line | [ydk:core-module:core/runner] |
 | Config reading and validation | [ydk:core-module:core/config-loader] |
 | Input discovery, item pairing by id, JSON parsing, size limit | [ydk:core-module:core/loader] |
 | Base64 and UTF-8 decoding, normalization, text hash | [ydk:core-module:core/decoder] |
@@ -67,4 +67,4 @@ The models are plain data, defined once and used for validation and for the JSON
 
 ## Parallelism
 
-Items are independent, so the runner processes them in a pool of worker processes; one worker means in-process execution, which keeps debugging simple. Workers return compact facts, never full texts. Results are consumed in item-id order, which keeps outputs identical for any worker count ([ydk:req:rules/deterministic-output]).
+Items are independent, so the runner hands them one at a time to worker processes, also when only one worker is requested, so timeout and crash handling always apply. Dispatch stays at most 32 items per worker ahead of the oldest unfinished item, which bounds the results waiting to be written. The runner tracks which item each worker holds: a worker that dies or exceeds the per-item timeout is replaced and only that item is marked with an error ([ydk:tool-error:errors/worker-crashed], [ydk:tool-error:errors/item-timeout]). Workers return compact facts, never full texts. Results are written in item-id order, which keeps outputs identical for any worker count ([ydk:req:rules/deterministic-output]).

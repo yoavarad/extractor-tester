@@ -56,7 +56,7 @@ The warning mark appears for a type family whose cut-line share is above the war
 
 ## Run statistics and profiling
 
-[ydk:core-module:core/timers] measures, for every item, time spent loading, decoding, building the tree, matching, comparing fields and comparing text (fast path, full and buffered separately). The main process adds aggregation and rendering time. [ydk:entity:model/RunStats] holds the totals, text comparison time per type family, the ten slowest items and the number of worker-pool restarts. These are always on; the cost is one clock read per stage per item.
+[ydk:core-module:core/timers] measures, for every item, time spent loading, decoding, building the tree, matching, comparing fields and comparing text (fast path, full and buffered separately). The main process adds aggregation and rendering time. [ydk:entity:model/RunStats] holds the totals, text comparison time per type family, the ten slowest items and the number of replaced workers. These are always on; the cost is one clock read per stage per item.
 
 With profiling requested, each worker runs under the standard Python profiler and writes one profile file per worker into the profile folder, viewable with standard profile viewers. It is off by default because the profiler adds a cost to every function call.
 

@@ -35,6 +35,7 @@ Both folders containing no items is a valid, empty run with [ydk:tool-error:erro
 | Parent links loop | [ydk:tool-error:errors/parent-cycle] |
 | Unexpected failure while comparing | [ydk:tool-error:errors/item-processing-failed], with the exception type and message |
 | Worker process dies | [ydk:tool-error:errors/worker-crashed] |
+| Item takes longer than the per-item timeout | [ydk:tool-error:errors/item-timeout] |
 
 ## File level
 
@@ -50,14 +51,14 @@ Both folders containing no items is a valid, empty run with [ydk:tool-error:erro
 
 | Challenge | Mechanism |
 |---|---|
-| One huge item (thousands of files, gigabytes of text) | Item JSON files above the size limit are rejected before parsing. Below it, the item runs in one worker while others continue; it appears in the slowest items of [ydk:entity:model/RunStats]. Long texts use the buffered method, where no single character comparison exceeds the full-comparison threshold. |
-| 100,000 tiny items | Items are sent to workers in batches ([ydk:core-module:core/runner]), so process communication happens once per batch, not once per item; results are written to disk as they arrive; aggregates hold counters and capped example lists, not per-pair data. Target: [ydk:nfr:perf/run-time-100k]. |
+| One huge item (thousands of files, gigabytes of text) | Item JSON files above the size limit are rejected before parsing. Below it, the item runs in one worker while others continue, until the per-item timeout ([ydk:tool-error:errors/item-timeout]); it appears in the slowest items of [ydk:entity:model/RunStats], timed out or not. Long texts use the buffered method, where no single character comparison exceeds the full-comparison threshold. |
+| 100,000 tiny items | Workers take one item at a time from a queue ([ydk:core-module:core/runner]); the per-item communication cost is small next to parsing an item; results are written to disk as they arrive; aggregates hold counters and capped example lists, not per-pair data. Target: [ydk:nfr:perf/run-time-100k]. |
 | Very deep nesting | Tree building, the matching walk and cycle detection are iterative, so depth has no recursion limit. Nested fields are flattened iteratively as well. |
 | Every file is binary with empty text | Empty text never pairs by hash, so tiers fall to name and type family. Texts are equal (both empty) and take the fast path. Empty-text counts are visible per type family. |
 | Duplicate names everywhere | Name grouping is a single pass with lookup tables, not pairwise comparison. Ties resolve by hash, then position, and every position-based pair is labelled. |
-| Worker crash (killed, out of memory) | The runner detects a broken pool, marks items whose results never arrived with [ydk:tool-error:errors/worker-crashed], recreates the pool and continues. After three restarts, remaining items are marked and the run still writes its report. |
-| Worker hangs without dying | Not detected: there is no per-item timeout. The progress line stops advancing; the user interrupts the run and finds the item among the slowest items of a rerun with one worker. |
+| Worker crash (killed, out of memory) | The runner sees the worker process exit while holding an item, marks that item with [ydk:tool-error:errors/worker-crashed], starts a replacement worker and continues. |
+| Worker hangs without dying | The runner knows which item each worker holds and since when. After the per-item timeout (by default 600 seconds; applies for every worker count, including one) it kills the worker, marks the item with [ydk:tool-error:errors/item-timeout], starts a replacement and continues. |
 | Text that is not UTF-8 | Bytes replaced and counted; never a crash ([ydk:req:rules/decode-first]). |
 | Malicious content in names, values or text | Standard JSON parsing only, nothing is executed; all input content is escaped in HTML; output file names never come from input content ([ydk:req:rules/escape-untrusted-content]). |
 | Huge single JSON file | Size limit (by default 50 MB) checked before parsing, so no worker parses a file larger than the one the memory target [ydk:nfr:perf/peak-memory] is measured with. |
-| Same inputs, different worker count | Results are collected in item-id order regardless of which worker finishes first ([ydk:req:rules/deterministic-output]). |
+| Same inputs, different worker count | Results are written in item-id order regardless of which worker finishes first ([ydk:req:rules/deterministic-output]). |

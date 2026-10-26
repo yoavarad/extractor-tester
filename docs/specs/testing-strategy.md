@@ -6,7 +6,7 @@ Tests are the definition of done. Every test runs with pytest; lint and type che
 
 - No mocking of the project's own modules. Tests call real code with real inputs.
 - Input data is hand-built item JSON written by test helpers in temporary folders, at most 10 files and 1,000 characters of text per item. Texts are base64-encoded by the helper, so every test also exercises [ydk:req:rules/decode-first].
-- The only boundaries are the file system and process pool, and both are used for real (temporary folders; a pool of two workers in pool tests).
+- The only boundaries are the file system and worker processes, and both are used for real (temporary folders; two workers in worker tests). A worker test checks [ydk:tool-error:errors/item-timeout] with real slow work: a one-second timeout, a raised full-comparison threshold, and one item whose old and new texts are 300,000 different characters each (measured at over 2 seconds to compare).
 - Every tool-error manifest has at least one test that triggers it and checks the recorded code and the run's continuation or exit code.
 
 ## Test types

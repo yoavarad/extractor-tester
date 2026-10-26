@@ -1,12 +1,17 @@
 $schema: ydk:schema:core-module
 id: ydk:core-module:core/runner
-description: 'Top-level run: config, discovery, process pool, streaming to writer and aggregator, rendering.'
+description: 'Top-level run: config, discovery, worker processes, per-item timeout, results to writer
+  and aggregator in item-id order, rendering.'
 responsibility: Run orchestration and parallelism (ADR-006)
 module_path: extractor_tester.runner
 interface:
   run:
-    description: Execute a compare run; ordered results via ProcessPoolExecutor.map in batches of 16 items;
-      --workers 1 runs in-process
+    description: Execute a compare run. Starts N worker processes fed one item at a time from a task queue;
+      tracks which item each worker holds and since when. A worker past item_timeout_seconds is killed
+      and replaced, its item recorded as item-timeout. A worker that dies is replaced, its item recorded
+      as worker-crashed. Results are buffered and written in item-id order; dispatch runs at most workers
+      x 32 items ahead of the oldest unfinished item, bounding the buffer. Always uses worker processes,
+      also for --workers 1, so the timeout and crash handling always apply
     params:
       old: path
       new: path
@@ -19,6 +24,7 @@ interface:
       type: exit code
     raises:
     - ydk:tool-error:errors/worker-crashed
+    - ydk:tool-error:errors/item-timeout
     - ydk:tool-error:errors/empty-input
     - ydk:tool-error:errors/internal-failure
 depends_on:
