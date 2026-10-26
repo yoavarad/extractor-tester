@@ -1,0 +1,17 @@
+$schema: ydk:schema:config-file
+id: ydk:config-file:config/type-families
+description: Maps MIME types to type families. Drives tier 3 matching, the type-family condition of tier
+  2, and report grouping.
+file_name: type-families.yaml
+format: YAML
+keys:
+  families:
+    type: map of family name -> list of MIME string
+    required: true
+    description: Each family lists the joined MIME types ('primary/secondary', compared lowercase) that
+      belong to it. A MIME type may appear in only one family. Unlisted MIME types form their own family
+      named after the MIME type. Empty MIME (both parts empty) maps to family 'unknown'.
+validation_error: ydk:tool-error:errors/invalid-config
+related:
+- ydk:core-module:core/config-loader
+- ydk:core-module:core/type-family

@@ -1,0 +1,14 @@
+$schema: ydk:schema:req
+id: ydk:req:rules/json-is-source-of-truth
+description: HTML is a pure rendering of report.json.
+type: constraint
+priority: high
+rule: report.html is produced only from the Report model read back from report.json; the renderer computes
+  no metric.
+failure_behavior: Architecture test fails
+related_components:
+- ydk:core-module:core/html-renderer
+- ydk:entity:model/Report
+acceptance_criteria:
+- Rendering a hand-written report.json fixture produces HTML without running any comparison
+- 'Import test: extractor_tester.render imports nothing from compare, matching or aggregate'

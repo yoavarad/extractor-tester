@@ -1,0 +1,32 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/loader
+description: Finds item JSON files and pairs them by itemId; parses one item JSON.
+responsibility: Input discovery and JSON parsing
+module_path: extractor_tester.loader
+interface:
+  discover:
+    description: Classify OLD/NEW as file pair or folder pair; folder mode lists top-level *.json, pairs
+      by file stem, sorted by itemId; subfolders and non-.json files are ignored and counted into a run
+      warning
+    params:
+      old: path
+      new: path
+    returns:
+      type: list of (item_id, old_path or null, new_path or null)
+    raises:
+    - ydk:tool-error:errors/mixed-input-kinds
+    - ydk:tool-error:errors/input-not-found
+  load_item:
+    description: Parse one JSON file into raw item dict after size check
+    params:
+      path: path
+      expected_item_id: string or null
+      config: CompareConfig
+    returns:
+      type: raw item dict
+    raises:
+    - ydk:tool-error:errors/item-too-large
+    - ydk:tool-error:errors/invalid-json
+    - ydk:tool-error:errors/item-id-mismatch
+forbidden_deps:
+- extractor_tester.render — comparison logic never depends on presentation

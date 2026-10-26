@@ -1,0 +1,18 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/config-loader
+description: Reads compare-config and type-families, applies defaults, validates.
+responsibility: Turn config files into a validated CompareConfig
+module_path: extractor_tester.config
+interface:
+  load_config:
+    description: Load and validate config; resolve type_families_file relative to config file
+    params:
+      path: path
+    returns:
+      type: CompareConfig
+    raises:
+    - ydk:tool-error:errors/invalid-config
+forbidden_deps:
+- extractor_tester.render — comparison logic never depends on presentation
+produces:
+- ydk:entity:model/CompareConfig

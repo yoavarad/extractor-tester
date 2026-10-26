@@ -1,0 +1,27 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/pair-comparer
+description: Builds PairFacts for every FilePair of one item, and the ItemResult.
+responsibility: Per-item comparison orchestration (fields, text, children, hints, identical)
+module_path: extractor_tester.compare.item
+interface:
+  compare_item:
+    description: Load, build, match and compare one item pair; catches item-scope errors into ItemResult
+    params:
+      item_id: string
+      old_path: path or null
+      new_path: path or null
+      config: CompareConfig
+    returns:
+      type: (ItemResult, list[PairFacts])
+depends_on:
+- ydk:core-module:core/loader
+- ydk:core-module:core/tree-builder
+- ydk:core-module:core/matcher
+- ydk:core-module:core/field-differ
+- ydk:core-module:core/text-comparer
+- ydk:core-module:core/timers
+forbidden_deps:
+- extractor_tester.render — comparison logic never depends on presentation
+produces:
+- ydk:entity:model/PairFacts
+- ydk:entity:model/ItemResult

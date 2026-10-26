@@ -1,0 +1,12 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/duplicate-file-id
+description: Two files share a fileId.
+code: DUPLICATE_FILE_ID
+scope: item
+severity: error
+detail_template: '${side} item ${item_id}: fileId ${file_id} appears ${count} times'
+triggers:
+- fileId not unique within item
+behavior: Item status error; run continues.
+related:
+- ydk:core-module:core/tree-builder

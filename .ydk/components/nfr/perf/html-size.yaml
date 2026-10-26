@@ -1,0 +1,10 @@
+$schema: ydk:schema:nfr
+id: ydk:nfr:perf/html-size
+description: report.html stays usable.
+category: performance
+target: report.html <= 20 MB and renders in < 3 s in a current Chromium for the benchmark corpus at examples_per_result
+  5
+measurement: File size; manual open time check in the benchmark
+test_method: Benchmark asserts file size; open time checked manually once per release.
+applies_to:
+- ydk:core-module:core/html-renderer

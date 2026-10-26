@@ -1,0 +1,13 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/input-not-found
+description: OLD or NEW path does not exist.
+code: INPUT_NOT_FOUND
+scope: run
+severity: fatal
+detail_template: 'Input not found: ${path}'
+triggers:
+- OLD or NEW path missing
+behavior: Print message, write nothing, exit 1.
+exit_code: 1
+related:
+- ydk:core-module:core/loader

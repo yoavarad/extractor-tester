@@ -1,0 +1,16 @@
+$schema: ydk:schema:req
+id: ydk:req:rules/decode-first
+description: Text is decoded before any use.
+type: constraint
+priority: critical
+rule: The text field is base64 + UTF-8 decoded in the decoder module before hashing, matching, comparison
+  or example extraction. No other module decodes or reads the raw field.
+failure_behavior: Invalid base64 -> ydk:tool-error:errors/invalid-base64
+related_components:
+- ydk:core-module:core/decoder
+- ydk:core-module:core/tree-builder
+- ydk:tool-error:errors/invalid-base64
+acceptance_criteria:
+- Fixture with base64 text equal after decoding yields relation equal
+- Snippets in report contain decoded text, never base64
+- Invalid UTF-8 bytes produce decode_errors > 0 and no crash

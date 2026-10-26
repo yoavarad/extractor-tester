@@ -1,0 +1,49 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/ItemResult
+description: Outcome for one item. One line of items.jsonl.
+fields:
+  item_id:
+    type: string
+    required: true
+    description: Item
+  status:
+    type: enum
+    values:
+    - compared
+    - only-in-old
+    - only-in-new
+    - error
+    required: true
+    description: Item outcome
+  metadata_diffs:
+    type: list[FieldDiff]
+    required: true
+    description: Item-level non-same field diffs
+  files_identical:
+    type: integer
+    required: true
+    description: Identical pairs
+  files_changed:
+    type: integer
+    required: true
+    description: Paired, not identical
+  files_only_old:
+    type: integer
+    required: true
+    description: Only-in-old files
+  files_only_new:
+    type: integer
+    required: true
+    description: Only-in-new files
+  errors:
+    type: list[ErrorRecord]
+    required: true
+    description: Item-scope errors and warnings
+  seconds:
+    type: number
+    required: true
+    description: Wall time for this item
+  stage_seconds:
+    type: map[string, number]
+    required: true
+    description: Per-stage time for this item

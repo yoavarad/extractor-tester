@@ -1,0 +1,82 @@
+$schema: ydk:schema:config-file
+id: ydk:config-file:config/compare-config
+description: Describes the shared JSON schema of both pipelines' outputs and every comparison threshold.
+  Same keys and nesting apply to old and new.
+file_name: compare-config.yaml
+format: YAML
+keys:
+  name_field:
+    type: string (dotted path)
+    required: true
+    description: File name field on a file object
+  mime_primary_field:
+    type: string (dotted path)
+    required: true
+    description: MIME primary part field (e.g. 'application')
+  mime_secondary_field:
+    type: string (dotted path)
+    required: true
+    description: MIME secondary part field (e.g. 'pdf')
+  text_field:
+    type: string (dotted path)
+    default: text
+    description: Base64-encoded text field
+  generic_fields:
+    type: list of string (dotted paths)
+    default: []
+    description: Fields counted as generic metadata. A path also covers all paths below it. Every other
+      compared file field is format-specific.
+  ignore_fields:
+    type: list of string (dotted paths)
+    default: []
+    description: Fields never compared (item and file level). fileId, parentId, rootId and text_field
+      are always ignored as metadata, whether listed or not.
+  type_families_file:
+    type: path or null
+    default: null
+    description: type-families YAML, relative to this config file. Null = every MIME type is its own type
+      family.
+  text_hash_chars:
+    type: integer
+    default: 1000000
+    constraints: '>= 1'
+    description: Chars of normalized text hashed for the text-hash tier
+  full_compare_max_chars:
+    type: integer
+    default: 100000
+    constraints: '>= 0'
+    description: If both texts are at most this long, compare full text to full text
+  max_block_chars:
+    type: integer
+    default: 4000
+    constraints: '>= 100'
+    description: 'Buffered mode: longer lines are cut into blocks of this size'
+  cut_lines_warn_pct:
+    type: number
+    default: 20
+    constraints: 0-100
+    description: Warn when cut lines exceed this % of lines
+  containment_pct:
+    type: number
+    default: 98
+    constraints: 0-100
+    description: Min % of the shorter text found in the longer one for a *-within-* relation
+  examples_per_result:
+    type: integer
+    default: 5
+    constraints: '>= 0'
+    description: Max examples attached to each reported result
+  snippet_chars:
+    type: integer
+    default: 300
+    constraints: '>= 20'
+    description: Max chars of each old/new side of a snippet or example value
+  max_item_bytes:
+    type: integer
+    default: 52428800
+    constraints: '>= 1'
+    description: Item JSON files larger than this are skipped with item-too-large
+validation_error: ydk:tool-error:errors/invalid-config
+related:
+- ydk:core-module:core/config-loader
+- ydk:config-file:config/type-families

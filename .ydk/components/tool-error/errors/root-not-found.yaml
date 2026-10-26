@@ -1,0 +1,12 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/root-not-found
+description: No file has fileId == parentId == rootId == itemId.
+code: ROOT_NOT_FOUND
+scope: item
+severity: error
+detail_template: ${side} item ${item_id} has no root file
+triggers:
+- no file satisfies the root rule
+behavior: Item status error; run continues.
+related:
+- ydk:core-module:core/tree-builder

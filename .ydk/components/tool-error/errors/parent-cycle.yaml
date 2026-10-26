@@ -1,0 +1,12 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/parent-cycle
+description: parentId links form a cycle not through the root.
+code: PARENT_CYCLE
+scope: item
+severity: error
+detail_template: '${side} item ${item_id}: parent cycle through fileId ${file_id}'
+triggers:
+- following parentId from a non-root file revisits a file before reaching the root
+behavior: Item status error; run continues.
+related:
+- ydk:core-module:core/tree-builder

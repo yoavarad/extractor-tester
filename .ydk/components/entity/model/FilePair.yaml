@@ -1,0 +1,44 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/FilePair
+description: 'Result of matching for one file: paired with a counterpart, or present on one side only.'
+fields:
+  kind:
+    type: enum
+    values:
+    - paired
+    - only-in-old
+    - only-in-new
+    required: true
+    description: Match outcome
+  old:
+    type: FileRecord
+    nullable: true
+    description: Old file; null for only-in-new
+  new:
+    type: FileRecord
+    nullable: true
+    description: New file; null for only-in-old
+  tier:
+    type: enum
+    values:
+    - root
+    - name
+    - text-hash
+    - type-family
+    nullable: true
+    description: Tier that paired the files; null when not paired
+  tie_break:
+    type: enum
+    values:
+    - none
+    - text-hash
+    - position
+    default: none
+    description: 'For tier name with same-name siblings: how the tie was broken'
+  unmatched_reason:
+    type: enum
+    values:
+    - no-candidate
+    - parent-unpaired
+    nullable: true
+    description: Why a file is unpaired

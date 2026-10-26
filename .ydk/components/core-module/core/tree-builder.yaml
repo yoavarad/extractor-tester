@@ -1,0 +1,30 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/tree-builder
+description: Builds the file tree of an Item from parentId links.
+responsibility: Item dict -> Item with FileRecord tree
+module_path: extractor_tester.tree
+interface:
+  build_item:
+    description: Decode each file, flatten fields, find root, link children by parentId in files-array
+      order, compute tree paths; iterative (no recursion)
+    params:
+      raw: raw item dict
+      side: old|new
+      config: CompareConfig
+    returns:
+      type: Item
+    raises:
+    - ydk:tool-error:errors/root-not-found
+    - ydk:tool-error:errors/multiple-roots
+    - ydk:tool-error:errors/parent-cycle
+    - ydk:tool-error:errors/orphan-file
+    - ydk:tool-error:errors/missing-field
+depends_on:
+- ydk:core-module:core/decoder
+- ydk:core-module:core/type-family
+- ydk:core-module:core/field-flattener
+forbidden_deps:
+- extractor_tester.render — comparison logic never depends on presentation
+produces:
+- ydk:entity:model/Item
+- ydk:entity:model/FileRecord

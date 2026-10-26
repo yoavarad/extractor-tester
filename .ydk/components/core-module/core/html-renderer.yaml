@@ -1,0 +1,18 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/html-renderer
+description: Renders report.html from report.json content via one Jinja2 template.
+responsibility: Presentation only
+module_path: extractor_tester.render
+interface:
+  render_html:
+    description: Read Report (validated from report.json), render with autoescape on, write report.html
+    params:
+      report_json: path
+      out: path
+    returns:
+      type: path
+forbidden_deps:
+- extractor_tester.compare, extractor_tester.matching, extractor_tester.aggregate — renderer computes
+  no metric; it reads only the Report model
+consumes:
+- ydk:entity:model/Report

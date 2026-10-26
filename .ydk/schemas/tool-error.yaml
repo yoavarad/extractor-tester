@@ -1,0 +1,45 @@
+name: tool-error
+description: "An error or warning condition of a local tool, with scope, code and exact behaviour"
+version: 1
+fields:
+  id:
+    type: string
+    required: true
+    pattern: "^ydk:tool-error:.+"
+    description: "Unique component identifier in ydk:tool-error:namespace/name format"
+  description:
+    type: text
+    required: true
+    description: "When and why this condition occurs"
+  code:
+    type: string
+    required: true
+    description: "Machine-readable code, e.g. ROOT_NOT_FOUND"
+  scope:
+    type: enum
+    values: [run, item, file]
+    required: true
+    description: "What the condition invalidates: whole run, one item, or one file"
+  severity:
+    type: enum
+    values: [fatal, error, warning]
+    required: true
+    description: "fatal = run stops; error = scope skipped and listed; warning = scope still compared, condition listed"
+  detail_template:
+    type: string
+    required: true
+    description: "Human-readable message with ${variable} placeholders"
+  triggers:
+    type: list
+    required: true
+    description: "Exact conditions that produce this error"
+  behavior:
+    type: text
+    required: true
+    description: "What the tool does when this occurs"
+  exit_code:
+    type: integer
+    description: "Process exit code (run-scope fatal only)"
+  related:
+    type: ref_list
+    description: "Components that raise or report this error"

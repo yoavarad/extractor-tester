@@ -1,0 +1,14 @@
+$schema: ydk:schema:req
+id: ydk:req:rules/escape-untrusted-content
+description: Input content is never executed or injected.
+type: policy
+priority: critical
+rule: All values from input JSON (names, field values, text snippets, itemIds) are HTML-escaped in report.html
+  via Jinja2 autoescape; output file names never derive from input content.
+failure_behavior: Security test fails
+related_components:
+- ydk:core-module:core/html-renderer
+- ydk:core-module:core/report-writer
+acceptance_criteria:
+- Fixture whose text contains a script tag renders as visible text, not markup
+- Fixture with itemId '../x' writes no file outside the output folder

@@ -1,0 +1,33 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/RunStats
+description: Timing and profiling numbers of the run.
+fields:
+  wall_seconds:
+    type: number
+    required: true
+    description: Total run time
+  workers:
+    type: integer
+    required: true
+    description: Worker processes used
+  stage_seconds:
+    type: map[string, number]
+    required: true
+    description: 'Summed over items: load, decode, tree, match, field-diff, text-fast-path, text-full,
+      text-buffered; plus aggregate and render (main process)'
+  text_seconds_by_family:
+    type: map[string, number]
+    required: true
+    description: Text comparison time per family
+  slowest_items:
+    type: list[map]
+    required: true
+    description: item_id and seconds, 10 slowest items
+  pool_restarts:
+    type: integer
+    required: true
+    description: Worker pool restarts after crashes
+  profile_dir:
+    type: string
+    nullable: true
+    description: Set when --profile used

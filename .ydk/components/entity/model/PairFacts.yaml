@@ -1,0 +1,117 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/PairFacts
+description: All facts about one file pair (paired or one-sided). One line of pairs.jsonl. Aggregates
+  are derived only from these.
+fields:
+  item_id:
+    type: string
+    required: true
+    description: Item
+  kind:
+    type: enum
+    values:
+    - paired
+    - only-in-old
+    - only-in-new
+    required: true
+    description: From FilePair
+  path_old:
+    type: string
+    nullable: true
+    description: Old tree path
+  path_new:
+    type: string
+    nullable: true
+    description: New tree path
+  family:
+    type: string
+    required: true
+    description: 'Grouping family: old file''s family for paired and only-in-old; new file''s for only-in-new'
+  tier:
+    type: string
+    nullable: true
+    description: From FilePair
+  tie_break:
+    type: string
+    required: true
+    description: From FilePair
+  mime_old:
+    type: string
+    nullable: true
+    description: Old MIME
+  mime_new:
+    type: string
+    nullable: true
+    description: New MIME
+  mime_equal:
+    type: boolean
+    nullable: true
+    description: Paired only
+  family_equal:
+    type: boolean
+    nullable: true
+    description: Paired only
+  field_diffs:
+    type: list[FieldDiff]
+    required: true
+    description: Non-same field diffs only (same fields counted, not listed)
+  fields_same:
+    type: list[string]
+    required: true
+    description: Paths of fields with status same
+  text:
+    type: TextFacts
+    nullable: true
+    description: Paired only
+  children_old:
+    type: integer
+    nullable: true
+    description: Child count in old
+  children_new:
+    type: integer
+    nullable: true
+    description: Child count in new
+  children_only_old:
+    type: integer
+    nullable: true
+    description: Children of this pair unpaired in old
+  children_only_new:
+    type: integer
+    nullable: true
+    description: Children of this pair unpaired in new
+  hints:
+    type: list[enum]
+    values:
+    - new-more-text
+    - new-less-text
+    - new-filled-field
+    - new-emptied-field
+    - new-more-subfiles
+    - new-fewer-subfiles
+    required: true
+    description: Directional hints
+  identical:
+    type: boolean
+    required: true
+    description: Paired, mime equal, no non-same field, text relation equal, no unpaired children
+  errors:
+    type: list[ErrorRecord]
+    required: true
+    description: File-scope errors and warnings
+  decode_errors_old:
+    type: integer
+    nullable: true
+    description: From FileRecord
+  decode_errors_new:
+    type: integer
+    nullable: true
+    description: From FileRecord
+relationships:
+- entity: ydk:entity:model/TextFacts
+  type: one-to-one
+  fk: text
+  description: Text facts
+- entity: ydk:entity:model/FieldDiff
+  type: one-to-many
+  fk: field_diffs
+  description: Field diffs

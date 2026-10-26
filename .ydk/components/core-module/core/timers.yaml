@@ -1,0 +1,23 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/timers
+description: Stage timers and optional cProfile wrapper.
+responsibility: Profiling (ADR-007)
+module_path: extractor_tester.profiling
+interface:
+  stage:
+    description: Context manager adding elapsed perf_counter time to a named stage
+    params:
+      name: string
+      sink: map
+    returns:
+      type: context manager
+  profiled_worker:
+    description: When profiling on, wrap a worker's lifetime in cProfile and dump profile/worker-<n>.prof
+      at exit
+    params:
+      out: path
+      n: integer
+    returns:
+      type: none
+produces:
+- ydk:entity:model/RunStats

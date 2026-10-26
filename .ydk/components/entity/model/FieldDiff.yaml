@@ -1,0 +1,41 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/FieldDiff
+description: Comparison of one dotted-path field between old and new.
+fields:
+  path:
+    type: string
+    required: true
+    description: Dotted field path
+  group:
+    type: enum
+    values:
+    - item
+    - generic
+    - specific
+    required: true
+    description: Field group
+  status:
+    type: enum
+    values:
+    - same
+    - changed
+    - only-in-old
+    - only-in-new
+    required: true
+    description: Comparison outcome
+  old_value:
+    type: any
+    nullable: true
+    description: Old value (truncated to snippet_chars when a string)
+  new_value:
+    type: any
+    nullable: true
+    description: New value (truncated to snippet_chars when a string)
+  old_type:
+    type: string
+    nullable: true
+    description: JSON type of old value
+  new_type:
+    type: string
+    nullable: true
+    description: JSON type of new value

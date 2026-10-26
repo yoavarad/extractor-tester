@@ -1,0 +1,66 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/Report
+description: Content of report.json; the single source of truth for report.html.
+fields:
+  schema_version:
+    type: integer
+    required: true
+    description: report.json schema version, starts at 1
+  tool_version:
+    type: string
+    required: true
+    description: Package version
+  started_at:
+    type: datetime
+    required: true
+    description: UTC ISO-8601
+  inputs:
+    type: map
+    required: true
+    description: old path, new path, mode (file or folder)
+  config:
+    type: map
+    required: true
+    description: Effective config with defaults applied
+  totals:
+    type: map[string, integer]
+    required: true
+    description: items_compared, items_only_old, items_only_new, items_error, pairs, pairs_identical,
+      files_only_old, files_only_new
+  items_only_old:
+    type: MetricResult
+    required: true
+    description: Items only in old
+  items_only_new:
+    type: MetricResult
+    required: true
+    description: Items only in new
+  item_fields:
+    type: list[MetricResult]
+    required: true
+    description: Item metadata change rate per field
+  families:
+    type: list[FamilyAggregate]
+    required: true
+    description: Sorted by family name
+  errors:
+    type: list[MetricResult]
+    required: true
+    description: One per error code across all scopes
+  warnings:
+    type: list[string]
+    required: true
+    description: Run warnings, e.g. empty input, cut-lines warnings
+  run_stats:
+    type: RunStats
+    required: true
+    description: Timing
+relationships:
+- entity: ydk:entity:model/FamilyAggregate
+  type: one-to-many
+  fk: families
+  description: Families
+- entity: ydk:entity:model/RunStats
+  type: one-to-one
+  fk: run_stats
+  description: Stats

@@ -1,0 +1,63 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/FileRecord
+description: One file object of an Item after decoding and tree building.
+fields:
+  file_id:
+    type: string
+    required: true
+    description: fileId (pipeline-local, never compared)
+  parent_id:
+    type: string
+    required: true
+    description: parentId (pipeline-local)
+  index:
+    type: integer
+    required: true
+    description: Position in the item's files array, 0-based
+  name:
+    type: string
+    required: true
+    description: Value of name_field; empty string when missing
+  mime:
+    type: string
+    required: true
+    description: '''primary/secondary'' lowercase; empty when both parts missing'
+  family:
+    type: string
+    required: true
+    description: Type family of mime
+  path:
+    type: string
+    required: true
+    description: 'Tree path: names from root to this file joined by ''/'', with ''#<n>'' appended to a
+      name that repeats among siblings (n = 1-based occurrence)'
+  fields:
+    type: map[string, any]
+    required: true
+    description: Compared fields flattened to dotted paths (ignored fields removed)
+  text:
+    type: string
+    required: true
+    description: Decoded text; empty when missing or undecodable
+  text_hash:
+    type: string
+    nullable: true
+    description: SHA-256 hex of the first text_hash_chars of normalized text; null when normalized text
+      is empty
+  decode_errors:
+    type: integer
+    required: true
+    description: Invalid UTF-8 byte sequences replaced
+  children:
+    type: list[FileRecord]
+    required: true
+    description: Child files in files-array order
+  missing_fields:
+    type: list[string]
+    required: true
+    description: Which of name/mime_primary/mime_secondary/text were absent
+relationships:
+- entity: ydk:entity:model/FileRecord
+  type: many-to-one
+  fk: parent_id
+  description: Parent file; root's parent is itself

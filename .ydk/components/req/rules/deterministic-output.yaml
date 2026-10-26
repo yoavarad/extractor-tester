@@ -1,0 +1,15 @@
+$schema: ydk:schema:req
+id: ydk:req:rules/deterministic-output
+description: Same inputs give byte-identical results.
+type: constraint
+priority: high
+rule: For identical inputs and config, report.json (excluding started_at and run_stats), pairs.jsonl and
+  items.jsonl are byte-identical regardless of --workers. Items are processed and written in itemId order;
+  examples are chosen by the documented selection rules with (item_id, path) as final tie-break.
+failure_behavior: Golden test fails
+related_components:
+- ydk:core-module:core/runner
+- ydk:core-module:core/aggregator
+- ydk:core-module:core/matcher
+acceptance_criteria:
+- Golden test passes with --workers 1 and --workers 4 against the same expected files

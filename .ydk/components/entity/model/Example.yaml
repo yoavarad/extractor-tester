@@ -1,0 +1,28 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/Example
+description: A concrete instance backing a reported result.
+fields:
+  item_id:
+    type: string
+    required: true
+    description: Item
+  path_old:
+    type: string
+    nullable: true
+    description: Old tree path
+  path_new:
+    type: string
+    nullable: true
+    description: New tree path
+  old_value:
+    type: any
+    nullable: true
+    description: Old value or snippet (truncated)
+  new_value:
+    type: any
+    nullable: true
+    description: New value or snippet (truncated)
+  note:
+    type: string
+    nullable: true
+    description: Short context, e.g. 'similarity 0.42' or 'string -> number'

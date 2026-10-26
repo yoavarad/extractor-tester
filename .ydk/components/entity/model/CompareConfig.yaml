@@ -1,0 +1,36 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/CompareConfig
+description: Validated in-memory form of compare-config plus resolved type-families map.
+fields:
+  name_field:
+    type: string
+    required: true
+    description: See compare-config
+  mime_primary_field:
+    type: string
+    required: true
+    description: See compare-config
+  mime_secondary_field:
+    type: string
+    required: true
+    description: See compare-config
+  text_field:
+    type: string
+    required: true
+    description: See compare-config
+  generic_fields:
+    type: list[string]
+    required: true
+    description: See compare-config
+  ignore_fields:
+    type: list[string]
+    required: true
+    description: Listed plus always-ignored structural fields
+  families:
+    type: map[string, string]
+    required: true
+    description: MIME (lowercase) -> family name
+  thresholds:
+    type: map[string, number]
+    required: true
+    description: All numeric keys of compare-config with defaults applied

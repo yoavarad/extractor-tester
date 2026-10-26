@@ -1,0 +1,14 @@
+$schema: ydk:schema:req
+id: ydk:req:rules/examples-on-every-result
+description: Every reported number has examples.
+type: business-rule
+priority: high
+rule: Every MetricResult with count > 0 carries min(count, examples_per_result) examples.
+failure_behavior: Aggregator test fails
+related_components:
+- ydk:core-module:core/aggregator
+- ydk:entity:model/MetricResult
+- ydk:entity:model/Example
+acceptance_criteria:
+- 'Golden report test: every MetricResult with count > 0 has >= 1 example when examples_per_result >=
+  1'

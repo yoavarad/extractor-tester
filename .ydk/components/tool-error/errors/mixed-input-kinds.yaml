@@ -1,0 +1,13 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/mixed-input-kinds
+description: OLD and NEW are not the same kind.
+code: MIXED_INPUT_KINDS
+scope: run
+severity: fatal
+detail_template: OLD is a ${old_kind} but NEW is a ${new_kind}; both must be files or both folders
+triggers:
+- one path is a file and the other a folder
+behavior: Print message, write nothing, exit 1.
+exit_code: 1
+related:
+- ydk:core-module:core/loader

@@ -1,0 +1,31 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/runner
+description: 'Top-level run: config, discovery, process pool, streaming to writer and aggregator, rendering.'
+responsibility: Run orchestration and parallelism (ADR-006)
+module_path: extractor_tester.runner
+interface:
+  run:
+    description: Execute a compare run; ordered results via ProcessPoolExecutor.map in batches of 16 items;
+      --workers 1 runs in-process
+    params:
+      old: path
+      new: path
+      config_path: path
+      out: path
+      overwrite: boolean
+      workers: integer
+      profile: boolean
+    returns:
+      type: exit code
+    raises:
+    - ydk:tool-error:errors/worker-crashed
+    - ydk:tool-error:errors/empty-input
+    - ydk:tool-error:errors/internal-failure
+depends_on:
+- ydk:core-module:core/config-loader
+- ydk:core-module:core/loader
+- ydk:core-module:core/pair-comparer
+- ydk:core-module:core/aggregator
+- ydk:core-module:core/report-writer
+- ydk:core-module:core/html-renderer
+- ydk:core-module:core/timers

@@ -1,0 +1,31 @@
+name: config-file
+description: "A user-edited configuration file: location, format and every key with type and default"
+version: 1
+fields:
+  id:
+    type: string
+    required: true
+    pattern: "^ydk:config-file:.+"
+    description: "Unique component identifier in ydk:config-file:namespace/name format"
+  description:
+    type: text
+    required: true
+    description: "What the file configures"
+  file_name:
+    type: string
+    required: true
+    description: "Conventional file name"
+  format:
+    type: string
+    required: true
+    description: "File format (e.g. YAML)"
+  keys:
+    type: map
+    required: true
+    description: "Keys keyed by name; each with type, required, default, constraints, description"
+  validation_error:
+    type: ref
+    description: "Error raised when the file is invalid"
+  related:
+    type: ref_list
+    description: "Components that read this file"

@@ -1,0 +1,24 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/MetricResult
+description: One reported number with its examples (a field change rate, a relation count, a hint count...).
+fields:
+  key:
+    type: string
+    required: true
+    description: Stable result key, e.g. 'field:generic:size' or 'relation:old-within-new'
+  count:
+    type: integer
+    required: true
+    description: Occurrences
+  denominator:
+    type: integer
+    required: true
+    description: Base for rate
+  rate:
+    type: number
+    required: true
+    description: count / denominator; 0 when denominator 0
+  examples:
+    type: list[Example]
+    required: true
+    description: Up to examples_per_result; selection rule per result in Report narrative

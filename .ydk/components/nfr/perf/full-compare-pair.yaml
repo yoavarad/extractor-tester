@@ -1,0 +1,9 @@
+$schema: ydk:schema:nfr
+id: ydk:nfr:perf/full-compare-pair
+description: Cost of one full text comparison at the threshold.
+category: performance
+target: <= 0.3 s per pair with both texts at 100,000 chars, 1% edits
+measurement: TextFacts.seconds
+test_method: Benchmark test generates the pair and times compare_text (median of 5 runs).
+applies_to:
+- ydk:core-module:core/text-comparer

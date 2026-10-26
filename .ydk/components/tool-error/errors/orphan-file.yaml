@@ -1,0 +1,13 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/orphan-file
+description: A file's parentId names no file in the item.
+code: ORPHAN_FILE
+scope: file
+severity: warning
+detail_template: '${side} item ${item_id}: file index ${index} parent ${parent_id} not found'
+triggers:
+- parentId not equal to any fileId of the item
+behavior: File and its descendants excluded from the tree and from matching; listed as warning; item still
+  compared.
+related:
+- ydk:core-module:core/tree-builder

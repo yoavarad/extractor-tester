@@ -1,0 +1,14 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/item-id-mismatch
+description: itemId inside the JSON differs from the expected id.
+code: ITEM_ID_MISMATCH
+scope: item
+severity: error
+detail_template: ${side} file ${path} has itemId ${found}, expected ${expected}
+triggers:
+- 'folder mode: itemId != file stem'
+- 'file mode: old itemId != new itemId'
+behavior: Item status error; run continues. In file mode this is the only item, so the report has one
+  errored item.
+related:
+- ydk:core-module:core/loader

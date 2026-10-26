@@ -1,0 +1,82 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/FamilyAggregate
+description: Everything reported for one type family. Main report view.
+fields:
+  family:
+    type: string
+    required: true
+    description: Type family
+  pairs:
+    type: integer
+    required: true
+    description: Paired file pairs
+  only_in_old:
+    type: MetricResult
+    required: true
+    description: Only-in-old files
+  only_in_new:
+    type: MetricResult
+    required: true
+    description: Only-in-new files
+  identical:
+    type: MetricResult
+    required: true
+    description: Identical pairs (rate over pairs)
+  mime_changed:
+    type: MetricResult
+    required: true
+    description: Pairs with different MIME
+  family_changed:
+    type: MetricResult
+    required: true
+    description: Pairs whose new file is in another family
+  fields:
+    type: list[MetricResult]
+    required: true
+    description: 'One per field path seen: changed + only-in-old + only-in-new over pairs; split counts
+      kept per status'
+  edit_similarity:
+    type: map
+    required: true
+    description: median, p10, min over pairs with text facts; worst examples
+  jaccard:
+    type: map
+    required: true
+    description: median, p10, min; worst examples
+  relations:
+    type: list[MetricResult]
+    required: true
+    description: One per relation value
+  methods:
+    type: map[string, integer]
+    required: true
+    description: Text comparison method counts
+  lines_cut_pct:
+    type: number
+    required: true
+    description: Cut lines / total lines over buffered pairs
+  cut_lines_warning:
+    type: boolean
+    required: true
+    description: lines_cut_pct > cut_lines_warn_pct
+  tiers:
+    type: list[MetricResult]
+    required: true
+    description: One per tier and tie_break
+  hints:
+    type: list[MetricResult]
+    required: true
+    description: One per hint
+  decode_errors:
+    type: MetricResult
+    required: true
+    description: Pairs with decode errors on either side
+  file_errors:
+    type: list[MetricResult]
+    required: true
+    description: One per file-scope error code
+relationships:
+- entity: ydk:entity:model/MetricResult
+  type: one-to-many
+  fk: fields
+  description: Results

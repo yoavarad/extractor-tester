@@ -1,0 +1,58 @@
+$schema: ydk:schema:cli-command
+id: ydk:cli-command:cli/compare
+description: Compare the outputs of the old and new pipelines and write the report. OLD and NEW are both
+  item JSON files (one item) or both folders of <itemId>.json files.
+usage: extractor-tester compare OLD NEW --config PATH [--out DIR] [--overwrite] [--workers N] [--profile]
+arguments:
+  OLD:
+    type: path
+    required: true
+    description: 'Old pipeline output: an item JSON file or a folder'
+  NEW:
+    type: path
+    required: true
+    description: 'New pipeline output: same kind as OLD (file with file, folder with folder)'
+options:
+  --config:
+    type: path
+    required: true
+    description: Path to compare-config YAML
+  --out:
+    type: path
+    default: ./compare-out
+    description: Output folder
+  --overwrite:
+    type: boolean
+    default: false
+    description: Allow writing into an existing non-empty output folder
+  --workers:
+    type: integer
+    default: CPU count
+    constraints: '>= 1'
+    description: Worker processes; 1 = run in-process
+  --profile:
+    type: boolean
+    default: false
+    description: Write cProfile output per worker to <out>/profile/
+exit_codes:
+  0: Run completed (differences and per-item/per-file errors do not change exit code)
+  1: Run-scope fatal error (see tool-error manifests with scope run)
+  2: Command-line usage error (unknown option, missing argument)
+  130: 'Interrupted (Ctrl-C): workers stopped, lines already written stay, JSON and HTML reports not written'
+outputs:
+- <out>/report.json — Report model, source of truth for report.html
+- <out>/report.html — rendered from report.json
+- <out>/pairs.jsonl — one PairFacts per line, one line per file pair
+- <out>/items.jsonl — one ItemResult per line, one line per item
+- <out>/profile/worker-<n>.prof — only with --profile
+- 'stderr — progress line: items done / total, elapsed'
+related:
+- ydk:core-module:core/runner
+- ydk:config-file:config/compare-config
+- ydk:entity:model/Report
+- ydk:tool-error:errors/output-exists
+- ydk:tool-error:errors/mixed-input-kinds
+- ydk:tool-error:errors/invalid-config
+- ydk:tool-error:errors/input-not-found
+- ydk:tool-error:errors/output-write-failed
+- ydk:tool-error:errors/internal-failure

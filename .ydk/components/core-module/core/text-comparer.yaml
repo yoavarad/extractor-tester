@@ -1,0 +1,22 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/text-comparer
+description: 'Computes TextFacts for one pair: fast path, full, or buffered (ADR-003). Character-level
+  comparison uses rapidfuzz Indel; buffered block-hash alignment uses difflib.SequenceMatcher with autojunk
+  off.'
+responsibility: All text metrics
+module_path: extractor_tester.compare.text
+interface:
+  compare_text:
+    description: Pick method and compute TextFacts
+    params:
+      old: string
+      new: string
+      config: CompareConfig
+    returns:
+      type: TextFacts
+depends_on:
+- ydk:core-module:core/decoder
+forbidden_deps:
+- extractor_tester.render — comparison logic never depends on presentation
+produces:
+- ydk:entity:model/TextFacts

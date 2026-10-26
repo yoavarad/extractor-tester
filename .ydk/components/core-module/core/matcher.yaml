@@ -1,0 +1,29 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/matcher
+description: Walks two file trees top-down from paired roots, running the tier list per parent pair.
+responsibility: File matching (owner of ADR-001 algorithm)
+module_path: extractor_tester.matching.matcher
+interface:
+  match_item:
+    description: Pair roots (tier root), then breadth-first per paired parent run tiers in order; descendants
+      of unpaired files become one-sided with reason parent-unpaired
+    params:
+      old: Item
+      new: Item
+      tiers: list[MatchTier]
+    returns:
+      type: list[FilePair]
+  default_tiers:
+    description: 'The configured order: name, text-hash, type-family'
+    params: {}
+    returns:
+      type: list[MatchTier]
+depends_on:
+- ydk:contract:core/MatchTier
+forbidden_deps:
+- extractor_tester.render — comparison logic never depends on presentation
+- extractor_tester.compare — matching does not know about comparison
+consumes:
+- ydk:entity:model/Item
+produces:
+- ydk:entity:model/FilePair

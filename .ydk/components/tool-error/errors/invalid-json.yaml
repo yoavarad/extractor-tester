@@ -1,0 +1,19 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/invalid-json
+description: Item file unreadable or not valid JSON / not an object with itemId and files.
+code: INVALID_JSON
+scope: item
+severity: error
+detail_template: '${side} item ${item_id}: ${reason}'
+triggers:
+- file read fails
+- JSON parse error
+- top level not an object
+- itemId missing
+- files missing or not a list
+- a files entry not an object
+- fileId or parentId missing on a file
+behavior: Item status error, no pairs, error listed; run continues.
+related:
+- ydk:core-module:core/loader
+- ydk:core-module:core/tree-builder

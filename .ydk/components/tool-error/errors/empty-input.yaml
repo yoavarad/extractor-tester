@@ -1,0 +1,12 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/empty-input
+description: Folder mode found no item JSON files on both sides.
+code: EMPTY_INPUT
+scope: run
+severity: warning
+detail_template: No *.json items found in ${old} or ${new}
+triggers:
+- zero *.json files in both folders
+behavior: Write empty report (all totals 0) with this warning, exit 0.
+related:
+- ydk:core-module:core/runner

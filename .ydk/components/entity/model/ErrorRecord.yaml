@@ -1,0 +1,43 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/ErrorRecord
+description: One occurrence of a tool-error.
+fields:
+  code:
+    type: string
+    required: true
+    description: tool-error code
+  scope:
+    type: enum
+    values:
+    - run
+    - item
+    - file
+    required: true
+    description: Scope
+  severity:
+    type: enum
+    values:
+    - fatal
+    - error
+    - warning
+    required: true
+    description: Severity
+  item_id:
+    type: string
+    nullable: true
+    description: Item, when scope item/file
+  side:
+    type: enum
+    values:
+    - old
+    - new
+    nullable: true
+    description: Side, when known
+  file_path:
+    type: string
+    nullable: true
+    description: Tree path or file index, when scope file
+  message:
+    type: string
+    required: true
+    description: Rendered detail_template
