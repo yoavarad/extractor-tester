@@ -14,7 +14,7 @@ local file-comparison tool. `ydk task start` refuses to run when
 - Skip ignition. Project scaffolding is task #24 (Stage 02 plan).
 - Commit an empty TODO registry (`todos: {}`, `next_id: 1`), written via YDK's own
   `TodoManager` so the format matches what YDK expects.
-- Upstream YDK issue filed to support skipped ignition natively.
+- Upstream YDK issue filed to support skipped ignition natively: https://github.com/yoavarad/ydk/issues/567
 
 ## Alternatives considered
 - `ydk ignite --skip-verify` with no pack: fails or generates unwanted files.
