@@ -1,0 +1,12 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/worker-crashed
+description: A worker process died (e.g. killed, out of memory).
+code: WORKER_CRASHED
+scope: item
+severity: error
+detail_template: 'item ${item_id}: worker process crashed'
+triggers:
+- worker process exits while holding an item
+behavior: The item the worker held is marked with this error; a new worker replaces it; the run continues.
+related:
+- ydk:core-module:core/runner

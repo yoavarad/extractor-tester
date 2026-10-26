@@ -1,0 +1,37 @@
+name: core-module
+description: "An internal code module with one responsibility, a public interface and explicit dependencies"
+version: 1
+fields:
+  id:
+    type: string
+    required: true
+    pattern: "^ydk:core-module:.+"
+    description: "Unique component identifier in ydk:core-module:namespace/name format"
+  description:
+    type: text
+    required: true
+    description: "What this module is for"
+  responsibility:
+    type: string
+    required: true
+    description: "The single responsibility this module owns"
+  module_path:
+    type: string
+    required: true
+    description: "Python module path inside the package"
+  interface:
+    type: map
+    required: true
+    description: "Public functions/classes keyed by name; each with description, params, returns, raises"
+  depends_on:
+    type: ref_list
+    description: "Components this module may use"
+  forbidden_deps:
+    type: list
+    description: "Modules this module must never import, with reason"
+  consumes:
+    type: ref_list
+    description: "Models this module reads"
+  produces:
+    type: ref_list
+    description: "Models this module creates"

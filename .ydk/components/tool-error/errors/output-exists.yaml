@@ -1,0 +1,14 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/output-exists
+description: Output folder exists and is not empty.
+code: OUTPUT_EXISTS
+scope: run
+severity: fatal
+detail_template: Output folder ${path} is not empty; use --overwrite
+triggers:
+- out exists, contains any entry, and --overwrite not given
+behavior: Print message, write nothing, exit 1. With --overwrite, known output files are replaced and
+  other entries left untouched.
+exit_code: 1
+related:
+- ydk:core-module:core/report-writer

@@ -1,0 +1,16 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/tier-text-hash
+description: 'Tier 2: same normalized-text hash and same type family.'
+responsibility: Text-hash tier
+module_path: extractor_tester.matching.tiers
+interface:
+  TextHashTier.pair:
+    description: Key = (family, text_hash), null hash excluded; pair only keys with exactly one file per
+      side
+    params:
+      old_children: list
+      new_children: list
+    returns:
+      type: see MatchTier
+depends_on:
+- ydk:contract:core/MatchTier

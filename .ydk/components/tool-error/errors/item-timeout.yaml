@@ -1,0 +1,14 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/item-timeout
+description: One item took longer than the per-item timeout.
+code: ITEM_TIMEOUT
+scope: item
+severity: error
+detail_template: 'item ${item_id}: not finished after ${seconds} s'
+triggers:
+- a worker holds the same item longer than item_timeout_seconds
+behavior: The worker is killed and replaced; the item is marked with this error and its seconds; the run
+  continues. Timed-out items appear in RunStats slowest items with their elapsed seconds.
+related:
+- ydk:core-module:core/runner
+- ydk:config-file:config/compare-config

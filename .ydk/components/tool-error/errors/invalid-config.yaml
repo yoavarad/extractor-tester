@@ -1,0 +1,18 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/invalid-config
+description: Config file missing, unparsable, or failing validation.
+code: INVALID_CONFIG
+scope: run
+severity: fatal
+detail_template: 'Invalid config ${path}: ${reason}'
+triggers:
+- config or type_families_file not found
+- YAML parse error
+- required key missing
+- unknown key
+- value fails type or range constraint
+- MIME listed in two families
+behavior: Print message to stderr, write nothing, exit 1.
+exit_code: 1
+related:
+- ydk:core-module:core/config-loader

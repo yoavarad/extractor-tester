@@ -1,0 +1,14 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/internal-failure
+description: Unexpected exception in the main process.
+code: INTERNAL_FAILURE
+scope: run
+severity: fatal
+detail_template: 'Internal failure: ${exception_type}: ${message}'
+triggers:
+- any exception raised in runner, aggregator, report-writer or html-renderer outside item processing
+behavior: Stop workers, print message with traceback to stderr, exit 1; lines already written to the pairs
+  and items files stay; no JSON or HTML report is written.
+exit_code: 1
+related:
+- ydk:core-module:core/runner

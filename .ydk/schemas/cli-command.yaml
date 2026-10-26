@@ -1,0 +1,36 @@
+name: cli-command
+description: "A command-line command with arguments, options, exit codes and produced outputs"
+version: 1
+fields:
+  id:
+    type: string
+    required: true
+    pattern: "^ydk:cli-command:.+"
+    description: "Unique component identifier in ydk:cli-command:namespace/name format"
+  description:
+    type: text
+    required: true
+    description: "What the command does"
+  usage:
+    type: string
+    required: true
+    description: "Invocation synopsis"
+  arguments:
+    type: map
+    required: true
+    description: "Positional arguments keyed by name; each with type, required, description"
+  options:
+    type: map
+    required: true
+    description: "Options keyed by flag; each with type, default, description"
+  exit_codes:
+    type: map
+    required: true
+    description: "Process exit codes keyed by code, with meaning"
+  outputs:
+    type: list
+    required: true
+    description: "Files and streams the command writes"
+  related:
+    type: ref_list
+    description: "Components this command uses or produces"

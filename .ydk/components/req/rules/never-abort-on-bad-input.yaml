@@ -1,0 +1,16 @@
+$schema: ydk:schema:req
+id: ydk:req:rules/never-abort-on-bad-input
+description: Bad items or files never stop a run.
+type: policy
+priority: critical
+rule: Only run-scope fatal tool-errors stop a run. Every item- or file-scope problem is recorded as an
+  ErrorRecord and the run continues to a complete report.
+failure_behavior: Item/file errors listed in report.json errors and items.jsonl
+related_components:
+- ydk:core-module:core/pair-comparer
+- ydk:core-module:core/runner
+- ydk:tool-error:errors/item-processing-failed
+- ydk:tool-error:errors/worker-crashed
+acceptance_criteria:
+- Folder with one malformed JSON among valid ones yields exit 0 and a report covering all valid items
+- An exception raised while comparing one item is listed as ITEM_PROCESSING_FAILED

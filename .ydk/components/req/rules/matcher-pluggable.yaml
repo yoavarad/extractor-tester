@@ -1,0 +1,14 @@
+$schema: ydk:schema:req
+id: ydk:req:rules/matcher-pluggable
+description: Matching tiers are swappable.
+type: constraint
+priority: high
+rule: Tiers implement ydk:contract:core/MatchTier and are passed to the matcher as an ordered list. Comparison,
+  aggregation and rendering read only FilePair.tier and tie_break labels.
+failure_behavior: Architecture test fails
+related_components:
+- ydk:core-module:core/matcher
+- ydk:contract:core/MatchTier
+acceptance_criteria:
+- A test runs the matcher with a custom one-tier list and gets pairs labelled with that tier
+- Removing a tier from the list requires no change outside extractor_tester.matching

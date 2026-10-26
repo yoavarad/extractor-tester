@@ -1,0 +1,12 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/item-processing-failed
+description: Unexpected exception while comparing one item.
+code: ITEM_PROCESSING_FAILED
+scope: item
+severity: error
+detail_template: 'item ${item_id}: ${exception_type}: ${message}'
+triggers:
+- any exception not mapped to another tool-error inside compare_item
+behavior: Item status error with exception type and message; run continues.
+related:
+- ydk:core-module:core/pair-comparer

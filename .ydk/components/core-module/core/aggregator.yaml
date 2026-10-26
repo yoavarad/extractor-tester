@@ -1,0 +1,34 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/aggregator
+description: Streams PairFacts and ItemResults into the Report with bounded memory.
+responsibility: All aggregate numbers and example selection
+module_path: extractor_tester.aggregate
+interface:
+  Aggregator.add_item:
+    description: Fold one ItemResult
+    params:
+      result: ItemResult
+    returns:
+      type: none
+  Aggregator.add_pair:
+    description: Fold one PairFacts
+    params:
+      facts: PairFacts
+    returns:
+      type: none
+  Aggregator.finish:
+    description: Compute medians, rates; return Report
+    params:
+      run_stats: RunStats
+    returns:
+      type: Report
+forbidden_deps:
+- extractor_tester.render — comparison logic never depends on presentation
+consumes:
+- ydk:entity:model/PairFacts
+- ydk:entity:model/ItemResult
+produces:
+- ydk:entity:model/Report
+- ydk:entity:model/FamilyAggregate
+- ydk:entity:model/MetricResult
+- ydk:entity:model/Example

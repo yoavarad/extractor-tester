@@ -1,0 +1,18 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/tier-name
+description: 'Tier 1: same file name.'
+responsibility: Name tier including same-name tie-break
+module_path: extractor_tester.matching.tiers
+interface:
+  NameTier.pair:
+    description: 'Group by exact name. 1 old : 1 new = pair (tie_break none). Several on a side: first
+      pair those with equal non-null text_hash and equal family 1:1 (tie_break text-hash), then zip the
+      rest in files-array order (tie_break position); extras pass to the next tier. Empty names never
+      pair in this tier'
+    params:
+      old_children: list
+      new_children: list
+    returns:
+      type: see MatchTier
+depends_on:
+- ydk:contract:core/MatchTier

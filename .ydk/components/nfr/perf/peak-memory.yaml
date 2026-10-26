@@ -1,0 +1,10 @@
+$schema: ydk:schema:nfr
+id: ydk:nfr:perf/peak-memory
+description: Memory ceiling at 8 workers.
+category: scalability
+target: <= 2 GB peak resident memory summed over main + workers, item JSON files <= 50 MB
+measurement: Sum of peak RSS of main and worker processes (psutil in the benchmark test only)
+test_method: Same benchmark corpus as ydk:nfr:perf/run-time-100k plus one 50 MB item; record peak RSS.
+applies_to:
+- ydk:core-module:core/runner
+- ydk:core-module:core/aggregator

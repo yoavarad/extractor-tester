@@ -1,0 +1,34 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/report-writer
+description: Writes report.json, pairs.jsonl and items.jsonl.
+responsibility: Serialization of outputs (not HTML)
+module_path: extractor_tester.output
+interface:
+  open_out_dir:
+    description: Create or check output folder
+    params:
+      out: path
+      overwrite: boolean
+    returns:
+      type: none
+    raises:
+    - ydk:tool-error:errors/output-exists
+    - ydk:tool-error:errors/output-write-failed
+  write_line:
+    description: Append one PairFacts/ItemResult as JSON line
+    params:
+      record: model
+    returns:
+      type: none
+  write_report:
+    description: Write report.json (UTF-8, indented)
+    params:
+      report: Report
+    returns:
+      type: path
+forbidden_deps:
+- extractor_tester.render — comparison logic never depends on presentation
+consumes:
+- ydk:entity:model/Report
+- ydk:entity:model/PairFacts
+- ydk:entity:model/ItemResult

@@ -1,0 +1,22 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/type-family
+description: MIME joining and family lookup.
+responsibility: Map a file's MIME parts to MIME string and type family
+module_path: extractor_tester.families
+interface:
+  mime_of:
+    description: Join primary/secondary lowercase; '' when both empty; missing part = ''
+    params:
+      primary: any
+      secondary: any
+    returns:
+      type: string
+  family_of:
+    description: Lookup in families map; unlisted = mime; '' = 'unknown'
+    params:
+      mime: string
+      families: map
+    returns:
+      type: string
+forbidden_deps:
+- extractor_tester.render — comparison logic never depends on presentation

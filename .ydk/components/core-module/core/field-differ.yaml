@@ -1,0 +1,19 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/field-differ
+description: Compares flattened fields of two records.
+responsibility: Field-level diff for item metadata and file fields
+module_path: extractor_tester.compare.fields
+interface:
+  diff_fields:
+    description: Union of paths; absent on one side = only-in-*; values equal when JSON-equal (int and
+      float compare numerically, bool never equals number, null is a value)
+    params:
+      old: map
+      new: map
+      group_of: callable path->group
+    returns:
+      type: list[FieldDiff]
+forbidden_deps:
+- extractor_tester.render — comparison logic never depends on presentation
+produces:
+- ydk:entity:model/FieldDiff

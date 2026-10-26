@@ -1,0 +1,15 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/output-write-failed
+description: An output file cannot be written.
+code: OUTPUT_WRITE_FAILED
+scope: run
+severity: fatal
+detail_template: 'Cannot write ${path}: ${reason}'
+triggers:
+- output folder not creatable
+- permission denied
+- disk full
+behavior: Stop workers, print message, exit 1; files already written stay as they are.
+exit_code: 1
+related:
+- ydk:core-module:core/report-writer

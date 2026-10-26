@@ -1,0 +1,12 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/item-too-large
+description: Item JSON exceeds max_item_bytes.
+code: ITEM_TOO_LARGE
+scope: item
+severity: error
+detail_template: ${side} item ${item_id} is ${bytes} bytes (limit ${limit})
+triggers:
+- file size > max_item_bytes before parsing
+behavior: File not parsed; item status error; run continues.
+related:
+- ydk:core-module:core/loader

@@ -1,0 +1,91 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/TextFacts
+description: Text comparison result for one file pair, computed on full decoded text.
+fields:
+  raw_equal:
+    type: boolean
+    required: true
+    description: Decoded texts identical
+  normalized_equal:
+    type: boolean
+    required: true
+    description: Texts identical after whitespace normalization
+  method:
+    type: enum
+    values:
+    - fast-path
+    - full
+    - buffered
+    - skipped
+    required: true
+    description: How compared
+  edit_similarity:
+    type: number
+    nullable: true
+    description: 0-1 Indel-based similarity; null when skipped
+  jaccard:
+    type: number
+    nullable: true
+    description: 0-1 word-set similarity; null when skipped
+  old_found_in_new:
+    type: number
+    nullable: true
+    description: 0-1 share of old chars found in new
+  new_found_in_old:
+    type: number
+    nullable: true
+    description: 0-1 share of new chars found in old
+  relation:
+    type: enum
+    values:
+    - equal
+    - old-within-new
+    - new-within-old
+    - overlapping
+    - disjoint
+    nullable: true
+    description: Containment relation
+  old_chars:
+    type: integer
+    required: true
+    description: Decoded old text length
+  new_chars:
+    type: integer
+    required: true
+    description: Decoded new text length
+  length_delta:
+    type: integer
+    required: true
+    description: new_chars - old_chars
+  old_empty:
+    type: boolean
+    required: true
+    description: Old normalized text empty
+  new_empty:
+    type: boolean
+    required: true
+    description: New normalized text empty
+  lines_total:
+    type: integer
+    required: true
+    description: Lines in old + new (buffered only, else 0)
+  lines_cut:
+    type: integer
+    required: true
+    description: Lines longer than max_block_chars (buffered only)
+  lines_cut_pct:
+    type: number
+    required: true
+    description: lines_cut / lines_total * 100; 0 when no lines
+  oversized_runs:
+    type: integer
+    required: true
+    description: Buffered replaced runs above full_compare_max_chars compared block by block
+  snippets:
+    type: list[map]
+    required: true
+    description: 'Up to 3 diff snippets: old, new, offset_old, offset_new'
+  seconds:
+    type: number
+    required: true
+    description: Time spent comparing this pair

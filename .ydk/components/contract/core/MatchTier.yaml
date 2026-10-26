@@ -1,0 +1,25 @@
+$schema: ydk:schema:contract
+id: ydk:contract:core/MatchTier
+description: Interface every matching tier implements. The matcher runs an ordered list of tiers on the
+  unpaired children of one parent pair.
+methods:
+  name:
+    description: Tier label recorded on FilePair.tier
+    params: {}
+    returns:
+      type: string
+      description: e.g. 'name'
+  pair:
+    description: Pair some of the unpaired children one-to-one. Must be deterministic and must not pair
+      a file twice. Returns pairs plus remaining children of each side, remaining lists keeping their
+      input order.
+    params:
+      old_children:
+        type: list[FileRecord]
+        description: Unpaired old children
+      new_children:
+        type: list[FileRecord]
+        description: Unpaired new children
+    returns:
+      type: (list[FilePair], list[FileRecord], list[FileRecord])
+      description: pairs, old remaining, new remaining

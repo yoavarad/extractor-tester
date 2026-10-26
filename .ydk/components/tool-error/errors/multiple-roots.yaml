@@ -1,0 +1,12 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/multiple-roots
+description: More than one file satisfies the root rule.
+code: MULTIPLE_ROOTS
+scope: item
+severity: error
+detail_template: ${side} item ${item_id} has ${count} root files
+triggers:
+- 2+ files satisfy the root rule
+behavior: Item status error; run continues.
+related:
+- ydk:core-module:core/tree-builder

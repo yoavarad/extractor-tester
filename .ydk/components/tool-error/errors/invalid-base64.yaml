@@ -1,0 +1,14 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/invalid-base64
+description: Text field is not valid base64.
+code: INVALID_BASE64
+scope: file
+severity: error
+detail_template: '${side} ${file_path}: text is not valid base64'
+triggers:
+- text value present, not null, and not a string
+- base64 decoding fails (strict, padding required)
+behavior: Text treated as empty for matching; TextFacts.method skipped for its pair; field metrics still
+  computed.
+related:
+- ydk:core-module:core/decoder

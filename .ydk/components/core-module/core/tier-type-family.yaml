@@ -1,0 +1,15 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/tier-type-family
+description: 'Tier 3: the only remaining file of a type family on each side.'
+responsibility: Type-family tier
+module_path: extractor_tester.matching.tiers
+interface:
+  TypeFamilyTier.pair:
+    description: Pair families with exactly one remaining file on each side
+    params:
+      old_children: list
+      new_children: list
+    returns:
+      type: see MatchTier
+depends_on:
+- ydk:contract:core/MatchTier

@@ -1,0 +1,29 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/decoder
+description: Base64 + UTF-8 decoding and whitespace normalization of text.
+responsibility: Text decoding and normalization (the only place either happens)
+module_path: extractor_tester.decode
+interface:
+  decode_text:
+    description: Decode base64 then UTF-8 with invalid bytes replaced; null or absent = empty text
+    params:
+      value: string or null
+    returns:
+      type: (text, decode_errors)
+    raises:
+    - ydk:tool-error:errors/invalid-base64
+  normalize:
+    description: Collapse every run of Unicode whitespace to one space, strip both ends
+    params:
+      text: string
+    returns:
+      type: string
+  text_hash:
+    description: SHA-256 hex of first text_hash_chars of normalized text; null if empty
+    params:
+      normalized: string
+      limit: integer
+    returns:
+      type: string or null
+forbidden_deps:
+- extractor_tester.render — comparison logic never depends on presentation

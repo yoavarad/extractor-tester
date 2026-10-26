@@ -1,0 +1,22 @@
+$schema: ydk:schema:core-module
+id: ydk:core-module:core/field-flattener
+description: Flattens nested objects to dotted paths and classifies fields.
+responsibility: Dotted-path flattening and generic/specific/ignored classification
+module_path: extractor_tester.fields
+interface:
+  flatten:
+    description: Nested objects become dotted paths; arrays and scalars are leaf values
+    params:
+      obj: map
+    returns:
+      type: map[string, any]
+  classify:
+    description: generic if path equals or is below a generic_fields entry; ignored if equals or is below
+      an ignore_fields entry; else specific
+    params:
+      path: string
+      config: CompareConfig
+    returns:
+      type: generic|specific|ignored
+forbidden_deps:
+- extractor_tester.render — comparison logic never depends on presentation

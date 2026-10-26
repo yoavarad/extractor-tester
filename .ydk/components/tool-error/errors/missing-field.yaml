@@ -1,0 +1,12 @@
+$schema: ydk:schema:tool-error
+id: ydk:tool-error:errors/missing-field
+description: name, MIME part or text field absent on a file.
+code: MISSING_FIELD
+scope: file
+severity: warning
+detail_template: '${side} ${file_path}: missing ${field}'
+triggers:
+- name_field, mime_primary_field, mime_secondary_field or text_field path absent or null
+behavior: Treated as empty string; counted per field in FamilyAggregate.file_errors; comparison continues.
+related:
+- ydk:core-module:core/tree-builder

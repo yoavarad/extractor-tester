@@ -1,0 +1,32 @@
+$schema: ydk:schema:entity
+id: ydk:entity:model/Item
+description: One pipeline's output for one item, as loaded from <itemId>.json.
+fields:
+  item_id:
+    type: string
+    required: true
+    description: itemId value from the JSON
+  side:
+    type: enum
+    values:
+    - old
+    - new
+    required: true
+    description: Which pipeline produced it
+  metadata:
+    type: map[string, any]
+    required: true
+    description: Item-level fields except itemId and files, flattened to dotted paths
+  files:
+    type: list[FileRecord]
+    required: true
+    description: Files in their order in the JSON files array
+  source_path:
+    type: string
+    required: true
+    description: Path of the JSON file it was loaded from
+relationships:
+- entity: ydk:entity:model/FileRecord
+  type: one-to-many
+  fk: files
+  description: Files extracted from this item
