@@ -1,6 +1,7 @@
 import base64
 import importlib
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -42,8 +43,10 @@ def test_compare_help_lists_arguments() -> None:
     args = ["compare", "--help"]
     result = CliRunner().invoke(app, args)
     assert result.exit_code == 0
+    # Rich forces ANSI styling on CI (GITHUB_ACTIONS); strip it before matching.
+    plain = re.sub(r"\x1b\[[0-9;]*m", "", result.output)
     for token in ["OLD", "NEW", "--config", "--out", "--overwrite", "--workers", "--profile"]:
-        assert token in result.output
+        assert token in plain
 
 
 def test_compare_stub_exits_zero(tmp_path: Path) -> None:
