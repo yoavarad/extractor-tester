@@ -1,0 +1,2 @@
+#!/bin/sh
+ydk verify run --trigger pre-commit

@@ -1,0 +1,2 @@
+#!/bin/sh
+ydk hooks commit-msg "$1"

@@ -1,0 +1,8 @@
+hashes:
+  .github/PULL_REQUEST_TEMPLATE.md: a3e6f9e7554d2babb4bfa4bddcdcf5fdb082c503c29e4e31ed4f78526b94ba8c
+  .github/workflows/ci.yml: 8abbfdb15849fe1ed2740f77460dab7500ba6549c39a9667762c52d5cca73d9c
+  .github/workflows/ydk-delete-merged-branch.yml: 48fe2b4ef051388d635bfe2e727022ca3c44c9a1b8ec797421b1cf45f01497b4
+  .github/workflows/ydk-pr-body.yml: bacb0690358e86bc6e3744d2f90f8d695d8614433c8ff33576b8de7abac0c5c4
+  .github/workflows/ydk-pr-checks.yml: 3f12d30fea26acc95535119c93c5206509c54bd9a3a4e78a9d94a66657b21b11
+  .github/workflows/ydk-spec-integrity.yml: 0459273a8705e61d9db95a7c461a1402e4bd8ae731204344c8caafef27e308b3
+  .github/workflows/ydk-sync.yml: 389256defd27bd0ad06db05a9eaa7a60698ba0d39deb934f97e6e7f220d09fdc

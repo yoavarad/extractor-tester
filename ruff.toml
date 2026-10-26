@@ -1,0 +1,2 @@
+# .claude/ holds YDK-installed hook scripts; not project code.
+extend-exclude = [".claude"]
