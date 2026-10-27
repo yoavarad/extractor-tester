@@ -134,3 +134,68 @@ def test_item_metadata_only_for_compared_and_warning_skipped() -> None:
     assert rep.item_fields[0].count == 1
     assert rep.item_fields[0].rate == 1.0
     assert rep.families[0].file_errors == []
+
+
+def _tpair(item: str, sim: float | None, **kw: Any) -> PairFacts:  # noqa: ANN401
+    text = {
+        "raw_equal": False,
+        "normalized_equal": False,
+        "method": "full",
+        "edit_similarity": sim,
+        "jaccard": sim,
+        "relation": "overlapping",
+        "old_chars": 1,
+        "new_chars": 1,
+        "length_delta": 0,
+        "old_empty": False,
+        "new_empty": False,
+        "lines_total": 10,
+        "lines_cut": 0,
+        "lines_cut_pct": 0.0,
+        "oversized_runs": 0,
+        "snippets": [],
+        "seconds": 0.0,
+    }
+    text.update(kw)
+    return _pair(item, text=text, path_old=f"p/{item}", path_new=f"p/{item}")
+
+
+def test_text_percentiles_match_statistics() -> None:
+    """Median/p10/min match statistics results."""
+    import statistics
+
+    sims = [0.1, 0.5, 0.9, 0.3, 0.7, 1.0, 0.2, 0.8, 0.6, 0.4]
+    agg = Aggregator(_cfg())
+    for i, s in enumerate(sims):
+        agg.add_pair(_tpair(f"i{i}", s))
+    fam = agg.finish().families[0]
+    assert fam.edit_similarity == {
+        "median": statistics.median(sims),
+        "p10": statistics.quantiles(sims, n=10)[0],
+        "min": 0.1,
+    }
+    assert fam.methods == {"full": 10}
+    assert fam.relations[0].key == "overlapping"
+    assert fam.relations[0].count == 10
+
+
+def test_lowest_similarity_examples_tie_order() -> None:
+    """Lowest-similarity examples, ties by item id."""
+    agg = Aggregator(_cfg(examples_per_result=3))
+    for item, s in [("b", 0.5), ("a", 0.5), ("c", 0.9), ("d", 0.5), ("e", 0.1)]:
+        agg.add_pair(_tpair(item, s))
+    ex = agg.finish().families[0].relations[0].examples
+    assert [e.item_id for e in ex] == ["e", "a", "b"]
+
+
+def test_cut_line_warning_and_hints() -> None:
+    """Cut-line share above threshold warns; hints counted."""
+    agg = Aggregator(_cfg(cut_lines_warn_pct=20))
+    agg.add_pair(_tpair("a", 0.5, lines_cut=3))
+    assert agg.finish().families[0].cut_lines_warning is True
+    low = Aggregator(_cfg(cut_lines_warn_pct=20))
+    low.add_pair(_tpair("a", 0.5, lines_cut=1))
+    assert low.finish().families[0].cut_lines_warning is False
+    h = Aggregator(_cfg())
+    h.add_pair(_pair("a", hints=["new-more-text"]))
+    assert h.finish().families[0].hints[0].key == "new-more-text"

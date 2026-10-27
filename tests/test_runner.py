@@ -186,6 +186,19 @@ def _run_with_workers(tmp_path: Path, cfg: Path, old: Path, new: Path, workers: 
     return out
 
 
+def _html_run(tmp_path: Path, cfg: Path, item_id: str, name: str, text: str) -> Path:
+    old, new = folders(tmp_path)
+    for d in (old, new):
+        files = item_files("a")
+        files[1]["name"] = name
+        files[1]["text"] = text
+        write_item(d, item_id, files)
+    out = tmp_path / "out"
+    code, output = invoke("compare", old, new, "--config", cfg, "--out", out)
+    assert code == 0, output
+    return out
+
+
 _TIMING_KEYS = {"seconds", "stage_seconds"}
 
 
@@ -254,3 +267,47 @@ def test_workers_zero_exits_2(tmp_path: Path, cfg: Path) -> None:
     old, new = folders(tmp_path)
     code, _ = invoke("compare", old, new, "--config", cfg, "--out", tmp_path / "o", "--workers", 0)
     assert code == 2
+
+
+def test_report_html_written_and_rerender_is_byte_identical(tmp_path: Path, cfg: Path) -> None:
+    """report.html sits next to report.json and re-rendering reproduces it."""
+    from extractor_tester.render import render
+
+    out = _html_run(tmp_path, cfg, "a", "a.pdf", "hello")
+    html = (out / "report.html").read_bytes()
+    (out / "report.html").unlink()
+    render(out / "report.json", out / "report.html")
+    assert (out / "report.html").read_bytes() == html
+
+
+def test_script_tags_in_input_are_escaped(tmp_path: Path, cfg: Path) -> None:
+    """Script tags from names and text never appear as markup."""
+    old, new = folders(tmp_path)
+    evil = "<script>alert(1)</script>"
+    for d, author in ((old, evil), (new, evil + "2")):
+        files = item_files("a", author=author)
+        files[1]["name"] = evil
+        files[1]["text"] = evil
+        write_item(d, "a", files)
+    out = tmp_path / "out"
+    code, output = invoke("compare", old, new, "--config", cfg, "--out", out)
+    assert code == 0, output
+    html = (out / "report.html").read_text(encoding="utf-8")
+    assert evil not in html
+    assert "&lt;script&gt;alert(1)&lt;/script&gt;" in html
+
+
+def test_path_shaped_item_id_creates_nothing_outside_out(tmp_path: Path, cfg: Path) -> None:
+    """An item id like ../x writes no file outside --out."""
+    box = tmp_path / "box"
+    box.mkdir()
+    old, new = folders(box)
+    for d in (old, new):
+        write_item(d, "a", item_files("../x"))
+    before = {p for p in tmp_path.rglob("*")}
+    out = box / "out"
+    code, _ = invoke("compare", old, new, "--config", cfg, "--out", out)
+    assert code in (0, 1)
+    created = {p for p in tmp_path.rglob("*")} - before
+    assert all(out in p.parents or p == out for p in created)
+    assert not (box / "x").exists()

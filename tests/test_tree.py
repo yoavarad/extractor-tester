@@ -159,3 +159,26 @@ def test_matcher_pairs_renamed_file_by_text_hash() -> None:
     new = build(item(f("I", "I", "r"), f("c", "I", "new.txt", "same  body")), CFG, "new").item
     pairs = match_item(old, new)
     assert [(p.kind, p.tier) for p in pairs[1:]] == [("paired", "text-hash")]
+
+
+def _bad(fid: str, parent: str, name: str, raw: bytes) -> dict:
+    """File entry whose text is the given raw (possibly invalid UTF-8) bytes."""
+    e = f(fid, parent, name, "")
+    e["text"] = base64.b64encode(raw).decode()
+    return e
+
+
+def test_text_hash_none_when_decode_errors() -> None:
+    """Files with decode errors get no text hash; clean files keep theirs."""
+    res = build(item(f("I", "I", "r", "hi"), _bad("c", "I", "bad", b"ab\xff\xfe")), CFG, "old")
+    root = res.item.files[0]
+    assert root.text_hash is not None
+    assert root.children[0].decode_errors > 0
+    assert root.children[0].text_hash is None
+
+
+def test_matcher_does_not_pair_broken_files_by_text_hash() -> None:
+    """Different invalid-UTF-8 files (same U+FFFD runs) are not text-hash paired."""
+    old = build(item(f("I", "I", "r"), _bad("c", "I", "old.txt", b"\xff\xfe\xfd")), CFG, "old").item
+    new = build(item(f("I", "I", "r"), _bad("c", "I", "new.txt", b"\xfa\xfb\xfc")), CFG, "new").item
+    assert all(p.tier != "text-hash" for p in match_item(old, new))
