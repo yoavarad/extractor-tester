@@ -203,7 +203,9 @@ def test_invalid_base64_skips_text_but_keeps_field_diffs(tmp_path: Path) -> None
     data = n.read_text(encoding="utf-8").replace("aGVsbG8=", "!!notbase64")
     n.write_text(data, encoding="utf-8")
     _, facts = compare_item(o, n, CFG)
-    pair = next(p for p in facts if p.path_old == p.path_new and p.path_old.endswith("a.pdf"))
+    pair = next(
+        p for p in facts if p.path_old == p.path_new and (p.path_old or "").endswith("a.pdf")
+    )
     assert pair.text is None
     assert any(e.code == ErrorCode.INVALID_BASE64 for e in pair.errors)
     assert [d.path for d in pair.field_diffs] == ["title"]
