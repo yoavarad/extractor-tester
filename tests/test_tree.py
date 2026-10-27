@@ -6,6 +6,8 @@ from typing import Any
 import pytest
 
 from extractor_tester.config import CompareConfig
+from extractor_tester.decode import text_hash
+from extractor_tester.matching.matcher import match_item
 from extractor_tester.models import ErrorCode, FileRecord
 from extractor_tester.tree import TreeError, build
 
@@ -133,3 +135,27 @@ def test_non_string_ids_are_tree_errors() -> None:
     """Non string ids are tree errors."""
     with pytest.raises(TreeError):
         build(item(f("I", "I"), {**f("x", "I"), "fileId": ["x"]}), CFG, "old")
+
+
+def test_text_hash_set_and_empty_none() -> None:
+    """Every record carries text_hash; empty text gives None."""
+    res = build(item(f("I", "I", "r", "hi"), f("c", "I", "e", "")), CFG, "old")
+    root = res.item.files[0]
+    assert root.text_hash == text_hash("hi", CFG.text_hash_chars)
+    assert root.text_hash is not None
+    assert root.children[0].text_hash is None
+
+
+def test_text_hash_ignores_whitespace_differences() -> None:
+    """Texts differing only in whitespace hash equal."""
+    a = build(item(f("I", "I", "r", "a  b\n c")), CFG, "old").item.files[0]
+    b = build(item(f("I", "I", "r", " a b c ")), CFG, "new").item.files[0]
+    assert a.text_hash == b.text_hash is not None
+
+
+def test_matcher_pairs_renamed_file_by_text_hash() -> None:
+    """Renamed file with same text and family pairs via the text-hash tier."""
+    old = build(item(f("I", "I", "r"), f("c", "I", "old.txt", "same body")), CFG, "old").item
+    new = build(item(f("I", "I", "r"), f("c", "I", "new.txt", "same  body")), CFG, "new").item
+    pairs = match_item(old, new)
+    assert [(p.kind, p.tier) for p in pairs[1:]] == [("paired", "text-hash")]
