@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import cProfile
 import multiprocessing as mp
 import os
 import time
@@ -17,6 +18,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
     from multiprocessing.connection import _ConnectionBase as Connection  # Pipe end, any OS
     from multiprocessing.process import BaseProcess
+    from pathlib import Path
 
     from extractor_tester.config import CompareConfig
     from extractor_tester.loader import DiscoveredItem
@@ -83,23 +85,40 @@ def _startup_hook() -> None:
         time.sleep(60)
 
 
-def _worker_main(config: CompareConfig, conn: Connection) -> None:
+def _worker_main(
+    slot: int, config: CompareConfig, conn: Connection, profile_dir: Path | None = None
+) -> None:
     """Worker loop on its own pipe: send ready (index -1), then take one (index, item) at a
-    time until None and send back (index, result, facts, pid)."""
+    time until None and send back (index, result, facts, pid).
+
+    With profile_dir set, the loop runs under cProfile and dumps worker-<slot>.prof on exit.
+    """
     _startup_hook()
     pid = os.getpid()
     crash_item = os.environ.get(CRASH_ITEM_ENV)
     garbage_item = os.environ.get(GARBAGE_ITEM_ENV)
+    prof = cProfile.Profile() if profile_dir is not None else None
+    if prof:
+        prof.enable()
     conn.send((-1, None, None, pid))
-    while (msg := conn.recv()) is not None:
-        index, item = msg
-        if item.item_id == crash_item:
-            os._exit(1)
-        if item.item_id == garbage_item:
-            conn.send_bytes(b"\x80\x05not a pickle")
-            os._exit(1)
-        result, facts = compare_one(item, config)
-        conn.send((index, result, facts, pid))
+    try:
+        while (msg := conn.recv()) is not None:
+            index, item = msg
+            if item.item_id == crash_item:
+                os._exit(1)
+            if item.item_id == garbage_item:
+                conn.send_bytes(b"\x80\x05not a pickle")
+                os._exit(1)
+            result, facts = compare_one(item, config)
+            conn.send((index, result, facts, pid))
+    finally:
+        if prof and profile_dir is not None:
+            prof.disable()
+            profile_dir.mkdir(parents=True, exist_ok=True)
+            target = profile_dir / f"worker-{slot}.prof"
+            tmp = target.with_suffix(".tmp")
+            prof.dump_stats(str(tmp))
+            tmp.replace(target)
 
 
 def _error_result(item_id: str, code: ErrorCode, message: str, seconds: float) -> ItemResult:
@@ -121,6 +140,7 @@ def compare_all(
     config: CompareConfig,
     workers: int,
     stats: WorkerStats | None = None,
+    profile_dir: Path | None = None,
 ) -> Iterator[_Result]:
     """Compare items in worker processes; yield (result, facts, worker pid) in input order.
 
@@ -140,7 +160,7 @@ def compare_all(
 
     def start(i: int, startup_failures: int = 0) -> None:
         parent, child = ctx.Pipe()
-        proc = ctx.Process(target=_worker_main, args=(config, child), daemon=True)
+        proc = ctx.Process(target=_worker_main, args=(i, config, child, profile_dir), daemon=True)
         proc.start()
         child.close()
         slot = _Slot(proc, parent, time.monotonic(), startup_failures=startup_failures)

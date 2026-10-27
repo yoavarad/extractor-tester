@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import sys
 import time
 import traceback
@@ -36,17 +37,31 @@ def _tool_version() -> str:
 
 
 def _execute(
-    old: Path, new: Path, config_path: Path, out: Path, overwrite: bool, workers: int
+    old: Path,
+    new: Path,
+    config_path: Path,
+    out: Path,
+    overwrite: bool,
+    workers: int,
+    profile: bool = False,
 ) -> None:
     t0 = time.perf_counter()
     started_at = datetime.now(UTC)
     config = load_config(config_path)
     discovery = discover(old, new)
     prepare_out(out, overwrite)
+    if profile:
+        shutil.rmtree(out / "profile", ignore_errors=True)
     agg = Aggregator(config)
     worker_stats = WorkerStats()
     with pairs_writer(out) as pw, items_writer(out) as iw:
-        for result, facts, _pid in compare_all(discovery.items, config, workers, worker_stats):
+        for result, facts, _pid in compare_all(
+            discovery.items,
+            config,
+            workers,
+            worker_stats,
+            out / "profile" if profile else None,
+        ):
             for pf in facts:
                 pw.write(pf)
                 agg.add_pair(pf)
@@ -68,6 +83,7 @@ def _execute(
             text_seconds_by_family={},
             slowest_items=[],
             workers_replaced=worker_stats.replaced,
+            profile_dir="profile" if profile else None,
         ),
     )
     report.warnings.extend(f"{w.code.value}: {w.message}" for w in discovery.warnings)
@@ -90,11 +106,10 @@ def run(
 ) -> int:
     """Execute a compare run in worker processes and return the exit code.
 
-    workers defaults to the CPU count; profile is accepted for the CLI contract only.
+    workers defaults to the CPU count; profile writes out/profile/worker-<n>.prof per worker.
     """
-    del profile
     try:
-        _execute(old, new, config_path, out, overwrite, workers or os.cpu_count() or 1)
+        _execute(old, new, config_path, out, overwrite, workers or os.cpu_count() or 1, profile)
     except ConfigError as e:
         print(f"{ErrorCode.INVALID_CONFIG.value}: {e}", file=sys.stderr)
         return 1
