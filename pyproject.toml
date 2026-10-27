@@ -26,7 +26,7 @@ packages = ["src/extractor_tester"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
+pythonpath = ["src", "."]
 markers = ["slow: slow benchmark tests, excluded by default"]
 addopts = '-m "not slow"'
 
