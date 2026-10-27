@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import multiprocessing as mp
+import os
+import queue
 import sys
 import time
 import traceback
@@ -24,6 +27,9 @@ from extractor_tester.output import (
 from extractor_tester.render import render
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
+    from multiprocessing.process import BaseProcess
+    from multiprocessing.queues import Queue
     from pathlib import Path
 
     from extractor_tester.config import CompareConfig
@@ -63,7 +69,80 @@ def compare_one(item: DiscoveredItem, config: CompareConfig) -> tuple[ItemResult
     return compare_item(item.old_path, item.new_path, config)
 
 
-def _execute(old: Path, new: Path, config_path: Path, out: Path, overwrite: bool) -> None:
+WINDOW_PER_WORKER = 32
+_POLL_SECONDS = 0.5
+
+_Result = tuple[ItemResult, list[PairFacts], int]
+
+
+def _worker_main(slot: int, config: CompareConfig, inbox: Queue, outbox: Queue) -> None:
+    """Worker loop: take one (index, item) at a time until None, return results with the pid."""
+    pid = os.getpid()
+    while (msg := inbox.get()) is not None:
+        index, item = msg
+        result, facts = compare_one(item, config)
+        outbox.put((slot, index, result, facts, pid))
+
+
+def compare_all(
+    items: Sequence[DiscoveredItem], config: CompareConfig, workers: int
+) -> Iterator[_Result]:
+    """Compare items in worker processes; yield (result, facts, worker pid) in input order.
+
+    Each worker holds at most one item. Dispatch runs at most workers x WINDOW_PER_WORKER
+    items ahead of the oldest unfinished item, which bounds the buffered results.
+    """
+    if workers < 1:
+        raise ValueError(f"workers must be >= 1, got {workers}")
+    ctx = mp.get_context("spawn")
+    outbox: Queue = ctx.Queue()
+    inboxes: list[Queue] = [ctx.Queue() for _ in range(workers)]
+    procs: list[BaseProcess] = [
+        ctx.Process(target=_worker_main, args=(i, config, inboxes[i], outbox), daemon=True)
+        for i in range(workers)
+    ]
+    held: dict[int, tuple[int, float]] = {}  # worker slot -> (item index, since)
+    buffer: dict[int, _Result] = {}
+    window = workers * WINDOW_PER_WORKER
+    next_dispatch = next_write = 0
+    try:
+        for p in procs:
+            p.start()
+        while next_write < len(items):
+            for slot in range(workers):
+                if slot in held or next_dispatch >= min(len(items), next_write + window):
+                    continue
+                inboxes[slot].put((next_dispatch, items[next_dispatch]))
+                held[slot] = (next_dispatch, time.monotonic())
+                next_dispatch += 1
+            try:
+                slot, index, result, facts, pid = outbox.get(timeout=_POLL_SECONDS)
+            except queue.Empty:
+                dead = [s for s in held if not procs[s].is_alive()]
+                if dead:
+                    lost = items[held[dead[0]][0]].item_id
+                    raise RuntimeError(f"worker process exited while holding item {lost}") from None
+                continue
+            del held[slot]
+            buffer[index] = (result, facts, pid)
+            while next_write in buffer:
+                yield buffer.pop(next_write)
+                next_write += 1
+    finally:
+        for inbox in inboxes:
+            inbox.put(None)
+        deadline = time.monotonic() + 5
+        for p in procs:
+            if p.pid is not None:
+                p.join(timeout=max(0.0, deadline - time.monotonic()))
+            if p.is_alive():
+                p.terminate()
+                p.join()
+
+
+def _execute(
+    old: Path, new: Path, config_path: Path, out: Path, overwrite: bool, workers: int
+) -> None:
     t0 = time.perf_counter()
     started_at = datetime.now(UTC)
     config = load_config(config_path)
@@ -71,8 +150,7 @@ def _execute(old: Path, new: Path, config_path: Path, out: Path, overwrite: bool
     prepare_out(out, overwrite)
     agg = Aggregator(config)
     with pairs_writer(out) as pw, items_writer(out) as iw:
-        for item in discovery.items:
-            result, facts = compare_one(item, config)
+        for result, facts, _pid in compare_all(discovery.items, config, workers):
             for pf in facts:
                 pw.write(pf)
                 agg.add_pair(pf)
@@ -89,7 +167,7 @@ def _execute(old: Path, new: Path, config_path: Path, out: Path, overwrite: bool
         },
         run_stats=RunStats(
             wall_seconds=time.perf_counter() - t0,
-            workers=1,
+            workers=workers,
             stage_seconds={},
             text_seconds_by_family={},
             slowest_items=[],
@@ -114,13 +192,13 @@ def run(
     workers: int | None = None,
     profile: bool = False,
 ) -> int:
-    """Execute a compare run sequentially and return the exit code.
+    """Execute a compare run in worker processes and return the exit code.
 
-    workers and profile are accepted for the CLI contract; this slice runs in-process.
+    workers defaults to the CPU count; profile is accepted for the CLI contract only.
     """
-    del workers, profile
+    del profile
     try:
-        _execute(old, new, config_path, out, overwrite)
+        _execute(old, new, config_path, out, overwrite, workers or os.cpu_count() or 1)
     except ConfigError as e:
         print(f"{ErrorCode.INVALID_CONFIG.value}: {e}", file=sys.stderr)
         return 1
