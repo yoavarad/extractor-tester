@@ -325,7 +325,7 @@ tasks:
     description: |
       extractor_tester.tree: build(item_json, config) -> Item with FileRecord tree. Root = the file whose
       fileId, parentId and rootId equal the item id. Children keep file-list order. Tree path = names from
-      root down with occurrence marker for repeated sibling names. Each FileRecord carries decoded text
+      root down with occurrence marker for repeated sibling names. Each FileRecord carries decoded text, its text hash
       (via decoder), decode-error count, MIME, family and flattened fields. Errors: ROOT_NOT_FOUND,
       MULTIPLE_ROOTS, DUPLICATE_FILE_ID, PARENT_CYCLE (item errors); ORPHAN_FILE (file and subtree dropped,
       rest kept); MISSING_FIELD warning when name/MIME part/text absent or null (treated as empty).

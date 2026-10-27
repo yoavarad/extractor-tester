@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from extractor_tester.config import CompareConfig
-from extractor_tester.decode import InvalidBase64Error, decode_text
+from extractor_tester.decode import InvalidBase64Error, decode_text, normalize, text_hash
 from extractor_tester.families import family, mime
 from extractor_tester.fields import flatten
 from extractor_tester.models import ErrorCode, ErrorRecord, FileRecord, Item, Side
@@ -213,6 +213,7 @@ def _record(
         path=path,
         fields=flat,
         text=text,
+        text_hash=text_hash(normalize(text), config.text_hash_chars),
         decode_errors=bad,
         children=children,
         missing_fields=missing,
