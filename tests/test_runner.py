@@ -328,7 +328,7 @@ def test_profile_writes_one_prof_per_worker(tmp_path: Path, cfg: Path) -> None:
     assert code == 0, output
     profs = sorted(p.name for p in (out / "profile").glob("worker-*.prof"))
     assert profs == ["worker-0.prof", "worker-1.prof"]
-    assert pstats.Stats(str(out / "profile" / "worker-0.prof")).total_calls > 0
+    assert pstats.Stats(str(out / "profile" / "worker-0.prof")).get_stats_profile().func_profiles
     report = json.loads((out / "report.json").read_text(encoding="utf-8"))
     assert report["run_stats"]["profile_dir"] == "profile"
 
