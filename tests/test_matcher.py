@@ -8,7 +8,13 @@ from extractor_tester.matching.tiers import NameTier, TierResult
 from extractor_tester.models import FilePair, FileRecord, Item, Side
 
 
-def rec(fid: str, name: str, *children: FileRecord, family: str = "pdf") -> FileRecord:
+def rec(
+    fid: str,
+    name: str,
+    *children: FileRecord,
+    family: str = "pdf",
+    text_hash: str | None = None,
+) -> FileRecord:
     """Build a FileRecord with children."""
     return FileRecord(
         file_id=fid,
@@ -20,6 +26,7 @@ def rec(fid: str, name: str, *children: FileRecord, family: str = "pdf") -> File
         path=name,
         fields={},
         text="",
+        text_hash=text_hash,
         decode_errors=0,
         children=list(children),
         missing_fields=[],
@@ -53,8 +60,8 @@ def test_roots_pair_with_tier_root() -> None:
 
 def test_children_pair_and_leftovers_have_no_candidate() -> None:
     """Children pair and leftovers have no candidate."""
-    old = rec("O", "r", rec("o1", "a"), rec("o2", "b"))
-    new = rec("N", "r", rec("n1", "a"), rec("n2", "c"))
+    old = rec("O", "r", rec("o1", "a"), rec("o2", "b", family="image"))
+    new = rec("N", "r", rec("n1", "a"), rec("n2", "c", family="doc"))
     pairs = match_item(item("old", old), item("new", new))
     assert summary(pairs) == [
         ("paired", "O", "N", "root", None),
@@ -78,8 +85,8 @@ def test_same_name_empty_text_siblings_pair_by_position() -> None:
 
 def test_descendants_of_unpaired_parent_are_parent_unpaired() -> None:
     """Descendants of unpaired parent are parent unpaired."""
-    old = rec("O", "r", rec("o1", "a", rec("o11", "deep", rec("o111", "deeper"))))
-    new = rec("N", "r", rec("n1", "b", rec("n11", "deep")))
+    old = rec("O", "r", rec("o1", "a", rec("o11", "deep", rec("o111", "deeper")), family="x"))
+    new = rec("N", "r", rec("n1", "b", rec("n11", "deep"), family="y"))
     pairs = match_item(item("old", old), item("new", new))
     assert summary(pairs)[1:] == [
         ("only-in-old", "o1", None, None, "no-candidate"),
@@ -119,9 +126,36 @@ def test_custom_tier_list_labels_pairs() -> None:
     assert summary(pairs)[1] == ("paired", "o1", "n1", "type-family", None)
 
 
-def test_default_tiers_is_name_tier() -> None:
-    """Default tiers is name tier."""
-    assert [t.name for t in default_tiers()] == ["name"]
+def test_default_tiers_order() -> None:
+    """Default tiers: name, text-hash, type-family."""
+    assert [t.name for t in default_tiers()] == ["name", "text-hash", "type-family"]
+
+
+def test_worked_example() -> None:
+    """The matching.md worked example."""
+    old = rec(
+        "O",
+        "root.eml",
+        rec("o1", "invoice.pdf", text_hash="h"),
+        rec("o2", "image001.png", family="image"),
+        rec("o3", "image001.png", family="image"),
+    )
+    new = rec(
+        "N",
+        "root.eml",
+        rec("n1", "Invoice 2026.pdf", text_hash="h"),
+        rec("n2", "image001.png", family="image"),
+        rec("n3", "image001.png", family="image"),
+        rec("n4", "logo.png", family="image"),
+    )
+    pairs = match_item(item("old", old), item("new", new))
+    assert summary(pairs) == [
+        ("paired", "O", "N", "root", None),
+        ("paired", "o2", "n2", "name", None),
+        ("paired", "o3", "n3", "name", None),
+        ("paired", "o1", "n1", "text-hash", None),
+        ("only-in-new", None, "n4", None, "no-candidate"),
+    ]
 
 
 def test_matching_does_not_import_compare_or_render() -> None:

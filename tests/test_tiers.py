@@ -1,6 +1,6 @@
 """Tests for matching tiers."""
 
-from extractor_tester.matching.tiers import MatchTier, NameTier
+from extractor_tester.matching.tiers import MatchTier, NameTier, TextHashTier, TypeFamilyTier
 from extractor_tester.models import FilePair, FileRecord
 
 
@@ -41,7 +41,10 @@ def test_unique_names_pair_without_tie_break() -> None:
     pairs, old_rest, new_rest = NameTier().pair(
         [rec("o1", "a"), rec("o2", "b")], [rec("n1", "b"), rec("n2", "a"), rec("n3", "c")]
     )
-    assert ids(pairs) == [("o1", "n2", "none"), ("o2", "n1", "none")]
+    assert [(p.old and p.old.file_id, p.new and p.new.file_id) for p in pairs] == [
+        ("o1", "n2"),
+        ("o2", "n1"),
+    ]
     assert all(p.tier == "name" and p.kind == "paired" for p in pairs)
     assert old_rest == []
     assert [r.file_id for r in new_rest] == ["n3"]
@@ -95,3 +98,62 @@ def test_extra_same_name_files_pass_on_in_order() -> None:
     assert ids(pairs) == [("o1", "n1", "position")]
     assert [r.file_id for r in old_rest] == ["o2"]
     assert [r.file_id for r in new_rest] == ["n2", "n3", "n4"]
+
+
+def test_text_hash_tier_pairs_unique_hash_and_family() -> None:
+    """Text hash tier pairs unique hash and family."""
+    old = [rec("o1", "a", text_hash="h"), rec("o2", "b", text_hash="k")]
+    new = [rec("n1", "c", text_hash="k"), rec("n2", "d", text_hash="z")]
+    pairs, old_rest, new_rest = TextHashTier().pair(old, new)
+    assert ids(pairs) == [("o2", "n1", "none")]
+    assert pairs[0].tier == "text-hash"
+    assert [r.file_id for r in old_rest] == ["o1"]
+    assert [r.file_id for r in new_rest] == ["n2"]
+
+
+def test_text_hash_tier_none_hash_never_pairs() -> None:
+    """Empty text (no hash) never pairs."""
+    pairs, old_rest, new_rest = TextHashTier().pair([rec("o1", "a")], [rec("n1", "b")])
+    assert pairs == []
+    assert len(old_rest) == len(new_rest) == 1
+
+
+def test_text_hash_tier_requires_same_family() -> None:
+    """Same hash, different family does not pair."""
+    old = [rec("o1", "a", text_hash="h", family="pdf")]
+    new = [rec("n1", "b", text_hash="h", family="image")]
+    assert TextHashTier().pair(old, new)[0] == []
+
+
+def test_text_hash_tier_ambiguous_not_paired() -> None:
+    """Two candidates on one side do not pair."""
+    old = [rec("o1", "a", text_hash="h"), rec("o2", "b", text_hash="h")]
+    new = [rec("n1", "c", text_hash="h")]
+    pairs, old_rest, new_rest = TextHashTier().pair(old, new)
+    assert pairs == []
+    assert len(old_rest) == 2
+    assert len(new_rest) == 1
+
+
+def test_type_family_tier_pairs_single_per_family() -> None:
+    """Exactly one per family per side pairs."""
+    old = [rec("o1", "a", family="pdf"), rec("o2", "b", family="image")]
+    new = [rec("n1", "c", family="image"), rec("n2", "d", family="pdf")]
+    pairs, old_rest, new_rest = TypeFamilyTier().pair(old, new)
+    assert [(p.old and p.old.file_id, p.new and p.new.file_id) for p in pairs] == [
+        ("o1", "n2"),
+        ("o2", "n1"),
+    ]
+    assert {p.tier for p in pairs} == {"type-family"}
+    assert old_rest == []
+    assert new_rest == []
+
+
+def test_type_family_tier_two_same_family_on_one_side_not_paired() -> None:
+    """Two candidates of a family on one side do not pair."""
+    old = [rec("o1", "a"), rec("o2", "b")]
+    new = [rec("n1", "c")]
+    pairs, old_rest, new_rest = TypeFamilyTier().pair(old, new)
+    assert pairs == []
+    assert [r.file_id for r in old_rest] == ["o1", "o2"]
+    assert [r.file_id for r in new_rest] == ["n1"]

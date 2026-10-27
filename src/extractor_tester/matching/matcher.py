@@ -3,13 +3,13 @@
 from collections import deque
 from typing import Literal
 
-from extractor_tester.matching.tiers import MatchTier, NameTier
+from extractor_tester.matching.tiers import MatchTier, NameTier, TextHashTier, TypeFamilyTier
 from extractor_tester.models import FilePair, FileRecord, Item, Side
 
 
 def default_tiers() -> list[MatchTier]:
     """Return the configured tier order."""
-    return [NameTier()]
+    return [NameTier(), TextHashTier(), TypeFamilyTier()]
 
 
 def match_item(old: Item, new: Item, tiers: list[MatchTier] | None = None) -> list[FilePair]:
