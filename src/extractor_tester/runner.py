@@ -91,6 +91,8 @@ def compare_all(
     Each worker holds at most one item. Dispatch runs at most workers x WINDOW_PER_WORKER
     items ahead of the oldest unfinished item, which bounds the buffered results.
     """
+    if workers < 1:
+        raise ValueError(f"workers must be >= 1, got {workers}")
     ctx = mp.get_context("spawn")
     outbox: Queue = ctx.Queue()
     inboxes: list[Queue] = [ctx.Queue() for _ in range(workers)]
@@ -128,8 +130,10 @@ def compare_all(
     finally:
         for inbox in inboxes:
             inbox.put(None)
+        deadline = time.monotonic() + 5
         for p in procs:
-            p.join(timeout=5)
+            if p.pid is not None:
+                p.join(timeout=max(0.0, deadline - time.monotonic()))
             if p.is_alive():
                 p.terminate()
                 p.join()
