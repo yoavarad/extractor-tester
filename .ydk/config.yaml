@@ -32,3 +32,5 @@ verification:
   - types-ty
   - tests-pytest
   - python-quality
+  - src-tdd-guard
+  - src-file-length

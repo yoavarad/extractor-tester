@@ -1,0 +1,6 @@
+description: 'Custom verification: src-tdd-guard'
+name: src-tdd-guard
+parallel: true
+requires: []
+timeout: 30
+trigger: git:pre-commit
