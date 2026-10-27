@@ -3,6 +3,8 @@ from typing import Annotated
 
 import typer
 
+from extractor_tester import runner
+
 app = typer.Typer(help="Compare JSON outputs of two extraction pipelines.")
 
 
@@ -28,4 +30,4 @@ def compare(
     ] = False,
 ) -> None:
     """Compare the outputs of the old and new pipelines and write the report."""
-    typer.echo("not implemented yet")
+    raise typer.Exit(runner.run(old, new, config, out, overwrite, workers, profile))
