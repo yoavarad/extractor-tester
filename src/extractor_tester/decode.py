@@ -54,6 +54,6 @@ def normalize(text: str) -> str:
 
 def text_hash(normalized: str, limit: int) -> str | None:
     """Return sha256 hex of the first ``limit`` chars of ``normalized``, or None if empty."""
-    if not normalized:
+    if not normalized or limit <= 0:
         return None
     return hashlib.sha256(normalized[:limit].encode("utf-8")).hexdigest()

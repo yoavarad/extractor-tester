@@ -67,6 +67,12 @@ def test_text_hash_empty_is_none() -> None:
     assert text_hash("", 10) is None
 
 
+def test_text_hash_nonpositive_limit_is_none() -> None:
+    """Text hash nonpositive limit is none."""
+    assert text_hash("abc", 0) is None
+    assert text_hash("abc", -1) is None
+
+
 def test_text_hash_whitespace_differences_equal() -> None:
     """Text hash whitespace differences equal."""
     a = normalize("foo   bar\n baz")
