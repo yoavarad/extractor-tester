@@ -6,6 +6,7 @@ from collections import Counter
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
+from extractor_tester.aggregate_util import Lowest, stats
 from extractor_tester.models import (
     ErrorRecord,
     Example,
@@ -67,6 +68,15 @@ class _Family:
         self.fields: dict[str, _Counter] = {}
         self.tiers: dict[str, _Counter] = {}
         self.file_errors: dict[str, _Counter] = {}
+        # Memory cost: one float per text-compared pair per similarity (O(pairs) per family).
+        self.edit: list[float] = []
+        self.jaccard: list[float] = []
+        self.relations: dict[str, _Counter] = {}
+        self.relation_low: dict[str, Lowest] = {}
+        self.methods = Counter[str]()
+        self.hints: dict[str, _Counter] = {}
+        self.lines_total = 0
+        self.lines_cut = 0
 
     def bump(self, table: dict[str, _Counter], key: str, example: Example) -> None:
         """Add an occurrence to the keyed counter, creating it on first use."""
@@ -138,6 +148,10 @@ class Aggregator:
                 fam.family_changed.add(ex)
             if pf.tier is not None:
                 fam.bump(fam.tiers, pf.tier, ex)
+            if pf.text is not None:
+                self._add_text(fam, pf, ex)
+            for h in pf.hints:
+                fam.bump(fam.hints, str(h), ex)
             for d in pf.field_diffs:
                 if d.status != "same":
                     fam.bump(fam.fields, f"{d.path}:{d.status}", self._diff_example(ex, d))
@@ -148,6 +162,23 @@ class Aggregator:
             if err.severity != "warning":
                 fam.bump(fam.file_errors, err.code.value, ex)
             self._record_error(err, ex.model_copy(update={"note": self._cut(err.message)}))
+
+    def _add_text(self, fam: _Family, pf: PairFacts, ex: Example) -> None:
+        t = pf.text
+        if t is None:
+            return
+        fam.methods[t.method] += 1
+        fam.lines_total += t.lines_total
+        fam.lines_cut += t.lines_cut
+        if t.edit_similarity is not None:
+            fam.edit.append(t.edit_similarity)
+        if t.jaccard is not None:
+            fam.jaccard.append(t.jaccard)
+        if t.relation is not None:
+            fam.relations.setdefault(t.relation, _Counter(0)).count += 1
+            if t.edit_similarity is not None:
+                low = fam.relation_low.setdefault(t.relation, Lowest(self._cap))
+                low.add(t.edit_similarity, ex.model_copy(update={"old_value": t.edit_similarity}))
 
     def add_item(self, item: ItemResult) -> None:
         """Fold one item result into the item-level counters."""
@@ -166,9 +197,15 @@ class Aggregator:
         for err in item.errors:
             self._record_error(err, ex.model_copy(update={"note": self._cut(err.message)}))
 
+    def _relation(self, key: str, f: _Family, n: int) -> MetricResult:
+        res = f.relations[key].result(key, n)
+        low = f.relation_low.get(key)
+        return res.model_copy(update={"examples": low.examples() if low else []})
+
     def _family(self, name: str, f: _Family) -> FamilyAggregate:
         n = f.pairs
         total = n + f.only_old.count + f.only_new.count
+        cut_pct = 100 * f.lines_cut / f.lines_total if f.lines_total else 0.0
         return FamilyAggregate(
             family=name,
             pairs=n,
@@ -178,14 +215,14 @@ class Aggregator:
             mime_changed=f.mime_changed.result("mime-changed", n),
             family_changed=f.family_changed.result("family-changed", n),
             fields=[f.fields[k].result(k, n) for k in sorted(f.fields)],
-            edit_similarity={},
-            jaccard={},
-            relations=[],
-            methods={},
-            lines_cut_pct=0.0,
-            cut_lines_warning=False,
+            edit_similarity=stats(f.edit),
+            jaccard=stats(f.jaccard),
+            relations=[self._relation(k, f, n) for k in sorted(f.relations)],
+            methods=dict(sorted(f.methods.items())),
+            lines_cut_pct=cut_pct,
+            cut_lines_warning=cut_pct > self.config.cut_lines_warn_pct,
             tiers=[f.tiers[k].result(k, n) for k in sorted(f.tiers)],
-            hints=[],
+            hints=[f.hints[k].result(k, n) for k in sorted(f.hints)],
             decode_errors=f.decode_errors.result("decode-errors", n),
             file_errors=[f.file_errors[k].result(k, n) for k in sorted(f.file_errors)],
         )
