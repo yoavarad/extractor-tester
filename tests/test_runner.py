@@ -311,3 +311,34 @@ def test_path_shaped_item_id_creates_nothing_outside_out(tmp_path: Path, cfg: Pa
     created = {p for p in tmp_path.rglob("*")} - before
     assert all(out in p.parents or p == out for p in created)
     assert not (box / "x").exists()
+
+
+def test_profile_writes_one_prof_per_worker(tmp_path: Path, cfg: Path) -> None:
+    """--profile writes loadable profile/worker-<n>.prof for each worker and records profile_dir."""
+    import pstats
+
+    old, new = folders(tmp_path)
+    for i in ("a", "b"):
+        write_item(old, i, item_files(i))
+        write_item(new, i, item_files(i))
+    out = tmp_path / "out"
+    code, output = invoke(
+        "compare", old, new, "--config", cfg, "--out", out, "--workers", 2, "--profile"
+    )
+    assert code == 0, output
+    profs = sorted(p.name for p in (out / "profile").glob("worker-*.prof"))
+    assert profs == ["worker-0.prof", "worker-1.prof"]
+    assert pstats.Stats(str(out / "profile" / "worker-0.prof")).total_calls > 0
+    report = json.loads((out / "report.json").read_text(encoding="utf-8"))
+    assert report["run_stats"]["profile_dir"] == "profile"
+
+
+def test_no_profile_dir_by_default(tmp_path: Path, cfg: Path) -> None:
+    """Without --profile no profile folder is written."""
+    old, new = folders(tmp_path)
+    write_item(old, "a", item_files("a"))
+    write_item(new, "a", item_files("a"))
+    out = tmp_path / "out"
+    code, output = invoke("compare", old, new, "--config", cfg, "--out", out)
+    assert code == 0, output
+    assert not (out / "profile").exists()
