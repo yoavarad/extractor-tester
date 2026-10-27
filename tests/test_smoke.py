@@ -49,16 +49,6 @@ def test_compare_help_lists_arguments() -> None:
         assert token in plain
 
 
-def test_compare_stub_exits_zero(tmp_path: Path) -> None:
-    """compare stub exits 0 with a placeholder message."""
-    cfg = tmp_path / "c.yaml"
-    cfg.write_text("x: 1", encoding="utf-8")
-    args = ["compare", str(tmp_path), str(tmp_path), "--config", str(cfg)]
-    result = CliRunner().invoke(app, args)
-    assert result.exit_code == 0
-    assert "not implemented yet" in result.output
-
-
 def test_write_item_round_trips_text(tmp_path: Path) -> None:
     """write_item text decodes back to the original string."""
     path = write_item(tmp_path, "i1", [{"fileId": "1", "text": "héllo"}], extra="x")
