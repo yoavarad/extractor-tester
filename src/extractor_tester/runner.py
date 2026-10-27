@@ -21,6 +21,7 @@ from extractor_tester.output import (
     prepare_out,
     write_report,
 )
+from extractor_tester.render import render
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -100,7 +101,8 @@ def _execute(old: Path, new: Path, config_path: Path, out: Path, overwrite: bool
         report.warnings.append(
             f"{discovery.ignored_count} folder entries ignored (not top-level *.json files)"
         )
-    write_report(out, report)
+    report_json = write_report(out, report)
+    render(report_json, out / "report.html")
 
 
 def run(
