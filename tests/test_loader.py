@@ -175,3 +175,11 @@ def test_id_mismatch_file_mode(tmp_path: Path) -> None:
     with pytest.raises(LoaderError) as e:
         load_item(n, expected, cfg(), "new")
     assert e.value.code == ErrorCode.ITEM_ID_MISMATCH
+
+
+def test_utf8_bom_tolerated(tmp_path: Path) -> None:
+    """A UTF-8 BOM prefix does not cause INVALID_JSON."""
+    p = tmp_path / "a.json"
+    p.write_bytes(b'\xef\xbb\xbf{"itemId": "a", "files": []}')
+    item = load_item(p, "a", cfg(), "old")
+    assert item["itemId"] == "a"

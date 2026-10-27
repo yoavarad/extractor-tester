@@ -114,7 +114,7 @@ def load_item(
             f"{prefix}item {item_id} grew past the limit ({config.max_item_bytes})",
         )
     try:
-        data = json.loads(raw.decode("utf-8"))
+        data = json.loads(raw.decode("utf-8-sig"))
     except (UnicodeDecodeError, json.JSONDecodeError) as e:
         raise _invalid(prefix, path, f"cannot parse JSON ({e})") from e
     if not isinstance(data, dict):
