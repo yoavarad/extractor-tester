@@ -68,4 +68,4 @@ def test_frozen() -> None:
     """Models are immutable."""
     _, err, _ = _sample()
     with pytest.raises(ValidationError):
-        err.message = "x"
+        err.message = "x"  # ty: ignore[invalid-assignment]
