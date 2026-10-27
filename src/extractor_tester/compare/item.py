@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from extractor_tester.compare.fields import diff
+from extractor_tester.compare.text import compare_text
 from extractor_tester.config import CompareConfig
 from extractor_tester.fields import flatten
 from extractor_tester.loader import LoaderError, load_item
@@ -14,10 +15,12 @@ from extractor_tester.models import (
     ErrorRecord,
     FieldDiff,
     FilePair,
+    Hint,
     Item,
     ItemResult,
     PairFacts,
     Side,
+    TextFacts,
 )
 from extractor_tester.tree import BuildResult, TreeError, build
 
@@ -116,7 +119,6 @@ def _facts(
         "tie_break": pair.tie_break,
         "mime_old": old.mime if old else None,
         "mime_new": new.mime if new else None,
-        "hints": [],
         "errors": _file_errors(old_build, "old", path_old)
         + _file_errors(new_build, "new", path_new),
         "decode_errors_old": old.decode_errors if old else None,
@@ -127,6 +129,7 @@ def _facts(
             **common,
             field_diffs=[],
             fields_same=[],
+            hints=[],
             children_old=len(old.children) if old else None,
             children_new=len(new.children) if new else None,
             identical=False,
@@ -145,15 +148,53 @@ def _facts(
     changed = [d for d in diffs if d.status != "same"]
     mime_equal = old.mime == new.mime
     family_equal = old.family == new.family
+    bad_base64 = any(e.code == ErrorCode.INVALID_BASE64 for e in common["errors"])
+    text = None if bad_base64 else compare_text(old.text, new.text, config)
+    unpaired = only_old + only_new
     return PairFacts(
         **common,
         mime_equal=mime_equal,
         family_equal=family_equal,
         field_diffs=changed,
         fields_same=[d.path for d in diffs if d.status == "same"],
+        text=text,
         children_old=len(old.children),
         children_new=len(new.children),
         children_only_old=only_old,
         children_only_new=only_new,
-        identical=mime_equal and not changed and only_old == 0 and only_new == 0,
+        hints=_hints(text, changed, only_old, only_new),
+        identical=mime_equal
+        and not changed
+        and unpaired == 0
+        and text is not None
+        and text.relation == "equal",
     )
+
+
+def _blank(status: str, side: str, value: object) -> bool:
+    return status == f"only-in-{'new' if side == 'old' else 'old'}" or value in (None, "", [], {})
+
+
+def _hints(
+    text: TextFacts | None, changed: list[FieldDiff], only_old: int, only_new: int
+) -> list[Hint]:
+    hints: list[Hint] = []
+    if text is not None and text.relation == "old-within-new":
+        hints.append("new-more-text")
+    elif text is not None and text.relation == "new-within-old":
+        hints.append("new-less-text")
+    if any(
+        _blank(d.status, "old", d.old_value) and not _blank(d.status, "new", d.new_value)
+        for d in changed
+    ):
+        hints.append("new-filled-field")
+    if any(
+        _blank(d.status, "new", d.new_value) and not _blank(d.status, "old", d.old_value)
+        for d in changed
+    ):
+        hints.append("new-emptied-field")
+    if only_new:
+        hints.append("new-more-subfiles")
+    if only_old:
+        hints.append("new-fewer-subfiles")
+    return hints

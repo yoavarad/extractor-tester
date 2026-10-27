@@ -70,7 +70,7 @@ def test_one_fact_per_paired_and_one_sided_file(tmp_path: Path) -> None:
     assert facts[1].tie_break == "none"
     assert facts[1].mime_equal is True
     assert facts[1].family_equal is True
-    assert facts[1].text is None
+    assert facts[1].text is not None
 
 
 def test_metadata_change_is_one_changed_diff_on_right_pair(tmp_path: Path) -> None:
@@ -174,3 +174,93 @@ def test_unattached_build_warnings_reach_item_result(tmp_path: Path) -> None:
     result, facts = compare_item(o, n, CFG)
     assert [e.code for e in result.errors] == [ErrorCode.ORPHAN_FILE]
     assert len(facts) == 1
+
+
+def test_paired_text_facts_attached(tmp_path: Path) -> None:
+    """Paired files carry text facts; one-sided files do not."""
+    o, n = sides(
+        tmp_path,
+        [f("I", "I", "root"), f("a", "I", "a.pdf", text="alpha beta")],
+        [
+            f("I", "I", "root"),
+            f("a", "I", "a.pdf", text="alpha gamma"),
+            f("b", "I", "b.docx", ms="docx"),
+        ],
+    )
+    _, facts = compare_item(o, n, CFG)
+    paired = [p for p in facts if p.kind == "paired"]
+    assert all(p.text is not None for p in paired)
+    assert next(p for p in facts if p.kind == "only-in-new").text is None
+
+
+def test_invalid_base64_skips_text_but_keeps_field_diffs(tmp_path: Path) -> None:
+    """Invalid base64 gives no text facts, a file error and still field diffs."""
+    o, n = sides(
+        tmp_path,
+        [f("I", "I", "root"), f("a", "I", "a.pdf", title="x")],
+        [f("I", "I", "root"), f("a", "I", "a.pdf", title="y")],
+    )
+    data = n.read_text(encoding="utf-8").replace("aGVsbG8=", "!!notbase64")
+    n.write_text(data, encoding="utf-8")
+    _, facts = compare_item(o, n, CFG)
+    pair = next(
+        p for p in facts if p.path_old == p.path_new and (p.path_old or "").endswith("a.pdf")
+    )
+    assert pair.text is None
+    assert any(e.code == ErrorCode.INVALID_BASE64 for e in pair.errors)
+    assert [d.path for d in pair.field_diffs] == ["title"]
+    assert not pair.identical
+
+
+def test_whitespace_only_change_is_identical(tmp_path: Path) -> None:
+    """Whitespace-only change leaves the pair identical."""
+    o, n = sides(
+        tmp_path,
+        [f("I", "I", "root"), f("a", "I", "a.pdf", text="a b")],
+        [f("I", "I", "root"), f("a", "I", "a.pdf", text="a \n  b ")],
+    )
+    result, facts = compare_item(o, n, CFG)
+    assert all(p.identical for p in facts)
+    assert result.files_identical == 2
+
+
+def test_text_change_is_not_identical_and_hinted(tmp_path: Path) -> None:
+    """New text where old had none raises new-more-text; reverse raises new-less-text."""
+    o, n = sides(
+        tmp_path,
+        [f("I", "I", "root"), f("a", "I", "a.pdf", text="")],
+        [f("I", "I", "root"), f("a", "I", "a.pdf", text="something new")],
+    )
+    _, facts = compare_item(o, n, CFG)
+    pair = next(p for p in facts if p.path_old and p.path_old.endswith("a.pdf"))
+    assert "new-more-text" in pair.hints
+    assert not pair.identical
+    _, back = compare_item(n, o, CFG)
+    pair = next(p for p in back if p.path_old and p.path_old.endswith("a.pdf"))
+    assert "new-less-text" in pair.hints
+
+
+def test_field_filled_and_emptied_hints(tmp_path: Path) -> None:
+    """A field present only in NEW is filled; only in OLD is emptied."""
+    o, n = sides(
+        tmp_path,
+        [f("I", "I", "root"), f("a", "I", "a.pdf", author="bob")],
+        [f("I", "I", "root"), f("a", "I", "a.pdf", title="t")],
+    )
+    _, facts = compare_item(o, n, CFG)
+    pair = next(p for p in facts if p.path_old and p.path_old.endswith("a.pdf"))
+    assert {"new-filled-field", "new-emptied-field"} <= set(pair.hints)
+
+
+def test_subfile_count_hints(tmp_path: Path) -> None:
+    """An extra child in NEW raises new-more-subfiles; a missing one new-fewer-subfiles."""
+    base = [f("I", "I", "root"), f("a", "I", "a.pdf")]
+    extra = [*base, f("c", "a", "c.pdf")]
+    o, n = sides(tmp_path, base, extra)
+    _, facts = compare_item(o, n, CFG)
+    pair = next(p for p in facts if p.path_old and p.path_old.endswith("a.pdf"))
+    assert "new-more-subfiles" in pair.hints
+    assert not pair.identical
+    _, back = compare_item(n, o, CFG)
+    pair = next(p for p in back if p.path_old and p.path_old.endswith("a.pdf"))
+    assert "new-fewer-subfiles" in pair.hints
