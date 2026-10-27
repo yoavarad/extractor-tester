@@ -1,0 +1,6 @@
+description: 'Custom verification: src-file-length'
+name: src-file-length
+parallel: true
+requires: []
+timeout: 30
+trigger: git:pre-push
