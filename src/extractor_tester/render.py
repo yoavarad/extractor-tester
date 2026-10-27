@@ -28,7 +28,10 @@ code,pre{background:#f4f4f4}
 {%- for e in m.examples %}
 <div>item {{ e.item_id }}
 {%- if e.path_old or e.path_new %} &middot; {{ e.path_old }} / {{ e.path_new }}{% endif %}
- &middot; old <code>{{ e.old_value }}</code> &middot; new <code>{{ e.new_value }}</code>
+
+{%- if e.similarity is not none %} &middot; similarity <code>{{ e.similarity }}</code>{% endif %}
+{%- if e.similarity is none %}
+ &middot; old <code>{{ e.old_value }}</code> &middot; new <code>{{ e.new_value }}</code>{% endif %}
 {%- if e.note %} &middot; {{ e.note }}{% endif %}</div>
 {%- endfor %}
 </details>

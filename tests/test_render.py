@@ -43,3 +43,31 @@ def test_import_graph() -> None:
     )
     out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True)
     assert out.stdout.strip() == "[]"
+
+
+def test_similarity_label(tmp_path: Path) -> None:
+    """Examples with a similarity render it, not as an old value."""
+    import json
+
+    rep = json.loads((FIX / "report.json").read_text("utf-8"))
+
+    def walk(o: object) -> None:
+        if isinstance(o, dict):
+            if "item_id" in o and "path_old" in o:
+                o["similarity"] = 0.42
+                o["old_value"] = None
+                o["new_value"] = None
+            for v in o.values():
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+
+    walk(rep)
+    src = tmp_path / "r.json"
+    src.write_text(json.dumps(rep), "utf-8")
+    out = tmp_path / "r.html"
+    render(src, out)
+    html = out.read_text("utf-8")
+    assert "similarity <code>0.42</code>" in html
+    assert "old <code>" not in html

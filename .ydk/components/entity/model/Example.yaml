@@ -22,6 +22,10 @@ fields:
     type: any
     nullable: true
     description: New value or snippet (truncated)
+  similarity:
+    type: number
+    nullable: true
+    description: Edit similarity score for lowest-similarity examples
   note:
     type: string
     nullable: true

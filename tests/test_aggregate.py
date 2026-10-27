@@ -186,6 +186,8 @@ def test_lowest_similarity_examples_tie_order() -> None:
         agg.add_pair(_tpair(item, s))
     ex = agg.finish().families[0].relations[0].examples
     assert [e.item_id for e in ex] == ["e", "a", "b"]
+    assert [e.similarity for e in ex] == [0.1, 0.5, 0.5]
+    assert all(e.old_value is None for e in ex)
 
 
 def test_cut_line_warning_and_hints() -> None:
