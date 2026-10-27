@@ -1,0 +1,1 @@
+Scaffold only. Reviewer subagent over diff: no blocking findings (B008 concern unfounded; ruff passes).

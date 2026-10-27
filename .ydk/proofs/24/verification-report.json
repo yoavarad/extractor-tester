@@ -1,0 +1,18 @@
+{
+  "task_id": null,
+  "timestamp": "2026-10-26T22:15:50Z",
+  "checks": [
+    {
+      "name": "tests",
+      "passed": true,
+      "output": "============================= test session starts =============================\nplatform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.7.0 -- C:\\Users\\yoava\\Projects\\extractor-tester\\.ydk\\worktrees\\24\\.venv\\Scripts\\python.exe\ncachedir: .pytest_cache\nrootdir: C:\\Users\\yoava\\Projects\\extractor-tester\\.ydk\\worktrees\\24\nconfigfile: pyproject.toml\ncollecting ... collected 21 items\n\ntests/test_smoke.py::test_module_imports[config] PASSED                  [  4%]\ntests/test_smoke.py::test_module_imports[loader] PASSED                  [  9%]\ntests/test_smoke.py::test_module_imports[decode] PASSED                  [ 14%]\ntests/test_smoke.py::test_module_imports[families] PASSED                [ 19%]\ntests/test_smoke.py::test_module_imports[fields] PASSED                  [ 23%]\ntests/test_smoke.py::test_module_imports[tree] PASSED                    [ 28%]\ntests/test_smoke.py::test_module_imports[matching.matcher] PASSED        [ 33%]\ntests/test_smoke.py::test_module_imports[matching.tiers] PASSED          [ 38%]\ntests/test_smoke.py::test_module_imports[compare.fields] PASSED          [ 42%]\ntests/test_smoke.py::test_module_imports[compare.text] PASSED            [ 47%]\ntests/test_smoke.py::test_module_imports[compare.item] PASSED            [ 52%]\ntests/test_smoke.py::test_module_imports[aggregate] PASSED               [ 57%]\ntests/test_smoke.py::test_module_imports[output] PASSED                  [ 61%]\ntests/test_smoke.py::test_module_imports[render] PASSED                  [ 66%]\ntests/test_smoke.py::test_module_imports[runner] PASSED                  [ 71%]\ntests/test_smoke.py::test_module_imports[profiling] PASSED               [ 76%]\ntests/test_smoke.py::test_module_imports[models] PASSED                  [ 80%]\ntests/test_smoke.py::test_module_imports[cli] PASSED                     [ 85%]\ntests/test_smoke.py::test_compare_help_lists_arguments PASSED            [ 90%]\ntests/test_smoke.py::test_compare_stub_exits_zero PASSED                 [ 95%]\ntests/test_smoke.py::test_write_item_round_trips_text PASSED             [100%]\n\n============================= 21 passed in 0.20s ==============================",
+      "duration_seconds": 0.5,
+      "detail": {
+        "level": "all",
+        "test_count": 21
+      }
+    }
+  ],
+  "all_passed": true,
+  "total_duration_seconds": 0.7
+}

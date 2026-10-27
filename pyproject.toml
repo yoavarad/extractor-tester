@@ -1,0 +1,34 @@
+[project]
+name = "extractor-tester"
+version = "0.1.0"
+description = "Compare JSON outputs of two extraction pipelines"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "typer",
+    "pydantic>=2",
+    "PyYAML",
+    "rapidfuzz",
+    "Jinja2",
+]
+
+[project.scripts]
+extractor-tester = "extractor_tester.cli:app"
+
+[dependency-groups]
+dev = ["pytest", "ruff", "ty"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/extractor_tester"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = ["slow: slow benchmark tests, excluded by default"]
+addopts = '-m "not slow"'
+
+[tool.ty.environment]
+python-version = "3.12"
