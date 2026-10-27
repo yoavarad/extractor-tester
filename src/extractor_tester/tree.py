@@ -213,7 +213,7 @@ def _record(
         path=path,
         fields=flat,
         text=text,
-        text_hash=text_hash(normalize(text), config.text_hash_chars),
+        text_hash=None if bad else text_hash(normalize(text), config.text_hash_chars),
         decode_errors=bad,
         children=children,
         missing_fields=missing,
