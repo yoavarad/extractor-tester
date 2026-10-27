@@ -1,5 +1,7 @@
 """Tests for flatten and classify."""
 
+import pytest
+
 from extractor_tester.config import CompareConfig
 from extractor_tester.fields import classify, flatten
 
@@ -40,3 +42,16 @@ def test_classify() -> None:
     for p in ("fileId", "parentId", "rootId", "text"):
         assert classify(p, c) == "ignored"
     assert classify("other", c) == "specific"
+
+
+def test_flatten_collision_raises() -> None:
+    """Literal dotted key colliding with nested path raises, naming the path."""
+    with pytest.raises(ValueError, match=r"a.b"):
+        flatten({"a": {"b": 1}, "a.b": 2})
+
+
+def test_classify_ignore_beats_generic() -> None:
+    """A path covered by both ignore and generic is ignored."""
+    c = cfg()
+    c.generic_fields.append("skip")
+    assert classify("skip.x", c) == "ignored"

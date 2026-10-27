@@ -6,7 +6,10 @@ from extractor_tester.config import CompareConfig
 
 
 def flatten(obj: dict[str, Any]) -> dict[str, Any]:
-    """Flatten nested dicts to dotted paths; lists, scalars, empty dicts are values."""
+    """Flatten nested dicts to dotted paths; lists, scalars, empty dicts are values.
+
+    Raises ValueError if two keys flatten to the same dotted path.
+    """
     out: dict[str, Any] = {}
     stack: list[tuple[str, dict[str, Any]]] = [("", obj)]
     while stack:
@@ -16,6 +19,8 @@ def flatten(obj: dict[str, Any]) -> dict[str, Any]:
             if isinstance(value, dict) and value:
                 stack.append((path, value))
             else:
+                if path in out:
+                    raise ValueError(f"flatten path collision: {path!r}")
                 out[path] = value
     return out
 
