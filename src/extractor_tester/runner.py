@@ -5,6 +5,7 @@ from __future__ import annotations
 import multiprocessing as mp
 import os
 import queue
+import signal
 import sys
 import time
 import traceback
@@ -71,6 +72,7 @@ def compare_one(item: DiscoveredItem, config: CompareConfig) -> tuple[ItemResult
 
 WINDOW_PER_WORKER = 32
 _POLL_SECONDS = 0.5
+_PROGRESS_SECONDS = 0.1
 
 _Result = tuple[ItemResult, list[PairFacts], int]
 
@@ -78,6 +80,10 @@ _Result = tuple[ItemResult, list[PairFacts], int]
 def _worker_main(slot: int, config: CompareConfig, inbox: Queue, outbox: Queue) -> None:
     """Worker loop: take one (index, item) at a time until None, return results with the pid."""
     pid = os.getpid()
+    # Ctrl-C reaches the whole console group; the main process alone stops the workers.
+    for name in ("SIGINT", "SIGBREAK"):
+        if hasattr(signal, name):
+            signal.signal(getattr(signal, name), signal.SIG_IGN)
     while (msg := inbox.get()) is not None:
         index, item = msg
         result, facts = compare_one(item, config)
@@ -140,6 +146,13 @@ def compare_all(
                 p.join()
 
 
+def _progress(done: int, total: int, t0: float) -> None:
+    """Rewrite the single progress line on stderr."""
+    elapsed = time.perf_counter() - t0
+    sys.stderr.write(f"\rcompared {done}/{total} items, {elapsed:.1f}s elapsed")
+    sys.stderr.flush()
+
+
 def _execute(
     old: Path, new: Path, config_path: Path, out: Path, overwrite: bool, workers: int
 ) -> None:
@@ -149,13 +162,23 @@ def _execute(
     discovery = discover(old, new)
     prepare_out(out, overwrite)
     agg = Aggregator(config)
+    total = len(discovery.items)
+    last_shown = 0.0
+    _progress(0, total, t0)
     with pairs_writer(out) as pw, items_writer(out) as iw:
-        for result, facts, _pid in compare_all(discovery.items, config, workers):
+        for done, (result, facts, _pid) in enumerate(
+            compare_all(discovery.items, config, workers), start=1
+        ):
             for pf in facts:
                 pw.write(pf)
                 agg.add_pair(pf)
             iw.write(result)
             agg.add_item(result)
+            if done == total or time.monotonic() - last_shown >= _PROGRESS_SECONDS:
+                _progress(done, total, t0)
+                last_shown = time.monotonic()
+    if total:
+        sys.stderr.write("\n")
     report = agg.finish(
         tool_version=_tool_version(),
         started_at=started_at,
@@ -199,6 +222,9 @@ def run(
     del profile
     try:
         _execute(old, new, config_path, out, overwrite, workers or os.cpu_count() or 1)
+    except KeyboardInterrupt:
+        print("\nInterrupted", file=sys.stderr)
+        return 130
     except ConfigError as e:
         print(f"{ErrorCode.INVALID_CONFIG.value}: {e}", file=sys.stderr)
         return 1
