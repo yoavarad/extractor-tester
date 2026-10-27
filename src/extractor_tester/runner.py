@@ -2,15 +2,16 @@
 
 from __future__ import annotations
 
+import contextlib
 import multiprocessing as mp
 import os
-import queue
 import sys
 import time
 import traceback
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from importlib.metadata import PackageNotFoundError, version
+from multiprocessing.connection import wait
 from typing import TYPE_CHECKING
 
 from extractor_tester.aggregate import Aggregator
@@ -29,8 +30,8 @@ from extractor_tester.render import render
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
+    from multiprocessing.connection import _ConnectionBase as Connection  # Pipe end, any OS
     from multiprocessing.process import BaseProcess
-    from multiprocessing.queues import Queue
     from pathlib import Path
 
     from extractor_tester.config import CompareConfig
@@ -72,8 +73,16 @@ def compare_one(item: DiscoveredItem, config: CompareConfig) -> tuple[ItemResult
 
 WINDOW_PER_WORKER = 32
 _POLL_SECONDS = 0.5
-# Test hook: a worker given the item with this id exits abruptly, simulating a crash.
+# A worker that has not signalled ready this long after spawn is killed and replaced.
+STARTUP_TIMEOUT_SECONDS = 120.0
+# Consecutive startup failures on one slot before the run gives up (a broken environment).
+_MAX_STARTUP_FAILURES = 3
+# Test hooks: a worker given the item with this id exits abruptly (crash) or sends a
+# corrupt payload and exits (killed mid-write); the worker that first creates the file at
+# the hang path hangs during startup.
 CRASH_ITEM_ENV = "EXTRACTOR_TESTER_TEST_CRASH_ITEM"
+GARBAGE_ITEM_ENV = "EXTRACTOR_TESTER_TEST_GARBAGE_ITEM"
+HANG_STARTUP_ENV = "EXTRACTOR_TESTER_TEST_HANG_STARTUP"
 
 _Result = tuple[ItemResult, list[PairFacts], int]
 
@@ -85,23 +94,49 @@ class WorkerStats:
     replaced: int = 0
 
 
-def _worker_main(slot: int, config: CompareConfig, inbox: Queue, outbox: Queue) -> None:
-    """Worker loop: announce readiness (index -1), then take one (index, item) at a time until
-    None and return results with the pid."""
+def _startup_hook() -> None:
+    path = os.environ.get(HANG_STARTUP_ENV)
+    if path is None:
+        return
+    try:
+        os.close(os.open(path, os.O_CREAT | os.O_EXCL))
+    except FileExistsError:
+        return
+    while True:
+        time.sleep(60)
+
+
+def _worker_main(config: CompareConfig, conn: Connection) -> None:
+    """Worker loop on its own pipe: send ready (index -1), then take one (index, item) at a
+    time until None and send back (index, result, facts, pid)."""
+    _startup_hook()
     pid = os.getpid()
     crash_item = os.environ.get(CRASH_ITEM_ENV)
-    outbox.put((slot, -1, None, None, pid))
-    while (msg := inbox.get()) is not None:
+    garbage_item = os.environ.get(GARBAGE_ITEM_ENV)
+    conn.send((-1, None, None, pid))
+    while (msg := conn.recv()) is not None:
         index, item = msg
-        if crash_item is not None and item.item_id == crash_item:
+        if item.item_id == crash_item:
+            os._exit(1)
+        if item.item_id == garbage_item:
+            conn.send_bytes(b"\x80\x05not a pickle")
             os._exit(1)
         result, facts = compare_one(item, config)
-        outbox.put((slot, index, result, facts, pid))
+        conn.send((index, result, facts, pid))
 
 
 def _error_result(item_id: str, code: ErrorCode, message: str, seconds: float) -> ItemResult:
     err = ErrorRecord(code=code, scope="item", severity="error", item_id=item_id, message=message)
     return _one_sided(item_id, "error").model_copy(update={"errors": [err], "seconds": seconds})
+
+
+@dataclass
+class _Slot:
+    proc: BaseProcess
+    conn: Connection
+    started: float
+    ready: bool = False
+    startup_failures: int = 0
 
 
 def compare_all(
@@ -112,105 +147,122 @@ def compare_all(
 ) -> Iterator[_Result]:
     """Compare items in worker processes; yield (result, facts, worker pid) in input order.
 
-    Each worker holds at most one item. Dispatch runs at most workers x WINDOW_PER_WORKER
-    items ahead of the oldest unfinished item, which bounds the buffered results. A worker
-    that dies or holds an item past item_timeout_seconds is replaced; only its item gets
-    WORKER_CRASHED or ITEM_TIMEOUT. Replacements are counted in stats.
+    Each worker has its own pipe and holds at most one item. Dispatch runs at most
+    workers x WINDOW_PER_WORKER items ahead of the oldest unfinished item, which bounds the
+    buffered results. A worker that dies, sends a corrupt message or holds an item past
+    item_timeout_seconds is replaced with a fresh pipe; only its item gets WORKER_CRASHED
+    or ITEM_TIMEOUT. A result already readable from the pipe always wins over a timeout.
+    A worker not ready within STARTUP_TIMEOUT_SECONDS is replaced. Replacements are
+    counted in stats.
     """
     if workers < 1:
         raise ValueError(f"workers must be >= 1, got {workers}")
     stats = stats if stats is not None else WorkerStats()
     ctx = mp.get_context("spawn")
-    outbox: Queue = ctx.Queue()
-    inboxes: list[Queue] = []
-    procs: list[BaseProcess] = []
+    slots: list[_Slot] = []
 
-    def start(slot: int) -> None:
-        inbox: Queue = ctx.Queue()
-        proc = ctx.Process(target=_worker_main, args=(slot, config, inbox, outbox), daemon=True)
+    def start(i: int, startup_failures: int = 0) -> None:
+        parent, child = ctx.Pipe()
+        proc = ctx.Process(target=_worker_main, args=(config, child), daemon=True)
         proc.start()
-        if slot < len(procs):
-            inboxes[slot], procs[slot] = inbox, proc
+        child.close()
+        slot = _Slot(proc, parent, time.monotonic(), startup_failures=startup_failures)
+        if i < len(slots):
+            slots[i] = slot
         else:
-            inboxes.append(inbox)
-            procs.append(proc)
+            slots.append(slot)
 
-    ready: set[int] = set()  # slots whose current worker has started up
+    def replace(i: int, startup_failures: int = 0) -> None:
+        old = slots[i]
+        if old.proc.is_alive():
+            old.proc.terminate()
+        old.proc.join()
+        old.conn.close()
+        stats.replaced += 1
+        start(i, startup_failures)
+
     held: dict[int, tuple[int, float]] = {}  # worker slot -> (item index, since)
     buffer: dict[int, _Result] = {}
     window = workers * WINDOW_PER_WORKER
     timeout = config.item_timeout_seconds
+
+    def read(i: int) -> bool:
+        """Read every message waiting on slot i; False if the pipe is broken or corrupt."""
+        s = slots[i]
+        try:
+            while s.conn.poll():
+                index, result, facts, pid = s.conn.recv()
+                if index == -1:
+                    s.ready = True
+                    s.startup_failures = 0
+                elif held.get(i, (None,))[0] == index:
+                    del held[i]
+                    buffer[index] = (result, facts, pid)
+        except Exception:  # broken pipe or any corrupt payload: the channel is unusable
+            return False
+        return True
+
     next_dispatch = next_write = 0
     try:
-        for slot in range(workers):
-            start(slot)
+        for i in range(workers):
+            start(i)
         while next_write < len(items):
             limit = min(len(items), next_write + window)
-            for slot in range(workers):
-                if slot not in ready or slot in held or next_dispatch >= limit:
+            for i, s in enumerate(slots):
+                if not s.ready or i in held or next_dispatch >= limit:
                     continue
-                inboxes[slot].put((next_dispatch, items[next_dispatch]))
-                held[slot] = (next_dispatch, time.monotonic())
-                next_dispatch += 1
-            # Drain every queued message before the timeout pass, so a finished item is
-            # never timed out just because its result waited behind others.
-            wait: float | None = _POLL_SECONDS
-            while True:
                 try:
-                    msg = outbox.get(timeout=wait) if wait else outbox.get_nowait()
-                except queue.Empty:
-                    break
-                wait = None
-                slot, index, result, facts, pid = msg
-                if index == -1:
-                    if procs[slot].pid == pid:
-                        ready.add(slot)
-                # A result from a worker already given up on (timed out) is stale: drop it.
-                elif held.get(slot, (None,))[0] == index:
-                    del held[slot]
-                    buffer[index] = (result, facts, pid)
-            now = time.monotonic()
-            for slot in range(workers):
-                if slot not in held and not procs[slot].is_alive():
-                    procs[slot].join()
-                    if slot not in ready:  # startup failure would repeat on every respawn
-                        raise RuntimeError("worker process exited during startup")
-                    ready.discard(slot)
-                    stats.replaced += 1
-                    start(slot)
-            for slot, (index, since) in list(held.items()):
-                proc = procs[slot]
+                    s.conn.send((next_dispatch, items[next_dispatch]))
+                except OSError:  # worker died while idle; the item stays undispatched
+                    replace(i)
+                    continue
+                held[i] = (next_dispatch, time.monotonic())
+                next_dispatch += 1
+            wait([s.conn for s in slots], timeout=_POLL_SECONDS)
+            # Per slot: snapshot liveness and clock, then read everything already sent, so a
+            # result written before the snapshot always wins over a crash or timeout verdict.
+            for i, s in enumerate(slots):
+                alive = s.proc.is_alive()
+                now = time.monotonic()
+                alive = read(i) and alive
+                if i not in held:
+                    late = now - s.started > STARTUP_TIMEOUT_SECONDS
+                    if s.ready and not alive:
+                        replace(i)
+                    elif not s.ready and (not alive or late):
+                        if s.startup_failures + 1 >= _MAX_STARTUP_FAILURES:
+                            raise RuntimeError("worker processes keep failing during startup")
+                        replace(i, s.startup_failures + 1)
+                    continue
+                index, since = held[i]
                 item_id = items[index].item_id
-                if not proc.is_alive():
-                    proc.join()
+                if not alive:
                     code = ErrorCode.WORKER_CRASHED
                     message = f"item {item_id}: worker process crashed"
                 elif now - since > timeout:
-                    proc.terminate()
-                    proc.join()
                     code = ErrorCode.ITEM_TIMEOUT
                     message = f"item {item_id}: not finished after {timeout} s"
                 else:
                     continue
                 result = _error_result(item_id, code, message, now - since)
-                buffer[index] = (result, [], proc.pid or 0)
-                del held[slot]
-                ready.discard(slot)
-                stats.replaced += 1
-                start(slot)
+                buffer[index] = (result, [], s.proc.pid or 0)
+                del held[i]
+                replace(i)
             while next_write in buffer:
                 yield buffer.pop(next_write)
                 next_write += 1
     finally:
-        for inbox in inboxes:
-            inbox.put(None)
+        for s in slots:
+            with contextlib.suppress(OSError):
+                s.conn.send(None)
         deadline = time.monotonic() + 5
-        for p in procs:
-            if p.pid is not None:
-                p.join(timeout=max(0.0, deadline - time.monotonic()))
-            if p.is_alive():
-                p.terminate()
-                p.join()
+        for s in slots:
+            if s.proc.pid is not None:
+                s.proc.join(timeout=max(0.0, deadline - time.monotonic()))
+            if s.proc.is_alive():
+                s.proc.terminate()
+                s.proc.join()
+            s.conn.close()
 
 
 def _execute(
