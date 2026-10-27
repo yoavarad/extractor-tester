@@ -1,5 +1,6 @@
-"""Matching tiers: the MatchTier contract and the name tier."""
+"""Matching tiers: the MatchTier contract, name, text-hash and type-family tiers."""
 
+from collections.abc import Callable, Hashable
 from typing import Literal, Protocol
 
 from extractor_tester.models import FilePair, FileRecord
@@ -48,6 +49,59 @@ class NameTier:
         old_rest = [o for o in old_children if id(o) not in used]
         new_rest = [n for n in new_children if id(n) not in used]
         return pairs, old_rest, new_rest
+
+
+class TextHashTier:
+    """Tier 2: same normalized-text hash and family, exactly one candidate per side."""
+
+    name = "text-hash"
+
+    def pair(self, old_children: list[FileRecord], new_children: list[FileRecord]) -> TierResult:
+        """Pair files whose (hash, family) key is unique on both sides; empty text never pairs."""
+        return _pair_unique(old_children, new_children, "text-hash", _hash_key)
+
+
+class TypeFamilyTier:
+    """Tier 3: exactly one unpaired file of a family on each side."""
+
+    name = "type-family"
+
+    def pair(self, old_children: list[FileRecord], new_children: list[FileRecord]) -> TierResult:
+        """Pair files whose family is unique on both sides."""
+        return _pair_unique(old_children, new_children, "type-family", lambda r: r.family)
+
+
+def _hash_key(rec: FileRecord) -> Hashable | None:
+    return None if rec.text_hash is None else (rec.text_hash, rec.family)
+
+
+def _pair_unique(
+    old: list[FileRecord],
+    new: list[FileRecord],
+    tier: Literal["text-hash", "type-family"],
+    key: Callable[[FileRecord], Hashable | None],
+) -> TierResult:
+    """Pair records whose key occurs exactly once on each side; None keys never pair."""
+    old_by: dict[Hashable, list[FileRecord]] = {}
+    new_by: dict[Hashable, list[FileRecord]] = {}
+    for recs, by in ((old, old_by), (new, new_by)):
+        for r in recs:
+            k = key(r)
+            if k is not None:
+                by.setdefault(k, []).append(r)
+    pairs: list[FilePair] = []
+    used: set[int] = set()
+    for o in old:
+        k = key(o)
+        if k is not None and len(old_by[k]) == 1 and len(new_by.get(k, ())) == 1:
+            n = new_by[k][0]
+            pairs.append(FilePair(kind="paired", old=o, new=n, tier=tier))
+            used.update((id(o), id(n)))
+    return (
+        pairs,
+        [o for o in old if id(o) not in used],
+        [n for n in new if id(n) not in used],
+    )
 
 
 def _pair_group(old: list[FileRecord], new: list[FileRecord]) -> list[_Match]:
