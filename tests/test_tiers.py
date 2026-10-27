@@ -41,10 +41,7 @@ def test_unique_names_pair_without_tie_break() -> None:
     pairs, old_rest, new_rest = NameTier().pair(
         [rec("o1", "a"), rec("o2", "b")], [rec("n1", "b"), rec("n2", "a"), rec("n3", "c")]
     )
-    assert [(p.old and p.old.file_id, p.new and p.new.file_id) for p in pairs] == [
-        ("o1", "n2"),
-        ("o2", "n1"),
-    ]
+    assert ids(pairs) == [("o1", "n2", "none"), ("o2", "n1", "none")]
     assert all(p.tier == "name" and p.kind == "paired" for p in pairs)
     assert old_rest == []
     assert [r.file_id for r in new_rest] == ["n3"]
@@ -140,10 +137,7 @@ def test_type_family_tier_pairs_single_per_family() -> None:
     old = [rec("o1", "a", family="pdf"), rec("o2", "b", family="image")]
     new = [rec("n1", "c", family="image"), rec("n2", "d", family="pdf")]
     pairs, old_rest, new_rest = TypeFamilyTier().pair(old, new)
-    assert [(p.old and p.old.file_id, p.new and p.new.file_id) for p in pairs] == [
-        ("o1", "n2"),
-        ("o2", "n1"),
-    ]
+    assert ids(pairs) == [("o1", "n2", "none"), ("o2", "n1", "none")]
     assert {p.tier for p in pairs} == {"type-family"}
     assert old_rest == []
     assert new_rest == []
