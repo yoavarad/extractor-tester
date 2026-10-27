@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import cProfile
 import multiprocessing as mp
 import os
 import queue
+import shutil
 import sys
 import time
 import traceback
@@ -75,17 +77,37 @@ _POLL_SECONDS = 0.5
 _Result = tuple[ItemResult, list[PairFacts], int]
 
 
-def _worker_main(slot: int, config: CompareConfig, inbox: Queue, outbox: Queue) -> None:
-    """Worker loop: take one (index, item) at a time until None, return results with the pid."""
+def _worker_main(
+    slot: int, config: CompareConfig, inbox: Queue, outbox: Queue, profile_dir: Path | None = None
+) -> None:
+    """Worker loop: take one (index, item) at a time until None, return results with the pid.
+
+    With profile_dir set, the loop runs under cProfile and dumps worker-<slot>.prof on exit.
+    """
     pid = os.getpid()
-    while (msg := inbox.get()) is not None:
-        index, item = msg
-        result, facts = compare_one(item, config)
-        outbox.put((slot, index, result, facts, pid))
+    prof = cProfile.Profile() if profile_dir is not None else None
+    if prof:
+        prof.enable()
+    try:
+        while (msg := inbox.get()) is not None:
+            index, item = msg
+            result, facts = compare_one(item, config)
+            outbox.put((slot, index, result, facts, pid))
+    finally:
+        if prof and profile_dir is not None:
+            prof.disable()
+            profile_dir.mkdir(parents=True, exist_ok=True)
+            target = profile_dir / f"worker-{slot}.prof"
+            tmp = target.with_suffix(".tmp")
+            prof.dump_stats(str(tmp))
+            tmp.replace(target)
 
 
 def compare_all(
-    items: Sequence[DiscoveredItem], config: CompareConfig, workers: int
+    items: Sequence[DiscoveredItem],
+    config: CompareConfig,
+    workers: int,
+    profile_dir: Path | None = None,
 ) -> Iterator[_Result]:
     """Compare items in worker processes; yield (result, facts, worker pid) in input order.
 
@@ -98,7 +120,9 @@ def compare_all(
     outbox: Queue = ctx.Queue()
     inboxes: list[Queue] = [ctx.Queue() for _ in range(workers)]
     procs: list[BaseProcess] = [
-        ctx.Process(target=_worker_main, args=(i, config, inboxes[i], outbox), daemon=True)
+        ctx.Process(
+            target=_worker_main, args=(i, config, inboxes[i], outbox, profile_dir), daemon=True
+        )
         for i in range(workers)
     ]
     held: dict[int, tuple[int, float]] = {}  # worker slot -> (item index, since)
@@ -141,16 +165,26 @@ def compare_all(
 
 
 def _execute(
-    old: Path, new: Path, config_path: Path, out: Path, overwrite: bool, workers: int
+    old: Path,
+    new: Path,
+    config_path: Path,
+    out: Path,
+    overwrite: bool,
+    workers: int,
+    profile: bool = False,
 ) -> None:
     t0 = time.perf_counter()
     started_at = datetime.now(UTC)
     config = load_config(config_path)
     discovery = discover(old, new)
     prepare_out(out, overwrite)
+    if profile:
+        shutil.rmtree(out / "profile", ignore_errors=True)
     agg = Aggregator(config)
     with pairs_writer(out) as pw, items_writer(out) as iw:
-        for result, facts, _pid in compare_all(discovery.items, config, workers):
+        for result, facts, _pid in compare_all(
+            discovery.items, config, workers, out / "profile" if profile else None
+        ):
             for pf in facts:
                 pw.write(pf)
                 agg.add_pair(pf)
@@ -172,6 +206,7 @@ def _execute(
             text_seconds_by_family={},
             slowest_items=[],
             workers_replaced=0,
+            profile_dir="profile" if profile else None,
         ),
     )
     report.warnings.extend(f"{w.code.value}: {w.message}" for w in discovery.warnings)
@@ -194,11 +229,10 @@ def run(
 ) -> int:
     """Execute a compare run in worker processes and return the exit code.
 
-    workers defaults to the CPU count; profile is accepted for the CLI contract only.
+    workers defaults to the CPU count; profile writes out/profile/worker-<n>.prof per worker.
     """
-    del profile
     try:
-        _execute(old, new, config_path, out, overwrite, workers or os.cpu_count() or 1)
+        _execute(old, new, config_path, out, overwrite, workers or os.cpu_count() or 1, profile)
     except ConfigError as e:
         print(f"{ErrorCode.INVALID_CONFIG.value}: {e}", file=sys.stderr)
         return 1
