@@ -1,7 +1,5 @@
 """Tests for extractor_tester.compare.text."""
 
-import pytest
-
 from extractor_tester.compare.text import compare_text
 from extractor_tester.config import CompareConfig
 
@@ -137,12 +135,6 @@ def test_region_longer_than_window_is_not_mispaired() -> None:
     """A deletion longer than the alignment window leaves the new side empty."""
     f = compare_text("Z" * 2000 + " TAIL", "TAIL", _cfg())
     assert f.snippets == [{"old": "Z" * 300, "new": ""}]
-
-
-def test_over_threshold_raises_not_implemented() -> None:
-    """Texts above full_compare_max_chars need the buffered method (not yet built)."""
-    with pytest.raises(NotImplementedError):
-        compare_text("a" * 101, "b" * 50, _cfg(full_compare_max_chars=100))
 
 
 def test_over_threshold_equal_still_fast_path() -> None:

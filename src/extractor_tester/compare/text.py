@@ -1,4 +1,4 @@
-"""Text comparison for one file pair: fast path and full method (see metrics.md)."""
+"""Text comparison for one file pair: fast path, full and buffered methods (see metrics.md)."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any
 
 from rapidfuzz.distance import Indel, Opcode
 
+from extractor_tester.compare.buffered import compare_buffered
 from extractor_tester.decode import normalize
 from extractor_tester.models import TextFacts
 
@@ -44,8 +45,26 @@ def compare_text(old: str, new: str, config: CompareConfig) -> TextFacts:
     elif max(len(old), len(new)) <= config.full_compare_max_chars:
         facts = _full(na, nb, config)
     else:
-        raise NotImplementedError("buffered text comparison is not implemented yet")
-    return TextFacts(**base, **facts, seconds=time.perf_counter() - start)
+        facts = _buffered(old, new, na, nb, config)
+    return TextFacts(**{**base, **facts}, seconds=time.perf_counter() - start)
+
+
+def _buffered(old: str, new: str, na: str, nb: str, config: CompareConfig) -> dict[str, Any]:
+    """Compare two long, unequal texts by aligned line blocks."""
+    facts = compare_buffered(old, new, config)
+    words_a, words_b = set(na.split()), set(nb.split())
+    shared = len(words_a & words_b)
+    facts["method"] = "buffered"
+    facts["jaccard"] = shared / len(words_a | words_b)
+    facts["relation"] = _relation(
+        na,
+        nb,
+        facts["old_found_in_new"],
+        facts["new_found_in_old"],
+        shared,
+        config.containment_pct / 100,
+    )
+    return facts
 
 
 def _full(a: str, b: str, config: CompareConfig) -> dict[str, Any]:
