@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 from tests.helpers import write_item
-from tests.test_runner import CONFIG, folders, item_files
+from tests.runner_common import CONFIG, folders, item_files
 
 
 @pytest.fixture
