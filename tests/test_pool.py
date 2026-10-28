@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.test_runner import CONFIG, _three_items, folders
+from tests.runner_common import CONFIG, folders, three_items
 
 
 def _compare_all(tmp_path: Path, extra_config: str = "", workers: int = 2) -> tuple[list, int]:
@@ -13,7 +13,7 @@ def _compare_all(tmp_path: Path, extra_config: str = "", workers: int = 2) -> tu
     from extractor_tester.pool import WorkerStats, compare_all
 
     old, new = folders(tmp_path)
-    _three_items(old, new)
+    three_items(old, new)
     cfg_path = tmp_path / "c.yaml"
     cfg_path.write_text(CONFIG + extra_config, encoding="utf-8")
     stats = WorkerStats()
@@ -127,11 +127,11 @@ def test_workers_dying_before_taking_items_end_the_run(
     """Workers that die right after startup are respawned only a bounded number of times;
     the run then fails with INTERNAL_FAILURE instead of looping forever."""
     from extractor_tester.pool import DIE_BEFORE_TAKE_ENV
-    from tests.test_runner import invoke
+    from tests.runner_common import invoke
 
     monkeypatch.setenv(DIE_BEFORE_TAKE_ENV, "1")
     old, new = folders(tmp_path)
-    _three_items(old, new)
+    three_items(old, new)
     cfg_path = tmp_path / "c.yaml"
     cfg_path.write_text(CONFIG, encoding="utf-8")
     out = tmp_path / "out"

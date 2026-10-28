@@ -2,56 +2,11 @@
 
 import json
 from pathlib import Path
-from typing import Any
 
 import pytest
-from typer.testing import CliRunner
 
-from extractor_tester.cli import app
 from tests.helpers import write_item
-
-CONFIG = "name_field: name\nmime_primary_field: mp\nmime_secondary_field: ms\n"
-
-
-def f(fid: str, parent: str, name: str, **extra: object) -> dict[str, object]:
-    """Build one file entry; the root has parentId equal to its own id."""
-    base = {"fileId": fid, "parentId": parent, "name": name, "mp": "application", "ms": "pdf"}
-    return {**base, "text": "hello", **extra}
-
-
-def item_files(item_id: str, author: str = "x") -> list[dict[str, object]]:
-    """A root with one child."""
-    return [
-        f(item_id, item_id, "root", rootId=item_id),
-        f(f"{item_id}-a", item_id, "a.pdf", rootId=item_id, author=author),
-    ]
-
-
-@pytest.fixture
-def cfg(tmp_path: Path) -> Path:
-    """Write a minimal compare-config."""
-    p = tmp_path / "c.yaml"
-    p.write_text(CONFIG, encoding="utf-8")
-    return p
-
-
-def folders(tmp_path: Path) -> tuple[Path, Path]:
-    """Create empty OLD and NEW folders."""
-    old, new = tmp_path / "old", tmp_path / "new"
-    old.mkdir()
-    new.mkdir()
-    return old, new
-
-
-def invoke(*args: object) -> tuple[int, str]:
-    """Run the CLI and return exit code plus combined output."""
-    result = CliRunner().invoke(app, [str(a) for a in args])
-    return result.exit_code, result.output
-
-
-def read_jsonl(path: Path) -> list[dict[str, Any]]:
-    """Parse a JSONL file."""
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+from tests.runner_common import folders, invoke, item_files, read_jsonl
 
 
 def test_folders_of_three_items_write_all_outputs(tmp_path: Path, cfg: Path) -> None:
@@ -179,13 +134,6 @@ def test_unexpected_failure_is_internal_failure(
     assert len(read_jsonl(out / "items.jsonl")) == 1
 
 
-def _run_with_workers(tmp_path: Path, cfg: Path, old: Path, new: Path, workers: int) -> Path:
-    out = tmp_path / f"out{workers}"
-    code, output = invoke("compare", old, new, "--config", cfg, "--out", out, "--workers", workers)
-    assert code == 0, output
-    return out
-
-
 def _html_run(tmp_path: Path, cfg: Path, item_id: str, name: str, text: str) -> Path:
     old, new = folders(tmp_path)
     for d in (old, new):
@@ -197,76 +145,6 @@ def _html_run(tmp_path: Path, cfg: Path, item_id: str, name: str, text: str) -> 
     code, output = invoke("compare", old, new, "--config", cfg, "--out", out)
     assert code == 0, output
     return out
-
-
-_TIMING_KEYS = {"seconds", "stage_seconds"}
-
-
-def _untimed(value: object) -> object:
-    """Drop per-run timing fields, which differ between any two runs."""
-    if isinstance(value, dict):
-        return {k: _untimed(v) for k, v in value.items() if k not in _TIMING_KEYS}
-    if isinstance(value, list):
-        return [_untimed(v) for v in value]
-    return value
-
-
-def _jsonl_untimed(path: Path) -> list[str]:
-    return [json.dumps(_untimed(json.loads(line))) for line in path.read_bytes().splitlines()]
-
-
-def test_outputs_identical_for_one_and_four_workers(tmp_path: Path, cfg: Path) -> None:
-    """pairs, items and report are identical for 1 and 4 workers, apart from timings.
-
-    Per rules/deterministic-output, report.json excludes started_at and run_stats; per-item
-    and per-pair timing fields vary run to run regardless of worker count.
-    """
-    old, new = folders(tmp_path)
-    for n in range(12):
-        i = f"item{n:02d}"
-        write_item(old, i, item_files(i))
-        write_item(new, i, item_files(i, author="y" if n % 3 == 0 else "x"))
-    (new / "item05.json").write_text("{not json", encoding="utf-8")
-    write_item(old, "gone", item_files("gone"))
-    o1 = _run_with_workers(tmp_path, cfg, old, new, 1)
-    o4 = _run_with_workers(tmp_path, cfg, old, new, 4)
-    for name in ("pairs.jsonl", "items.jsonl"):
-        assert _jsonl_untimed(o1 / name) == _jsonl_untimed(o4 / name)
-
-    def stable(out: Path) -> bytes:
-        report = json.loads((out / "report.json").read_text(encoding="utf-8"))
-        del report["started_at"], report["run_stats"]
-        return json.dumps(report).encode()
-
-    assert stable(o1) == stable(o4)
-    r4 = json.loads((o4 / "report.json").read_text(encoding="utf-8"))
-    assert r4["run_stats"]["workers"] == 4
-
-
-def test_single_worker_runs_in_separate_process(tmp_path: Path) -> None:
-    """With one worker the comparison runs in a child process, results in input order."""
-    import os
-
-    from extractor_tester.config import load_config
-    from extractor_tester.loader import discover
-    from extractor_tester.pool import compare_all
-
-    old, new = folders(tmp_path)
-    for i in ("b", "a"):
-        write_item(old, i, item_files(i))
-        write_item(new, i, item_files(i))
-    cfg_path = tmp_path / "c.yaml"
-    cfg_path.write_text(CONFIG, encoding="utf-8")
-    results = list(compare_all(discover(old, new).items, load_config(cfg_path), 1))
-    assert [r.item_id for r, _, _ in results] == ["a", "b"]
-    assert all(pid != os.getpid() for _, _, pid in results)
-
-
-def test_workers_zero_exits_2(tmp_path: Path, cfg: Path) -> None:
-    """--workers 0 is a usage error."""
-    old, new = folders(tmp_path)
-    code, _ = invoke("compare", old, new, "--config", cfg, "--out", tmp_path / "o", "--workers", 0)
-    assert code == 2
 
 
 def test_report_html_written_and_rerender_is_byte_identical(tmp_path: Path, cfg: Path) -> None:
@@ -311,83 +189,3 @@ def test_path_shaped_item_id_creates_nothing_outside_out(tmp_path: Path, cfg: Pa
     created = {p for p in tmp_path.rglob("*")} - before
     assert all(out in p.parents or p == out for p in created)
     assert not (box / "x").exists()
-
-
-def _three_items(old: Path, new: Path) -> None:
-    for i in ("a", "b", "c"):
-        write_item(old, i, item_files(i))
-        write_item(new, i, item_files(i, author="y"))
-
-
-def _item_errors(out: Path) -> dict[str, list[str]]:
-    return {r["item_id"]: [e["code"] for e in r["errors"]] for r in read_jsonl(out / "items.jsonl")}
-
-
-def test_slow_item_times_out_and_others_are_compared(tmp_path: Path) -> None:
-    """A 1 s timeout on two different 300,000-char texts yields ITEM_TIMEOUT for that item only."""
-    import random
-
-    cfg_path = tmp_path / "c.yaml"
-    cfg_path.write_text(
-        CONFIG + "item_timeout_seconds: 1\nfull_compare_max_chars: 1000000\n", encoding="utf-8"
-    )
-    old, new = folders(tmp_path)
-    _three_items(old, new)
-    rng = random.Random(0)
-    for d in (old, new):
-        files = item_files("slow")
-        files[1]["text"] = "".join(rng.choices("abcdefghij \n", k=300_000))
-        write_item(d, "slow", files)
-    out = _run_with_workers(tmp_path, cfg_path, old, new, 2)
-    rows = {r["item_id"]: r for r in read_jsonl(out / "items.jsonl")}
-    assert _item_errors(out) == {"a": [], "b": [], "c": [], "slow": ["ITEM_TIMEOUT"]}
-    assert all(rows[i]["status"] == "compared" for i in ("a", "b", "c"))
-    assert rows["slow"]["status"] == "error"
-    report = json.loads((out / "report.json").read_text(encoding="utf-8"))
-    assert report["run_stats"]["workers_replaced"] == 1
-
-
-def test_crashed_worker_marks_only_its_item(
-    tmp_path: Path, cfg: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """A worker that exits mid-item yields WORKER_CRASHED for that item; the run completes."""
-    from extractor_tester.pool import CRASH_ITEM_ENV
-
-    monkeypatch.setenv(CRASH_ITEM_ENV, "b")
-    old, new = folders(tmp_path)
-    _three_items(old, new)
-    out = _run_with_workers(tmp_path, cfg, old, new, 2)
-    assert _item_errors(out) == {"a": [], "b": ["WORKER_CRASHED"], "c": []}
-    report = json.loads((out / "report.json").read_text(encoding="utf-8"))
-    assert report["run_stats"]["workers_replaced"] == 1
-
-
-def test_profile_writes_one_prof_per_worker(tmp_path: Path, cfg: Path) -> None:
-    """--profile writes loadable profile/worker-<n>.prof for each worker and records profile_dir."""
-    import pstats
-
-    old, new = folders(tmp_path)
-    for i in ("a", "b"):
-        write_item(old, i, item_files(i))
-        write_item(new, i, item_files(i))
-    out = tmp_path / "out"
-    code, output = invoke(
-        "compare", old, new, "--config", cfg, "--out", out, "--workers", 2, "--profile"
-    )
-    assert code == 0, output
-    profs = sorted(p.name for p in (out / "profile").glob("worker-*.prof"))
-    assert profs == ["worker-0.prof", "worker-1.prof"]
-    assert pstats.Stats(str(out / "profile" / "worker-0.prof")).get_stats_profile().func_profiles
-    report = json.loads((out / "report.json").read_text(encoding="utf-8"))
-    assert report["run_stats"]["profile_dir"] == "profile"
-
-
-def test_no_profile_dir_by_default(tmp_path: Path, cfg: Path) -> None:
-    """Without --profile no profile folder is written."""
-    old, new = folders(tmp_path)
-    write_item(old, "a", item_files("a"))
-    write_item(new, "a", item_files("a"))
-    out = tmp_path / "out"
-    code, output = invoke("compare", old, new, "--config", cfg, "--out", out)
-    assert code == 0, output
-    assert not (out / "profile").exists()
