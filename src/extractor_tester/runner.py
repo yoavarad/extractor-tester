@@ -36,6 +36,16 @@ def _tool_version() -> str:
         return "0"
 
 
+_PROGRESS_SECONDS = 0.1
+
+
+def _progress(done: int, total: int, t0: float) -> None:
+    """Rewrite the single progress line on stderr."""
+    elapsed = time.perf_counter() - t0
+    sys.stderr.write(f"\rcompared {done}/{total} items, {elapsed:.1f}s elapsed")
+    sys.stderr.flush()
+
+
 def _execute(
     old: Path,
     new: Path,
@@ -54,19 +64,30 @@ def _execute(
         shutil.rmtree(out / "profile", ignore_errors=True)
     agg = Aggregator(config)
     worker_stats = WorkerStats()
+    total = len(discovery.items)
+    last_shown = 0.0
+    _progress(0, total, t0)
     with pairs_writer(out) as pw, items_writer(out) as iw:
-        for result, facts, _pid in compare_all(
-            discovery.items,
-            config,
-            workers,
-            worker_stats,
-            out / "profile" if profile else None,
+        for done, (result, facts, _pid) in enumerate(
+            compare_all(
+                discovery.items,
+                config,
+                workers,
+                worker_stats,
+                out / "profile" if profile else None,
+            ),
+            start=1,
         ):
             for pf in facts:
                 pw.write(pf)
                 agg.add_pair(pf)
             iw.write(result)
             agg.add_item(result)
+            if done == total or time.monotonic() - last_shown >= _PROGRESS_SECONDS:
+                _progress(done, total, t0)
+                last_shown = time.monotonic()
+    if total:
+        sys.stderr.write("\n")
     report = agg.finish(
         tool_version=_tool_version(),
         started_at=started_at,
@@ -110,6 +131,9 @@ def run(
     """
     try:
         _execute(old, new, config_path, out, overwrite, workers or os.cpu_count() or 1, profile)
+    except KeyboardInterrupt:
+        print("\nInterrupted", file=sys.stderr)
+        return 130
     except ConfigError as e:
         print(f"{ErrorCode.INVALID_CONFIG.value}: {e}", file=sys.stderr)
         return 1

@@ -6,6 +6,7 @@ import contextlib
 import cProfile
 import multiprocessing as mp
 import os
+import signal
 import time
 from dataclasses import dataclass
 from multiprocessing.connection import wait
@@ -94,6 +95,10 @@ def _worker_main(
     With profile_dir set, the loop runs under cProfile and dumps worker-<slot>.prof on exit.
     """
     _startup_hook()
+    # Ctrl-C reaches the whole console group; the main process alone stops the workers.
+    for name in ("SIGINT", "SIGBREAK"):
+        if hasattr(signal, name):
+            signal.signal(getattr(signal, name), signal.SIG_IGN)
     pid = os.getpid()
     crash_item = os.environ.get(CRASH_ITEM_ENV)
     garbage_item = os.environ.get(GARBAGE_ITEM_ENV)
