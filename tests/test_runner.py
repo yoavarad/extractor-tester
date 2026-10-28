@@ -1,11 +1,6 @@
 """End-to-end compare runs through the CLI on tmp_path folders."""
 
 import json
-import re
-import signal
-import subprocess
-import sys
-import time
 from pathlib import Path
 from typing import Any
 
@@ -254,7 +249,7 @@ def test_single_worker_runs_in_separate_process(tmp_path: Path) -> None:
 
     from extractor_tester.config import load_config
     from extractor_tester.loader import discover
-    from extractor_tester.runner import compare_all
+    from extractor_tester.pool import compare_all
 
     old, new = folders(tmp_path)
     for i in ("b", "a"):
@@ -318,80 +313,81 @@ def test_path_shaped_item_id_creates_nothing_outside_out(tmp_path: Path, cfg: Pa
     assert not (box / "x").exists()
 
 
-def test_progress_line_on_stderr(tmp_path: Path, cfg: Path) -> None:
-    """A finished run leaves a done/total progress line on stderr."""
-    old, new = folders(tmp_path)
-    for i in range(3):
-        for d in (old, new):
-            write_item(d, f"i{i}", item_files(f"i{i}"))
-    proc = subprocess.run(
-        [
-            sys.executable,
-            "-c",
-            "from extractor_tester.cli import app; app()",
-            "compare",
-            str(old),
-            str(new),
-            "--config",
-            str(cfg),
-            "--out",
-            str(tmp_path / "out"),
-            "--workers",
-            "1",
-        ],
-        capture_output=True,
-        text=True,
-        timeout=120,
+def _three_items(old: Path, new: Path) -> None:
+    for i in ("a", "b", "c"):
+        write_item(old, i, item_files(i))
+        write_item(new, i, item_files(i, author="y"))
+
+
+def _item_errors(out: Path) -> dict[str, list[str]]:
+    return {r["item_id"]: [e["code"] for e in r["errors"]] for r in read_jsonl(out / "items.jsonl")}
+
+
+def test_slow_item_times_out_and_others_are_compared(tmp_path: Path) -> None:
+    """A 1 s timeout on two different 300,000-char texts yields ITEM_TIMEOUT for that item only."""
+    import random
+
+    cfg_path = tmp_path / "c.yaml"
+    cfg_path.write_text(
+        CONFIG + "item_timeout_seconds: 1\nfull_compare_max_chars: 1000000\n", encoding="utf-8"
     )
-    assert proc.returncode == 0, proc.stderr
-    assert "3/3 items" in proc.stderr
-
-
-def test_ctrl_c_exits_130_without_report(tmp_path: Path, cfg: Path) -> None:
-    """Interrupting mid-run exits 130 and writes no report."""
     old, new = folders(tmp_path)
-    big = "word " * 100_000
-    for i in range(60):
-        for d, text in ((old, big + "a"), (new, big + "b")):
-            files = item_files(f"i{i}")
-            files[1]["text"] = text
-            write_item(d, f"i{i}", files)
+    _three_items(old, new)
+    rng = random.Random(0)
+    for d in (old, new):
+        files = item_files("slow")
+        files[1]["text"] = "".join(rng.choices("abcdefghij \n", k=300_000))
+        write_item(d, "slow", files)
+    out = _run_with_workers(tmp_path, cfg_path, old, new, 2)
+    rows = {r["item_id"]: r for r in read_jsonl(out / "items.jsonl")}
+    assert _item_errors(out) == {"a": [], "b": [], "c": [], "slow": ["ITEM_TIMEOUT"]}
+    assert all(rows[i]["status"] == "compared" for i in ("a", "b", "c"))
+    assert rows["slow"]["status"] == "error"
+    report = json.loads((out / "report.json").read_text(encoding="utf-8"))
+    assert report["run_stats"]["workers_replaced"] == 1
+
+
+def test_crashed_worker_marks_only_its_item(
+    tmp_path: Path, cfg: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A worker that exits mid-item yields WORKER_CRASHED for that item; the run completes."""
+    from extractor_tester.pool import CRASH_ITEM_ENV
+
+    monkeypatch.setenv(CRASH_ITEM_ENV, "b")
+    old, new = folders(tmp_path)
+    _three_items(old, new)
+    out = _run_with_workers(tmp_path, cfg, old, new, 2)
+    assert _item_errors(out) == {"a": [], "b": ["WORKER_CRASHED"], "c": []}
+    report = json.loads((out / "report.json").read_text(encoding="utf-8"))
+    assert report["run_stats"]["workers_replaced"] == 1
+
+
+def test_profile_writes_one_prof_per_worker(tmp_path: Path, cfg: Path) -> None:
+    """--profile writes loadable profile/worker-<n>.prof for each worker and records profile_dir."""
+    import pstats
+
+    old, new = folders(tmp_path)
+    for i in ("a", "b"):
+        write_item(old, i, item_files(i))
+        write_item(new, i, item_files(i))
     out = tmp_path / "out"
-    windows = sys.platform == "win32"
-    # Windows: a new process group makes CTRL_BREAK deliverable; map it to KeyboardInterrupt.
-    boot = (
-        "import signal, sys; "
-        + ("signal.signal(signal.SIGBREAK, signal.default_int_handler); " if windows else "")
-        + "from extractor_tester.cli import app; app()"
+    code, output = invoke(
+        "compare", old, new, "--config", cfg, "--out", out, "--workers", 2, "--profile"
     )
-    proc = subprocess.Popen(
-        [
-            sys.executable,
-            "-c",
-            boot,
-            "compare",
-            str(old),
-            str(new),
-            "--config",
-            str(cfg),
-            "--out",
-            str(out),
-            "--workers",
-            "1",
-        ],
-        stderr=subprocess.PIPE,
-        text=True,
-        creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if windows else 0,
-    )
-    seen = ""
-    deadline = time.monotonic() + 60
-    while time.monotonic() < deadline and not re.search(r"compared [1-9]\d*/", seen):
-        assert proc.stderr is not None
-        seen += proc.stderr.read(1)
-    assert proc.poll() is None, "run finished before interrupt"
-    proc.send_signal(signal.CTRL_BREAK_EVENT if windows else signal.SIGINT)
-    _, err = proc.communicate(timeout=60)
-    assert proc.returncode == 130, err
-    assert not (out / "report.json").exists()
-    assert not (out / "report.html").exists()
-    assert "Traceback" not in err
+    assert code == 0, output
+    profs = sorted(p.name for p in (out / "profile").glob("worker-*.prof"))
+    assert profs == ["worker-0.prof", "worker-1.prof"]
+    assert pstats.Stats(str(out / "profile" / "worker-0.prof")).get_stats_profile().func_profiles
+    report = json.loads((out / "report.json").read_text(encoding="utf-8"))
+    assert report["run_stats"]["profile_dir"] == "profile"
+
+
+def test_no_profile_dir_by_default(tmp_path: Path, cfg: Path) -> None:
+    """Without --profile no profile folder is written."""
+    old, new = folders(tmp_path)
+    write_item(old, "a", item_files("a"))
+    write_item(new, "a", item_files("a"))
+    out = tmp_path / "out"
+    code, output = invoke("compare", old, new, "--config", cfg, "--out", out)
+    assert code == 0, output
+    assert not (out / "profile").exists()

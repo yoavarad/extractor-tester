@@ -191,6 +191,7 @@ class Example(BaseModel):
     path_new: str | None = None
     old_value: Any = None
     new_value: Any = None
+    similarity: float | None = None
     note: str | None = None
 
 

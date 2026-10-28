@@ -178,7 +178,7 @@ class Aggregator:
             fam.relations.setdefault(t.relation, _Counter(0)).count += 1
             if t.edit_similarity is not None:
                 low = fam.relation_low.setdefault(t.relation, Lowest(self._cap))
-                low.add(t.edit_similarity, ex.model_copy(update={"old_value": t.edit_similarity}))
+                low.add(t.edit_similarity, ex.model_copy(update={"similarity": t.edit_similarity}))
 
     def add_item(self, item: ItemResult) -> None:
         """Fold one item result into the item-level counters."""
