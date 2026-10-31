@@ -18,6 +18,7 @@ from extractor_tester.models import (
     Report,
     RunStats,
 )
+from extractor_tester.profiling import STAGES, TEXT_STAGE, Slowest
 
 if TYPE_CHECKING:
     from extractor_tester.config import CompareConfig
@@ -98,6 +99,21 @@ class Aggregator:
         self._errors: dict[str, _Counter] = {}
         self._warnings = Counter[str]()
         self._error_total = 0
+        self._stage = dict.fromkeys(STAGES, 0.0)
+        self._text_by_family: dict[str, float] = {}
+        self._slowest = Slowest()
+
+    def add_stage(self, stage: str, seconds: float) -> None:
+        """Add main-process time (aggregate, render) to a stage total."""
+        self._stage[stage] += seconds
+
+    def timings(self) -> tuple[dict[str, float], dict[str, float], list[dict[str, Any]]]:
+        """Stage totals, text seconds per family, ten slowest items."""
+        return (
+            dict(self._stage),
+            dict(sorted(self._text_by_family.items())),
+            self._slowest.items(),
+        )
 
     def _cut(self, value: object) -> object:
         n = self.config.snippet_chars
@@ -126,6 +142,10 @@ class Aggregator:
     def add_pair(self, pf: PairFacts) -> None:
         """Fold one file pair into its family's counters."""
         fam = self._families.setdefault(pf.family, _Family(self._cap))
+        if pf.text is not None and pf.text.method in TEXT_STAGE:
+            self._text_by_family[pf.family] = (
+                self._text_by_family.get(pf.family, 0.0) + pf.text.seconds
+            )
         ex = Example(item_id=pf.item_id, path_old=pf.path_old, path_new=pf.path_new)
         if pf.kind == "only-in-old":
             fam.only_old.add(ex)
@@ -183,6 +203,10 @@ class Aggregator:
     def add_item(self, item: ItemResult) -> None:
         """Fold one item result into the item-level counters."""
         self._items[item.status] += 1
+        for k, v in item.stage_seconds.items():
+            if k in self._stage:
+                self._stage[k] += v
+        self._slowest.add(item.item_id, item.seconds, item.status)
         ex = Example(item_id=item.item_id)
         if item.status == "only-in-old":
             self._items_only_old.add(ex)

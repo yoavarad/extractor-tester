@@ -39,6 +39,12 @@ def test_slow_item_times_out_and_others_are_compared(tmp_path: Path) -> None:
     assert rows["slow"]["status"] == "error"
     report = json.loads((out / "report.json").read_text(encoding="utf-8"))
     assert report["run_stats"]["workers_replaced"] == 1
+    rs = report["run_stats"]
+    assert set(rs["stage_seconds"]) >= {"load", "decode", "tree", "match", "aggregate", "render"}
+    assert all(v >= 0 for v in rs["stage_seconds"].values())
+    slow = rs["slowest_items"]
+    assert [x["seconds"] for x in slow] == sorted((x["seconds"] for x in slow), reverse=True)
+    assert "slow" in {x["item_id"] for x in slow}
 
 
 def test_crashed_worker_marks_only_its_item(

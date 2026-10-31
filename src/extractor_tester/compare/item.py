@@ -22,6 +22,7 @@ from extractor_tester.models import (
     Side,
     TextFacts,
 )
+from extractor_tester.profiling import TEXT_STAGE, add, take
 from extractor_tester.tree import BuildResult, TreeError, build
 
 
@@ -32,27 +33,35 @@ def compare_item(
     t0 = time.perf_counter()
     item_id = old_path.stem
     stages: dict[str, float] = {}
+    take("decode")
+    take("field_compare")
     try:
         old_data = load_item(old_path, None, config, "old")
         item_id = old_data["itemId"]
         new_data = load_item(new_path, item_id, config, "new")
+        t1 = time.perf_counter()
+        stages["load"] = t1 - t0
         old_build = build(old_data, config, "old", str(old_path))
         new_build = build(new_data, config, "new", str(new_path))
-        stages["load"] = time.perf_counter() - t0
-        t1 = time.perf_counter()
-        pairs = match_item(old_build.item, new_build.item)
-        stages["match"] = time.perf_counter() - t1
         t2 = time.perf_counter()
+        stages["decode"] = take("decode")
+        stages["tree"] = max(0.0, t2 - t1 - stages["decode"])
+        pairs = match_item(old_build.item, new_build.item)
+        stages["match"] = time.perf_counter() - t2
         facts = [_facts(item_id, p, pairs, old_build, new_build, config) for p in pairs]
-        stages["compare"] = time.perf_counter() - t2
+        stages["field_compare"] = take("field_compare")
+        for f in facts:
+            if f.text is not None and f.text.method in TEXT_STAGE:
+                key = TEXT_STAGE[f.text.method]
+                stages[key] = stages.get(key, 0.0) + f.text.seconds
         attached = {id(e) for f in facts for e in f.errors}
         unattached = [e for e in old_build.errors + new_build.errors if id(e) not in attached]
         meta = _metadata_diffs(old_build.item, new_build.item, config)
     except (LoaderError, TreeError) as e:
-        return _failed(item_id, e.code, e.message, t0), []
+        return _failed(item_id, e.code, e.message, t0, stages), []
     except Exception as e:  # any unexpected failure is an item-level tool-error
         return _failed(
-            item_id, ErrorCode.ITEM_PROCESSING_FAILED, f"{type(e).__name__}: {e}", t0
+            item_id, ErrorCode.ITEM_PROCESSING_FAILED, f"{type(e).__name__}: {e}", t0, stages
         ), []
     result = ItemResult(
         item_id=item_id,
@@ -69,7 +78,9 @@ def compare_item(
     return result, facts
 
 
-def _failed(item_id: str, code: ErrorCode, message: str, t0: float) -> ItemResult:
+def _failed(
+    item_id: str, code: ErrorCode, message: str, t0: float, stages: dict[str, float]
+) -> ItemResult:
     err = ErrorRecord(code=code, scope="item", severity="error", item_id=item_id, message=message)
     return ItemResult(
         item_id=item_id,
@@ -81,7 +92,7 @@ def _failed(item_id: str, code: ErrorCode, message: str, t0: float) -> ItemResul
         files_only_new=0,
         errors=[err],
         seconds=time.perf_counter() - t0,
-        stage_seconds={},
+        stage_seconds=stages,
     )
 
 
@@ -144,7 +155,9 @@ def _facts(
         p.kind == "only-in-new" and p.new is not None and p.new.file_id in ids_new
         for p in all_pairs
     )
+    t_fields = time.perf_counter()
     diffs = diff(old.fields, new.fields, config)
+    add("field_compare", time.perf_counter() - t_fields)
     changed = [d for d in diffs if d.status != "same"]
     mime_equal = old.mime == new.mime
     family_equal = old.family == new.family
