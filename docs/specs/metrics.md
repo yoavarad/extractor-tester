@@ -54,3 +54,15 @@ The buffered method is an approximation: text moved outside its aligned run coun
 ## Per item
 
 [ydk:entity:model/ItemResult] holds item metadata field differences and counts of identical, changed and one-sided files. Item-level fields are every top-level field except the item id and the file list. Item metadata change rates across all items appear at the top of the report.
+
+## Result keys
+
+Every [ydk:entity:model/MetricResult] in the report carries one of these keys. A key in angle brackets is a pattern: `<field>` is a flattened field path and `<error code>` is the code of a tool-error manifest.
+
+- Items: `items-only-in-old`, `items-only-in-new`.
+- Item and file metadata fields: `<field>:changed`, `<field>:only-in-old`, `<field>:only-in-new`.
+- File pairs per family: `only-in-old`, `only-in-new`, `identical`, `mime-changed`, `family-changed`, `decode-errors`.
+- Text relations: `equal`, `old-within-new`, `new-within-old`, `overlapping`, `disjoint`.
+- Matching tiers (matching.md): `root`, `name`, `text-hash`, `type-family`.
+- Hints: `new-more-text`, `new-less-text`, `new-filled-field`, `new-emptied-field`, `new-more-subfiles`, `new-fewer-subfiles`.
+- File and run errors: `<error code>`.
