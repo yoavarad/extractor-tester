@@ -1,0 +1,845 @@
+{
+ "schema_version": 1,
+ "tool_version": "0.1.0",
+ "config": {
+  "name_field": "name",
+  "mime_primary_field": "mp",
+  "mime_secondary_field": "ms",
+  "text_field": "text",
+  "generic_fields": [],
+  "ignore_fields": [
+   "fileId",
+   "parentId",
+   "rootId",
+   "text"
+  ],
+  "type_families_file": null,
+  "text_hash_chars": 1000000,
+  "full_compare_max_chars": 100000,
+  "max_block_chars": 4000,
+  "cut_lines_warn_pct": 20,
+  "containment_pct": 98,
+  "examples_per_result": 5,
+  "snippet_chars": 300,
+  "max_item_bytes": 52428800,
+  "item_timeout_seconds": 600
+ },
+ "totals": {
+  "items": 12,
+  "compared": 10,
+  "only_in_old": 1,
+  "only_in_new": 0,
+  "error": 1,
+  "pairs": 21
+ },
+ "items_only_old": {
+  "key": "items-only-in-old",
+  "count": 1,
+  "denominator": 12,
+  "rate": 0.08333333333333333,
+  "examples": [
+   {
+    "item_id": "g12-one-sided-item",
+    "path_old": null,
+    "path_new": null,
+    "old_value": null,
+    "new_value": null,
+    "similarity": null,
+    "note": null
+   }
+  ]
+ },
+ "items_only_new": {
+  "key": "items-only-in-new",
+  "count": 0,
+  "denominator": 12,
+  "rate": 0.0,
+  "examples": []
+ },
+ "item_fields": [],
+ "families": [
+  {
+   "family": "application/eml",
+   "pairs": 10,
+   "only_in_old": {
+    "key": "only-in-old",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0.0,
+    "examples": []
+   },
+   "only_in_new": {
+    "key": "only-in-new",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0.0,
+    "examples": []
+   },
+   "identical": {
+    "key": "identical",
+    "count": 9,
+    "denominator": 10,
+    "rate": 0.9,
+    "examples": [
+     {
+      "item_id": "g01-identical",
+      "path_old": "root.eml",
+      "path_new": "root.eml",
+      "old_value": null,
+      "new_value": null,
+      "similarity": null,
+      "note": null
+     },
+     {
+      "item_id": "g02-metadata",
+      "path_old": "root.eml",
+      "path_new": "root.eml",
+      "old_value": null,
+      "new_value": null,
+      "similarity": null,
+      "note": null
+     },
+     {
+      "item_id": "g03-type-change",
+      "path_old": "root.eml",
+      "path_new": "root.eml",
+      "old_value": null,
+      "new_value": null,
+      "similarity": null,
+      "note": null
+     },
+     {
+      "item_id": "g04-text-extension",
+      "path_old": "root.eml",
+      "path_new": "root.eml",
+      "old_value": null,
+      "new_value": null,
+      "similarity": null,
+      "note": null
+     },
+     {
+      "item_id": "g05-text-loss",
+      "path_old": "root.eml",
+      "path_new": "root.eml",
+      "old_value": null,
+      "new_value": null,
+      "similarity": null,
+      "note": null
+     }
+    ]
+   },
+   "mime_changed": {
+    "key": "mime-changed",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0.0,
+    "examples": []
+   },
+   "family_changed": {
+    "key": "family-changed",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0.0,
+    "examples": []
+   },
+   "fields": [],
+   "edit_similarity": {
+    "median": 1.0,
+    "p10": 1.0,
+    "min": 1.0
+   },
+   "jaccard": {
+    "median": 1.0,
+    "p10": 1.0,
+    "min": 1.0
+   },
+   "relations": [
+    {
+     "key": "equal",
+     "count": 10,
+     "denominator": 10,
+     "rate": 1.0,
+     "examples": [
+      {
+       "item_id": "g01-identical",
+       "path_old": "root.eml",
+       "path_new": "root.eml",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 1.0,
+       "note": null
+      },
+      {
+       "item_id": "g02-metadata",
+       "path_old": "root.eml",
+       "path_new": "root.eml",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 1.0,
+       "note": null
+      },
+      {
+       "item_id": "g03-type-change",
+       "path_old": "root.eml",
+       "path_new": "root.eml",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 1.0,
+       "note": null
+      },
+      {
+       "item_id": "g04-text-extension",
+       "path_old": "root.eml",
+       "path_new": "root.eml",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 1.0,
+       "note": null
+      },
+      {
+       "item_id": "g05-text-loss",
+       "path_old": "root.eml",
+       "path_new": "root.eml",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 1.0,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "methods": {
+    "fast-path": 10
+   },
+   "lines_cut_pct": 0.0,
+   "cut_lines_warning": false,
+   "tiers": [
+    {
+     "key": "root",
+     "count": 10,
+     "denominator": 10,
+     "rate": 1.0,
+     "examples": [
+      {
+       "item_id": "g01-identical",
+       "path_old": "root.eml",
+       "path_new": "root.eml",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      },
+      {
+       "item_id": "g02-metadata",
+       "path_old": "root.eml",
+       "path_new": "root.eml",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      },
+      {
+       "item_id": "g03-type-change",
+       "path_old": "root.eml",
+       "path_new": "root.eml",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      },
+      {
+       "item_id": "g04-text-extension",
+       "path_old": "root.eml",
+       "path_new": "root.eml",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      },
+      {
+       "item_id": "g05-text-loss",
+       "path_old": "root.eml",
+       "path_new": "root.eml",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "hints": [
+    {
+     "key": "new-more-subfiles",
+     "count": 1,
+     "denominator": 10,
+     "rate": 0.1,
+     "examples": [
+      {
+       "item_id": "g09-one-sided-subfile",
+       "path_old": "root.eml",
+       "path_new": "root.eml",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "decode_errors": {
+    "key": "decode-errors",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0.0,
+    "examples": []
+   },
+   "file_errors": []
+  },
+  {
+   "family": "application/pdf",
+   "pairs": 9,
+   "only_in_old": {
+    "key": "only-in-old",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0.0,
+    "examples": []
+   },
+   "only_in_new": {
+    "key": "only-in-new",
+    "count": 1,
+    "denominator": 10,
+    "rate": 0.1,
+    "examples": [
+     {
+      "item_id": "g09-one-sided-subfile",
+      "path_old": null,
+      "path_new": "root.eml/b.pdf",
+      "old_value": null,
+      "new_value": null,
+      "similarity": null,
+      "note": null
+     }
+    ]
+   },
+   "identical": {
+    "key": "identical",
+    "count": 3,
+    "denominator": 9,
+    "rate": 0.3333333333333333,
+    "examples": [
+     {
+      "item_id": "g01-identical",
+      "path_old": "root.eml/a.pdf",
+      "path_new": "root.eml/a.pdf",
+      "old_value": null,
+      "new_value": null,
+      "similarity": null,
+      "note": null
+     },
+     {
+      "item_id": "g07-renamed",
+      "path_old": "root.eml/a.pdf",
+      "path_new": "root.eml/report-final.pdf",
+      "old_value": null,
+      "new_value": null,
+      "similarity": null,
+      "note": null
+     },
+     {
+      "item_id": "g09-one-sided-subfile",
+      "path_old": "root.eml/a.pdf",
+      "path_new": "root.eml/a.pdf",
+      "old_value": null,
+      "new_value": null,
+      "similarity": null,
+      "note": null
+     }
+    ]
+   },
+   "mime_changed": {
+    "key": "mime-changed",
+    "count": 0,
+    "denominator": 9,
+    "rate": 0.0,
+    "examples": []
+   },
+   "family_changed": {
+    "key": "family-changed",
+    "count": 0,
+    "denominator": 9,
+    "rate": 0.0,
+    "examples": []
+   },
+   "fields": [
+    {
+     "key": "author:changed",
+     "count": 1,
+     "denominator": 9,
+     "rate": 0.1111111111111111,
+     "examples": [
+      {
+       "item_id": "g02-metadata",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": "Jane",
+       "new_value": "John",
+       "similarity": null,
+       "note": null
+      }
+     ]
+    },
+    {
+     "key": "pages:changed",
+     "count": 1,
+     "denominator": 9,
+     "rate": 0.1111111111111111,
+     "examples": [
+      {
+       "item_id": "g03-type-change",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": 3,
+       "new_value": "3",
+       "similarity": null,
+       "note": "number -> string"
+      }
+     ]
+    }
+   ],
+   "edit_similarity": {
+    "median": 1.0,
+    "p10": 0.3398428109107721,
+    "min": 0.3619047619047619
+   },
+   "jaccard": {
+    "median": 1.0,
+    "p10": -0.03076923076923077,
+    "min": 0.0
+   },
+   "relations": [
+    {
+     "key": "disjoint",
+     "count": 1,
+     "denominator": 9,
+     "rate": 0.1111111111111111,
+     "examples": [
+      {
+       "item_id": "g06-rewritten",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 0.3619047619047619,
+       "note": null
+      }
+     ]
+    },
+    {
+     "key": "equal",
+     "count": 5,
+     "denominator": 9,
+     "rate": 0.5555555555555556,
+     "examples": [
+      {
+       "item_id": "g01-identical",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 1.0,
+       "note": null
+      },
+      {
+       "item_id": "g02-metadata",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 1.0,
+       "note": null
+      },
+      {
+       "item_id": "g03-type-change",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 1.0,
+       "note": null
+      },
+      {
+       "item_id": "g07-renamed",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/report-final.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 1.0,
+       "note": null
+      },
+      {
+       "item_id": "g09-one-sided-subfile",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 1.0,
+       "note": null
+      }
+     ]
+    },
+    {
+     "key": "new-within-old",
+     "count": 1,
+     "denominator": 9,
+     "rate": 0.1111111111111111,
+     "examples": [
+      {
+       "item_id": "g05-text-loss",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 0.5825242718446602,
+       "note": null
+      }
+     ]
+    },
+    {
+     "key": "old-within-new",
+     "count": 1,
+     "denominator": 9,
+     "rate": 0.1111111111111111,
+     "examples": [
+      {
+       "item_id": "g04-text-extension",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 0.9240506329113924,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "methods": {
+    "fast-path": 5,
+    "full": 3
+   },
+   "lines_cut_pct": 0.0,
+   "cut_lines_warning": false,
+   "tiers": [
+    {
+     "key": "name",
+     "count": 8,
+     "denominator": 9,
+     "rate": 0.8888888888888888,
+     "examples": [
+      {
+       "item_id": "g01-identical",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      },
+      {
+       "item_id": "g02-metadata",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      },
+      {
+       "item_id": "g03-type-change",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      },
+      {
+       "item_id": "g04-text-extension",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      },
+      {
+       "item_id": "g05-text-loss",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      }
+     ]
+    },
+    {
+     "key": "text-hash",
+     "count": 1,
+     "denominator": 9,
+     "rate": 0.1111111111111111,
+     "examples": [
+      {
+       "item_id": "g07-renamed",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/report-final.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "hints": [
+    {
+     "key": "new-less-text",
+     "count": 1,
+     "denominator": 9,
+     "rate": 0.1111111111111111,
+     "examples": [
+      {
+       "item_id": "g05-text-loss",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      }
+     ]
+    },
+    {
+     "key": "new-more-text",
+     "count": 1,
+     "denominator": 9,
+     "rate": 0.1111111111111111,
+     "examples": [
+      {
+       "item_id": "g04-text-extension",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "decode_errors": {
+    "key": "decode-errors",
+    "count": 0,
+    "denominator": 9,
+    "rate": 0.0,
+    "examples": []
+   },
+   "file_errors": [
+    {
+     "key": "INVALID_BASE64",
+     "count": 1,
+     "denominator": 9,
+     "rate": 0.1111111111111111,
+     "examples": [
+      {
+       "item_id": "g10-invalid-base64",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "family": "application/png",
+   "pairs": 2,
+   "only_in_old": {
+    "key": "only-in-old",
+    "count": 0,
+    "denominator": 2,
+    "rate": 0.0,
+    "examples": []
+   },
+   "only_in_new": {
+    "key": "only-in-new",
+    "count": 0,
+    "denominator": 2,
+    "rate": 0.0,
+    "examples": []
+   },
+   "identical": {
+    "key": "identical",
+    "count": 2,
+    "denominator": 2,
+    "rate": 1.0,
+    "examples": [
+     {
+      "item_id": "g08-same-name-siblings",
+      "path_old": "root.eml/image001.png[1]",
+      "path_new": "root.eml/image001.png[1]",
+      "old_value": null,
+      "new_value": null,
+      "similarity": null,
+      "note": null
+     },
+     {
+      "item_id": "g08-same-name-siblings",
+      "path_old": "root.eml/image001.png[2]",
+      "path_new": "root.eml/image001.png[2]",
+      "old_value": null,
+      "new_value": null,
+      "similarity": null,
+      "note": null
+     }
+    ]
+   },
+   "mime_changed": {
+    "key": "mime-changed",
+    "count": 0,
+    "denominator": 2,
+    "rate": 0.0,
+    "examples": []
+   },
+   "family_changed": {
+    "key": "family-changed",
+    "count": 0,
+    "denominator": 2,
+    "rate": 0.0,
+    "examples": []
+   },
+   "fields": [],
+   "edit_similarity": {
+    "median": 1.0,
+    "p10": 1.0,
+    "min": 1.0
+   },
+   "jaccard": {
+    "median": 1.0,
+    "p10": 1.0,
+    "min": 1.0
+   },
+   "relations": [
+    {
+     "key": "equal",
+     "count": 2,
+     "denominator": 2,
+     "rate": 1.0,
+     "examples": [
+      {
+       "item_id": "g08-same-name-siblings",
+       "path_old": "root.eml/image001.png[1]",
+       "path_new": "root.eml/image001.png[1]",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 1.0,
+       "note": null
+      },
+      {
+       "item_id": "g08-same-name-siblings",
+       "path_old": "root.eml/image001.png[2]",
+       "path_new": "root.eml/image001.png[2]",
+       "old_value": null,
+       "new_value": null,
+       "similarity": 1.0,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "methods": {
+    "fast-path": 2
+   },
+   "lines_cut_pct": 0.0,
+   "cut_lines_warning": false,
+   "tiers": [
+    {
+     "key": "name",
+     "count": 2,
+     "denominator": 2,
+     "rate": 1.0,
+     "examples": [
+      {
+       "item_id": "g08-same-name-siblings",
+       "path_old": "root.eml/image001.png[1]",
+       "path_new": "root.eml/image001.png[1]",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      },
+      {
+       "item_id": "g08-same-name-siblings",
+       "path_old": "root.eml/image001.png[2]",
+       "path_new": "root.eml/image001.png[2]",
+       "old_value": null,
+       "new_value": null,
+       "similarity": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "hints": [],
+   "decode_errors": {
+    "key": "decode-errors",
+    "count": 0,
+    "denominator": 2,
+    "rate": 0.0,
+    "examples": []
+   },
+   "file_errors": []
+  }
+ ],
+ "errors": [
+  {
+   "key": "INVALID_BASE64",
+   "count": 1,
+   "denominator": 2,
+   "rate": 0.5,
+   "examples": [
+    {
+     "item_id": "g10-invalid-base64",
+     "path_old": "root.eml/a.pdf",
+     "path_new": "root.eml/a.pdf",
+     "old_value": null,
+     "new_value": null,
+     "similarity": null,
+     "note": "Only base64 data is allowed"
+    }
+   ]
+  },
+  {
+   "key": "INVALID_JSON",
+   "count": 1,
+   "denominator": 2,
+   "rate": 0.5,
+   "examples": [
+    {
+     "item_id": "g11-malformed-json",
+     "path_old": null,
+     "path_new": null,
+     "old_value": null,
+     "new_value": null,
+     "similarity": null,
+     "note": "new file <tmp>/new/g11-malformed-json.json is not a valid item: cannot parse JSON (Expecting property name enclosed in double quotes: line 1 column 2 (char 1))"
+    }
+   ]
+  }
+ ],
+ "warnings": []
+}
