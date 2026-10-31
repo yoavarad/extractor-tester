@@ -2,7 +2,7 @@
 
 Compares the JSON outputs of two binary-file extraction pipelines (old vs new) and reports the differences grouped by file type family, with examples for every result.
 
-Status: design stage. No code yet.
+Status: implemented. The `compare` command runs end to end and writes `report.json`, `report.html`, `pairs.jsonl` and `items.jsonl`.
 
 ## Installation and quick start
 
@@ -27,6 +27,16 @@ Run the tests (slow benchmarks are excluded by default) and lint:
 uv run pytest -q
 uv run ruff check
 ```
+
+## Input format
+
+OLD and NEW are each one `.json` file or a folder of top-level `*.json` files (items are paired by file name without `.json`; `itemId` inside must equal it). Each item file is an object with `itemId` and a `files` list. Every file entry has `fileId`, `parentId` (its own id for the root), `rootId`, the fields named in the config for name and MIME parts, and `text` as base64 (UTF-8). Any other keys are compared as metadata.
+
+## Output
+
+`--out` (default `./compare-out`) receives `report.json` (aggregates and capped examples), `report.html` (self-contained, rendered from `report.json`), `pairs.jsonl` (one line per file pair), `items.jsonl` (one line per item) and, with `--profile`, `profile/worker-<n>.prof`. Exit code: 0 success, 1 fatal error (code and reason on stderr), 130 interrupted.
+
+Reference: [Configuration keys](docs/config-reference.md) and [JSON report structure](docs/report-format.md).
 
 ## Documentation
 
