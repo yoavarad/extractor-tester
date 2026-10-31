@@ -9,6 +9,7 @@ from extractor_tester.decode import InvalidBase64Error, decode_text, normalize, 
 from extractor_tester.families import family, mime
 from extractor_tester.fields import flatten
 from extractor_tester.models import ErrorCode, ErrorRecord, FileRecord, Item, Side
+from extractor_tester.profiling import add, clock
 
 
 class TreeError(Exception):
@@ -187,6 +188,7 @@ def _record(
         )
         for f in missing
     )
+    t_dec = clock()
     try:
         text, bad = decode_text(raw_text)
     except InvalidBase64Error as e:
@@ -202,6 +204,7 @@ def _record(
                 message=str(e),
             )
         )
+    add("decode", clock() - t_dec)
     m = mime(_str(flat.get(config.mime_primary_field)), _str(flat.get(config.mime_secondary_field)))
     return FileRecord(
         file_id=entry["fileId"],

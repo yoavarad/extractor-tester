@@ -78,16 +78,20 @@ def _execute(
             ),
             start=1,
         ):
+            t_agg = time.perf_counter()
             for pf in facts:
                 pw.write(pf)
                 agg.add_pair(pf)
             iw.write(result)
             agg.add_item(result)
+            agg.add_stage("aggregate", time.perf_counter() - t_agg)
             if done == total or time.monotonic() - last_shown >= _PROGRESS_SECONDS:
                 _progress(done, total, t0)
                 last_shown = time.monotonic()
     if total:
         sys.stderr.write("\n")
+    t_fin = time.perf_counter()
+    stage_seconds, text_by_family, slowest = agg.timings()
     report = agg.finish(
         tool_version=_tool_version(),
         started_at=started_at,
@@ -100,9 +104,9 @@ def _execute(
         run_stats=RunStats(
             wall_seconds=time.perf_counter() - t0,
             workers=workers,
-            stage_seconds={},
-            text_seconds_by_family={},
-            slowest_items=[],
+            stage_seconds=stage_seconds,
+            text_seconds_by_family=text_by_family,
+            slowest_items=slowest,
             workers_replaced=worker_stats.replaced,
             profile_dir="profile" if profile else None,
         ),
@@ -112,8 +116,16 @@ def _execute(
         report.warnings.append(
             f"{discovery.ignored_count} folder entries ignored (not top-level *.json files)"
         )
-    report_json = write_report(out, report)
-    render(report_json, out / "report.html")
+    agg.add_stage("aggregate", time.perf_counter() - t_fin)
+    # Render time is only known after rendering: render once to measure it, then write the
+    # final report.json (with the render stage) and render again so the HTML shows it too.
+    t_render = time.perf_counter()
+    render(write_report(out, report), out / "report.html")
+    agg.add_stage("render", time.perf_counter() - t_render)
+    stage_seconds = agg.timings()[0]
+    report.run_stats.stage_seconds = stage_seconds
+    report.run_stats.wall_seconds = time.perf_counter() - t0
+    render(write_report(out, report), out / "report.html")
 
 
 def run(
