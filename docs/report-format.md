@@ -27,7 +27,7 @@ Every reported number has this shape:
 {"key": "author:changed", "count": 1, "denominator": 10, "rate": 0.1, "examples": []}
 ```
 
-`examples` holds up to `examples_per_result` entries: `item_id`, `path_old`, `path_new`, `old_value`, `new_value`, `similarity`, `note` (values may be null). Keys of `fields` and `item_fields` results are `<path>:<status>` (e.g. `author:changed`). Selection is deterministic: lowest similarity first for similarity results, otherwise the first occurrences in item-id order, then matcher order within an item.
+`examples` holds up to `examples_per_result` entries: `item_id`, `path_old`, `path_new`, `old_value`, `new_value`, `similarity`, `note` (values may be null). Keys of `fields` and `item_fields` results are `<path>:<status>` (e.g. `author:changed`). Selection is deterministic: lowest similarity first for similarity results, otherwise the first occurrences in item-id order, then matcher order within an item. A `note` is cut at `snippet_chars`. Error notes name the item file by its file name only (e.g. `new file g11-malformed-json.json is not a valid item: ...`); the `old`/`new` word says which input it came from, so notes never contain local absolute paths.
 
 ## Family entry
 

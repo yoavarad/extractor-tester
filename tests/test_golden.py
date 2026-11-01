@@ -34,6 +34,20 @@ def test_golden_outputs_match(corpus_dir: Path, workers: int) -> None:
         assert actual[name] == (EXPECTED / name).read_text(encoding="utf-8"), name
 
 
+def test_golden_outputs_match_from_long_temp_path(tmp_path: Path) -> None:
+    """A corpus under a folder path of 200+ characters gives the same outputs.
+
+    Error notes are cut at snippet_chars, so they must not contain the input folder.
+    The path stays a little under the classic 260-char Windows limit.
+    """
+    base = tmp_path / ("d" * max(1, 205 - len(str(tmp_path)) - 1))
+    assert len(str(base)) >= 200, "temp root too long to build a 200-char test path"
+    base.mkdir()
+    actual = run(base, 1)
+    for name in OUTPUT_FILES:
+        assert actual[name] == (EXPECTED / name).read_text(encoding="utf-8"), name
+
+
 def _report() -> dict:
     return json.loads((EXPECTED / "report.json").read_text(encoding="utf-8"))
 
