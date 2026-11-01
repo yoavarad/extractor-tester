@@ -9,7 +9,14 @@ from pathlib import Path
 
 import pytest
 
-from tests.golden.checks import METRICS_MD, metric_results, missing_examples, undefined_keys
+from tests.golden.checks import (
+    METRICS_MD,
+    metric_results,
+    missing_examples,
+    tool_error_codes,
+    undefined_keys,
+    undefined_keys_message,
+)
 from tests.golden.corpus import EXPECTED, OUTPUT_FILES, run
 
 
@@ -49,7 +56,9 @@ def test_example_presence_check_fails_on_emptied_list() -> None:
 def test_golden_report_keys_defined_in_metrics_md() -> None:
     """Every result key of the golden report is defined in metrics.md."""
     assert len(list(metric_results(_report()))) >= 30
-    assert undefined_keys(_report(), METRICS_MD.read_text(encoding="utf-8")) == []
+    md = METRICS_MD.read_text(encoding="utf-8")
+    bad = undefined_keys(_report(), md)
+    assert bad == [], undefined_keys_message(bad, md)
 
 
 def test_metrics_key_check_fails_on_undefined_key() -> None:
@@ -59,3 +68,35 @@ def test_metrics_key_check_fails_on_undefined_key() -> None:
         {"key": "made-up-key", "count": 1, "denominator": 1, "rate": 1.0, "examples": []}
     )
     assert undefined_keys(report, METRICS_MD.read_text(encoding="utf-8")) == ["made-up-key"]
+
+
+def _keys_report(*keys: str) -> dict:
+    return {
+        "results": [
+            {"key": k, "count": 0, "denominator": 1, "rate": 0.0, "examples": []} for k in keys
+        ]
+    }
+
+
+def test_field_placeholder_is_strict() -> None:
+    """<field> keys need a non-empty field with no ':'; other shapes are rejected."""
+    md = METRICS_MD.read_text(encoding="utf-8")
+    good = ["author:changed", "pages:only-in-new", "a.b.c:only-in-old"]
+    bad = [":changed", "a:changed:changed", "a:bogus", "a:b:changed"]
+    assert undefined_keys(_keys_report(*good), md) == []
+    assert undefined_keys(_keys_report(*bad), md) == sorted(bad)
+
+
+def test_undefined_key_message_names_key_and_expected_forms() -> None:
+    """The failure text names the bad key and the metrics.md forms it should look like."""
+    md = METRICS_MD.read_text(encoding="utf-8")
+    text = undefined_keys_message(["a:changed:changed"], md)
+    assert "'a:changed:changed'" in text
+    assert "<field>:changed" in text
+
+
+def test_error_code_placeholder_matches_only_known_codes() -> None:
+    """A real tool-error code passes as a key; an invented one is rejected."""
+    md = METRICS_MD.read_text(encoding="utf-8")
+    code = tool_error_codes()[0]
+    assert undefined_keys(_keys_report(code, "not-a-code"), md) == ["not-a-code"]

@@ -36,13 +36,31 @@ def missing_examples(report: dict[str, Any]) -> list[str]:
     return [w for w, m in metric_results(report) if m["count"] and not m["examples"]]
 
 
-def _key_patterns(metrics_md: str) -> list[re.Pattern[str]]:
-    """Full-match patterns for every backticked key in the 'Result keys' section's list."""
+def _placeholder_patterns() -> dict[str, str]:
+    """What each <placeholder> in metrics.md may stand for in a result key."""
+    return {
+        # a flattened field path (see fields.flatten): not empty, and no ':' (it ends the field)
+        "field": "[^:]+",
+        # the code of one tool-error manifest
+        "error code": "|".join(map(re.escape, tool_error_codes())),
+    }
+
+
+def _key_forms(metrics_md: str) -> list[str]:
+    """Every backticked key form in the 'Result keys' list, e.g. '<field>:changed'."""
     section = metrics_md.split("## Result keys", 1)[1].split("\n## ", 1)[0]
     body = "\n".join(line for line in section.splitlines() if line.startswith("- "))
-    holes = {"field": ".+", "error code": "|".join(map(re.escape, tool_error_codes()))}
+    return re.findall(r"`([^`]+)`", body)
+
+
+def _key_patterns(metrics_md: str) -> list[re.Pattern[str]]:
+    """Full-match patterns for every key form in the 'Result keys' list."""
+    holes = _placeholder_patterns()
     patterns = []
-    for token in re.findall(r"`([^`]+)`", body):
+    for token in _key_forms(metrics_md):
+        for name in _PLACEHOLDER.findall(token):
+            if name not in holes:
+                raise ValueError(f"metrics.md key {token!r} uses unknown placeholder <{name}>")
         parts = _PLACEHOLDER.split(token)  # literal, name, literal, name, ...
         rx = "".join(re.escape(p) if i % 2 == 0 else f"(?:{holes[p]})" for i, p in enumerate(parts))
         patterns.append(re.compile(rx))
@@ -54,3 +72,14 @@ def undefined_keys(report: dict[str, Any], metrics_md: str) -> list[str]:
     patterns = _key_patterns(metrics_md)
     keys = sorted({m["key"] for _, m in metric_results(report)})
     return [k for k in keys if not any(p.fullmatch(k) for p in patterns)]
+
+
+def undefined_keys_message(keys: list[str], metrics_md: str) -> str:
+    """Plain-words failure text: each bad key, with the metrics.md key forms ending the same way."""
+    forms = _key_forms(metrics_md)
+    lines = []
+    for key in keys:
+        ending = key.rsplit(":", 1)[-1]
+        close = [f for f in forms if f.endswith(ending)] or forms
+        lines.append(f"key {key!r} is not defined in metrics.md; expected one of: {close}")
+    return "\n".join(lines)
