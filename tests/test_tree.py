@@ -66,6 +66,7 @@ def test_sibling_occurrence_paths() -> None:
     assert [c.path for c in res.item.files[0].children] == ["r/a.png[1]", "r/a.png[2]", "r/b"]
 
 
+@pytest.mark.covers_error("ROOT_NOT_FOUND")
 def test_root_not_found() -> None:
     """Root not found."""
     with pytest.raises(TreeError) as e:
@@ -73,6 +74,7 @@ def test_root_not_found() -> None:
     assert e.value.code == ErrorCode.ROOT_NOT_FOUND
 
 
+@pytest.mark.covers_error("MULTIPLE_ROOTS")
 def test_multiple_roots() -> None:
     """Multiple roots."""
     with pytest.raises(TreeError) as e:
@@ -80,6 +82,7 @@ def test_multiple_roots() -> None:
     assert e.value.code == ErrorCode.MULTIPLE_ROOTS
 
 
+@pytest.mark.covers_error("DUPLICATE_FILE_ID")
 def test_duplicate_file_id() -> None:
     """Duplicate file id."""
     with pytest.raises(TreeError) as e:
@@ -87,6 +90,7 @@ def test_duplicate_file_id() -> None:
     assert e.value.code == ErrorCode.DUPLICATE_FILE_ID
 
 
+@pytest.mark.covers_error("PARENT_CYCLE")
 def test_parent_cycle() -> None:
     """Parent cycle."""
     with pytest.raises(TreeError) as e:
@@ -94,6 +98,7 @@ def test_parent_cycle() -> None:
     assert e.value.code == ErrorCode.PARENT_CYCLE
 
 
+@pytest.mark.covers_error("ORPHAN_FILE")
 def test_orphan_keeps_rest() -> None:
     """Orphan keeps rest."""
     res = build(item(f("I", "I", "r"), f("a", "I", "ok"), f("o", "zz"), f("p", "o")), CFG, "old")
@@ -101,6 +106,7 @@ def test_orphan_keeps_rest() -> None:
     assert [e.code for e in res.errors] == [ErrorCode.ORPHAN_FILE]
 
 
+@pytest.mark.covers_error("MISSING_FIELD")
 def test_missing_field_warning() -> None:
     """Missing field warning."""
     res = build(item(f("I", "I", "r"), f("a", "I", name=None, text=None)), CFG, "old")

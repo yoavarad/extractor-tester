@@ -17,6 +17,7 @@ from tests.runner_common import (
 )
 
 
+@pytest.mark.covers_error("ITEM_TIMEOUT")
 def test_slow_item_times_out_and_others_are_compared(tmp_path: Path) -> None:
     """A 1 s timeout on two different 300,000-char texts yields ITEM_TIMEOUT for that item only."""
     import random
@@ -47,6 +48,7 @@ def test_slow_item_times_out_and_others_are_compared(tmp_path: Path) -> None:
     assert "slow" in {x["item_id"] for x in slow}
 
 
+@pytest.mark.covers_error("WORKER_CRASHED")
 def test_crashed_worker_marks_only_its_item(
     tmp_path: Path, cfg: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

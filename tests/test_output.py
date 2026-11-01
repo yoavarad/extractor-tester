@@ -75,6 +75,7 @@ def test_prepare_empty_ok(tmp_path: Path) -> None:
     prepare_out(tmp_path, False)
 
 
+@pytest.mark.covers_error("OUTPUT_EXISTS")
 def test_prepare_non_empty_refused(tmp_path: Path) -> None:
     """Non-empty folder without overwrite raises OUTPUT_EXISTS."""
     (tmp_path / "x").write_text("1")
@@ -90,6 +91,7 @@ def test_prepare_non_empty_overwrite(tmp_path: Path) -> None:
     assert (tmp_path / "x").exists()
 
 
+@pytest.mark.covers_error("OUTPUT_WRITE_FAILED")
 def test_prepare_unwritable(tmp_path: Path) -> None:
     """A path that cannot be a folder raises OUTPUT_WRITE_FAILED."""
     f = tmp_path / "file"

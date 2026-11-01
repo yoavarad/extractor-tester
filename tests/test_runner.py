@@ -113,6 +113,7 @@ def test_file_mode_reports_one_item(tmp_path: Path, cfg: Path) -> None:
     assert report["totals"]["items"] == 1
 
 
+@pytest.mark.covers_error("INTERNAL_FAILURE")
 def test_unexpected_failure_is_internal_failure(
     tmp_path: Path, cfg: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

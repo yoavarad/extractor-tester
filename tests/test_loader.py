@@ -76,6 +76,7 @@ def test_file_mode(tmp_path: Path) -> None:
     assert d.ignored_count == 0
 
 
+@pytest.mark.covers_error("INPUT_NOT_FOUND")
 def test_input_not_found(tmp_path: Path) -> None:
     """Missing path raises INPUT_NOT_FOUND, OLD checked first."""
     with pytest.raises(LoaderError) as e:
@@ -84,6 +85,7 @@ def test_input_not_found(tmp_path: Path) -> None:
     assert str(e.value) == f"Input not found: {tmp_path / 'nope'}"
 
 
+@pytest.mark.covers_error("MIXED_INPUT_KINDS")
 def test_mixed_kinds(tmp_path: Path) -> None:
     """File vs folder raises MIXED_INPUT_KINDS."""
     old, new = dirs(tmp_path)
@@ -94,6 +96,7 @@ def test_mixed_kinds(tmp_path: Path) -> None:
     assert str(e.value) == "OLD is a file but NEW is a folder; both must be files or both folders"
 
 
+@pytest.mark.covers_error("EMPTY_INPUT")
 def test_empty_input_warning(tmp_path: Path) -> None:
     """No items yields EMPTY_INPUT warning, no raise."""
     old, new = dirs(tmp_path)
@@ -126,6 +129,7 @@ def test_load_ok(tmp_path: Path) -> None:
         b'{"itemId": "a", "files": [{"fileId": "1"}]}',
     ],
 )
+@pytest.mark.covers_error("INVALID_JSON")
 def test_invalid_json(tmp_path: Path, content: bytes) -> None:
     """Unparseable or malformed items raise INVALID_JSON."""
     p = tmp_path / "a.json"
@@ -142,6 +146,7 @@ def test_unreadable_is_invalid_json(tmp_path: Path) -> None:
     assert e.value.code == ErrorCode.INVALID_JSON
 
 
+@pytest.mark.covers_error("ITEM_TOO_LARGE")
 def test_too_large_not_parsed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Size check precedes parsing."""
     p = tmp_path / "a.json"
@@ -157,6 +162,7 @@ def test_too_large_not_parsed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
     assert str(e.value) == "new item a is 109 bytes (limit 10)"
 
 
+@pytest.mark.covers_error("ITEM_ID_MISMATCH")
 def test_id_mismatch_folder_mode(tmp_path: Path) -> None:
     """itemId differing from the stem raises ITEM_ID_MISMATCH."""
     p = write_item(tmp_path, "a", [])
@@ -166,6 +172,7 @@ def test_id_mismatch_folder_mode(tmp_path: Path) -> None:
     assert str(e.value) == f"old file {p} has itemId a, expected b"
 
 
+@pytest.mark.covers_error("ITEM_ID_MISMATCH")
 def test_id_mismatch_file_mode(tmp_path: Path) -> None:
     """NEW checked against OLD itemId in file mode."""
     old, new = dirs(tmp_path)
