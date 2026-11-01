@@ -36,13 +36,39 @@ def missing_examples(report: dict[str, Any]) -> list[str]:
     return [w for w, m in metric_results(report) if m["count"] and not m["examples"]]
 
 
-def _placeholder_patterns() -> dict[str, str]:
+def field_names(report: dict[str, Any]) -> set[str]:
+    """Field names the report itself lists: its per-field results ('author:changed' -> 'author')."""
+    names: set[str] = set()
+    for lists in _lists_named(report, {"fields", "item_fields"}):
+        for result in lists:
+            name = result["key"].rsplit(":", 1)[0]
+            if name:
+                names.add(name)
+    return names
+
+
+def _lists_named(value: object, wanted: set[str]) -> Iterator[list[dict[str, Any]]]:
+    """Yield every list stored under one of the `wanted` dict keys, anywhere in the report."""
+    if isinstance(value, dict):
+        for k, v in value.items():
+            if k in wanted and isinstance(v, list):
+                yield v
+            yield from _lists_named(v, wanted)
+    elif isinstance(value, list):
+        for v in value:
+            yield from _lists_named(v, wanted)
+
+
+def _placeholder_patterns(fields: set[str]) -> dict[str, str]:
     """What each <placeholder> in metrics.md may stand for in a result key."""
+    codes = tool_error_codes()
+    if not codes:
+        raise ValueError(f"no tool-error manifests found in {TOOL_ERRORS}")
     return {
-        # a flattened field path (see fields.flatten): not empty, and no ':' (it ends the field)
-        "field": "[^:]+",
+        # a field name that appears in this report (it may itself contain ':', like 'dc:title')
+        "field": "|".join(map(re.escape, sorted(fields))) or "(?!)",  # (?!) never matches
         # the code of one tool-error manifest
-        "error code": "|".join(map(re.escape, tool_error_codes())),
+        "error code": "|".join(map(re.escape, codes)),
     }
 
 
@@ -53,9 +79,9 @@ def _key_forms(metrics_md: str) -> list[str]:
     return re.findall(r"`([^`]+)`", body)
 
 
-def _key_patterns(metrics_md: str) -> list[re.Pattern[str]]:
+def _key_patterns(metrics_md: str, fields: set[str]) -> list[re.Pattern[str]]:
     """Full-match patterns for every key form in the 'Result keys' list."""
-    holes = _placeholder_patterns()
+    holes = _placeholder_patterns(fields)
     patterns = []
     for token in _key_forms(metrics_md):
         for name in _PLACEHOLDER.findall(token):
@@ -69,17 +95,24 @@ def _key_patterns(metrics_md: str) -> list[re.Pattern[str]]:
 
 def undefined_keys(report: dict[str, Any], metrics_md: str) -> list[str]:
     """Result keys of the report that no key in metrics.md defines."""
-    patterns = _key_patterns(metrics_md)
+    patterns = _key_patterns(metrics_md, field_names(report))
     keys = sorted({m["key"] for _, m in metric_results(report)})
     return [k for k in keys if not any(p.fullmatch(k) for p in patterns)]
 
 
-def undefined_keys_message(keys: list[str], metrics_md: str) -> str:
-    """Plain-words failure text: each bad key, with the metrics.md key forms ending the same way."""
+def undefined_keys_message(keys: list[str], metrics_md: str, fields: set[str] | None = None) -> str:
+    """Plain-words failure text: each bad key, with the metrics.md key forms ending the same way.
+
+    When `fields` is given, a key whose field part is not one of them also says so.
+    """
     forms = _key_forms(metrics_md)
     lines = []
     for key in keys:
         ending = key.rsplit(":", 1)[-1]
         close = [f for f in forms if f.endswith(ending)] or forms
-        lines.append(f"key {key!r} is not defined in metrics.md; expected one of: {close}")
+        line = f"key {key!r} is not defined in metrics.md; expected one of: {close}"
+        field = key.rsplit(":", 1)[0]
+        if fields is not None and ":" in key and field not in fields:
+            line += f"; its field part {field!r} is not a field name in this report"
+        lines.append(line)
     return "\n".join(lines)

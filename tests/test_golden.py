@@ -9,8 +9,10 @@ from pathlib import Path
 
 import pytest
 
+from tests.golden import checks
 from tests.golden.checks import (
     METRICS_MD,
+    field_names,
     metric_results,
     missing_examples,
     tool_error_codes,
@@ -72,7 +74,7 @@ def test_golden_report_keys_defined_in_metrics_md() -> None:
     assert len(list(metric_results(_report()))) >= 30
     md = METRICS_MD.read_text(encoding="utf-8")
     bad = undefined_keys(_report(), md)
-    assert bad == [], undefined_keys_message(bad, md)
+    assert bad == [], undefined_keys_message(bad, md, field_names(_report()))
 
 
 def test_metrics_key_check_fails_on_undefined_key() -> None:
@@ -84,29 +86,54 @@ def test_metrics_key_check_fails_on_undefined_key() -> None:
     assert undefined_keys(report, METRICS_MD.read_text(encoding="utf-8")) == ["made-up-key"]
 
 
-def _keys_report(*keys: str) -> dict:
-    return {
-        "results": [
-            {"key": k, "count": 0, "denominator": 1, "rate": 0.0, "examples": []} for k in keys
-        ]
-    }
+def _result(key: str) -> dict:
+    return {"key": key, "count": 0, "denominator": 1, "rate": 0.0, "examples": []}
 
 
-def test_field_placeholder_is_strict() -> None:
-    """<field> keys need a non-empty field with no ':'; other shapes are rejected."""
+def _keys_report(*keys: str, fields: tuple[str, ...] = ()) -> dict:
+    """A tiny report: `keys` are plain results; `fields` are per-field results (the field names)."""
+    return {"results": [_result(k) for k in keys], "fields": [_result(f) for f in fields]}
+
+
+def test_field_placeholder_matches_field_names_in_report() -> None:
+    """<field> is a field name the report lists, so it may contain ':' (e.g. 'dc:title')."""
     md = METRICS_MD.read_text(encoding="utf-8")
-    good = ["author:changed", "pages:only-in-new", "a.b.c:only-in-old"]
-    bad = [":changed", "a:changed:changed", "a:bogus", "a:b:changed"]
-    assert undefined_keys(_keys_report(*good), md) == []
-    assert undefined_keys(_keys_report(*bad), md) == sorted(bad)
+    fields = ("author:changed", "dc:title:changed")
+    good = ["author:changed", "dc:title:changed", "dc:title:only-in-new", "author:only-in-old"]
+    bad = [":changed", "a:bogus", "nosuch:changed", "dc:changed", "author:changed:changed"]
+    assert undefined_keys(_keys_report(*good, fields=fields), md) == []
+    assert undefined_keys(_keys_report(*bad, fields=fields), md) == sorted(bad)
+
+
+def test_field_with_colon_and_extra_suffix_is_a_field_name_only_if_listed() -> None:
+    """'a:changed:changed' is accepted only when the report lists a field called 'a:changed'."""
+    md = METRICS_MD.read_text(encoding="utf-8")
+    assert (
+        undefined_keys(_keys_report("a:changed:changed", fields=("a:changed:changed",)), md) == []
+    )
+    assert undefined_keys(_keys_report("a:changed:changed", fields=("a:changed",)), md) == [
+        "a:changed:changed"
+    ]
+
+
+def test_empty_tool_error_folder_is_a_clear_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """No manifests would make '<error code>' match an empty key, so fail naming the folder."""
+    monkeypatch.setattr(checks, "TOOL_ERRORS", tmp_path)
+    md = METRICS_MD.read_text(encoding="utf-8")
+    with pytest.raises(ValueError, match="no tool-error manifests found in .*" + tmp_path.name):
+        undefined_keys(_keys_report("x"), md)
 
 
 def test_undefined_key_message_names_key_and_expected_forms() -> None:
     """The failure text names the bad key and the metrics.md forms it should look like."""
     md = METRICS_MD.read_text(encoding="utf-8")
-    text = undefined_keys_message(["a:changed:changed"], md)
-    assert "'a:changed:changed'" in text
+    text = undefined_keys_message(["nosuch:changed"], md, {"author"})
+    assert "'nosuch:changed'" in text
     assert "<field>:changed" in text
+    assert "field part 'nosuch' is not a field name in this report" in text
+    assert "field part" not in undefined_keys_message(["made-up-key"], md, {"author"})
 
 
 def test_error_code_placeholder_matches_only_known_codes() -> None:
