@@ -1,0 +1,2 @@
+- plan: started task, investigator mapping codes to tests
+- build done: 21 markers on existing tests, 0 new tests; suite 251 pass, ruff clean. review spawned

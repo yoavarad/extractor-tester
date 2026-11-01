@@ -114,6 +114,7 @@ def test_mime_change_marks_pair(tmp_path: Path) -> None:
     assert not facts[1].identical
 
 
+@pytest.mark.covers_error("ITEM_PROCESSING_FAILED")
 def test_exception_becomes_item_processing_failed(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -193,6 +194,7 @@ def test_paired_text_facts_attached(tmp_path: Path) -> None:
     assert next(p for p in facts if p.kind == "only-in-new").text is None
 
 
+@pytest.mark.covers_error("INVALID_BASE64")
 def test_invalid_base64_skips_text_but_keeps_field_diffs(tmp_path: Path) -> None:
     """Invalid base64 gives no text facts, a file error and still field diffs."""
     o, n = sides(

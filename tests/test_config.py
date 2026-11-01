@@ -40,6 +40,7 @@ def test_structural_and_text_always_ignored(tmp_path: Path) -> None:
     assert {"x", "fileId", "parentId", "rootId", "body"} <= set(c.ignore_fields)
 
 
+@pytest.mark.covers_error("INVALID_CONFIG")
 def test_missing_file(tmp_path: Path) -> None:
     """Missing file."""
     with pytest.raises(ConfigError, match=r"nope.yaml") as e:

@@ -32,7 +32,10 @@ packages = ["src/extractor_tester"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", "."]
-markers = ["slow: slow benchmark tests, excluded by default"]
+markers = [
+    "slow: slow benchmark tests, excluded by default",
+    "covers_error(code): this test triggers and asserts the named ErrorCode",
+]
 addopts = '-m "not slow"'
 
 [tool.ty.environment]
