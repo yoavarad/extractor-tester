@@ -836,7 +836,7 @@
      "old_value": null,
      "new_value": null,
      "similarity": null,
-     "note": "new file <tmp>/new/g11-malformed-json.json is not a valid item: cannot parse JSON (Expecting property name enclosed in double quotes: line 1 column 2 (char 1))"
+     "note": "new file g11-malformed-json.json is not a valid item: cannot parse JSON (Expecting property name enclosed in double quotes: line 1 column 2 (char 1))"
     }
    ]
   }

@@ -169,7 +169,7 @@ def test_id_mismatch_folder_mode(tmp_path: Path) -> None:
     with pytest.raises(LoaderError) as e:
         load_item(p, "b", cfg(), "old")
     assert e.value.code == ErrorCode.ITEM_ID_MISMATCH
-    assert str(e.value) == f"old file {p} has itemId a, expected b"
+    assert str(e.value) == f"old file {p.name} has itemId a, expected b"
 
 
 @pytest.mark.covers_error("ITEM_ID_MISMATCH")

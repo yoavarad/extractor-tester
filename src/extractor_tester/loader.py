@@ -81,7 +81,10 @@ def discover(old: Path, new: Path) -> Discovery:
 
 
 def _invalid(prefix: str, path: Path, reason: str) -> LoaderError:
-    return LoaderError(ErrorCode.INVALID_JSON, f"{prefix}file {path} is not a valid item: {reason}")
+    # File name only: notes stay short, the same on every machine, and free of local paths.
+    return LoaderError(
+        ErrorCode.INVALID_JSON, f"{prefix}file {path.name} is not a valid item: {reason}"
+    )
 
 
 def load_item(
@@ -133,6 +136,6 @@ def load_item(
     if expected_item_id is not None and found != expected_item_id:
         raise LoaderError(
             ErrorCode.ITEM_ID_MISMATCH,
-            f"{prefix}file {path} has itemId {found}, expected {expected_item_id}",
+            f"{prefix}file {path.name} has itemId {found}, expected {expected_item_id}",
         )
     return data
