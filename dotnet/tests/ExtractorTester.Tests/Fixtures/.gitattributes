@@ -1,0 +1,2 @@
+# Fixture bytes must match pydantic output exactly; no EOL conversion.
+* -text

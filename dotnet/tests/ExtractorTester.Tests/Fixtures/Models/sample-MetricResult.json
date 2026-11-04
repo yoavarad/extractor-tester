@@ -1,0 +1,1 @@
+{"key":"k","count":1,"denominator":3,"rate":0.3333333333333333,"examples":[{"item_id":"i1","path_old":null,"path_new":"p","old_value":1e+16,"new_value":["q\"b\\s/\n\r\t\b\f\u0000\u001f é ✓ 😀   <&> "],"similarity":1e-6,"note":null}]}

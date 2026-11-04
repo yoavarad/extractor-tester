@@ -1,0 +1,1 @@
+{"code":"INVALID_BASE64","scope":"file","severity":"error","item_id":"i1","side":"new","file_path":"a/b","message":"q\"b\\s/\n\r\t\b\f\u0000\u001f é ✓ 😀   <&> "}
