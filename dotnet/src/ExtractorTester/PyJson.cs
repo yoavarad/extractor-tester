@@ -28,6 +28,8 @@ public static class PyJson
         {
             PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
             TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
+            // Deep file trees (3 JSON levels per archive level) exceed the default of 64.
+            MaxDepth = 1024,
         };
         options.Converters.Add(new PyAnyConverter());
         options.MakeReadOnly();
@@ -155,9 +157,6 @@ public static class PyJson
                 return;
             case double d:
                 sb.Append(FormatFloat(d));
-                return;
-            case float f:
-                sb.Append(FormatFloat(f));
                 return;
             case long or int or short or sbyte or ulong or uint or ushort or byte or BigInteger:
                 sb.Append(((IFormattable)value).ToString(null, CultureInfo.InvariantCulture));

@@ -17,6 +17,7 @@ import json
 import sys
 import tempfile
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[5]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
@@ -49,7 +50,7 @@ def _write(path: Path, text: str) -> None:
     path.write_bytes(text.encode("utf-8"))
 
 
-def _file(fid: str, parent: str, children: list) -> object:
+def _file(fid: str, parent: str, children: list[Any]) -> Any:
     return m.FileRecord(
         file_id=fid,
         parent_id=parent,
@@ -74,7 +75,7 @@ def _file(fid: str, parent: str, children: list) -> object:
     )
 
 
-def samples() -> list:
+def samples() -> list[Any]:
     """One edge-case instance per model."""
     leaf = _file("c1", "r1", [])
     root = _file("r1", "r1", [leaf])
