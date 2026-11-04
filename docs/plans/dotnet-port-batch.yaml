@@ -1,0 +1,326 @@
+# C# .NET 8 port batch for extractor-tester (ADR-009).
+# Create with: PYTHONUTF8=1 ydk task create-batch --from docs/plans/dotnet-port-batch.yaml
+# Source: src/extractor_tester (Python, reference implementation until golden parity).
+# Target: dotnet/ (ExtractorTester console project + ExtractorTester.Tests xUnit project).
+
+epics:
+  - id: E-dotnet-port
+    title: "C# .NET 8 port"
+    description: "Port src/extractor_tester to a .NET 8 console app in dotnet/ with identical logic and byte-identical outputs (ADR-009). Python stays the reference until golden parity."
+    spec_refs: architecture.md,matching.md,metrics.md,outputs.md,config.md,errors-and-edge-cases.md,testing-strategy.md,docs/adrs/009-dotnet-port.md
+
+stories:
+  - id: S-dotnet-foundation
+    title: "Solution skeleton, parity helpers, models, config"
+    epic: E-dotnet-port
+    spec_refs: architecture.md,config.md,metrics.md,docs/adrs/009-dotnet-port.md
+    component_refs: ydk:cli-command:cli/compare,ydk:core-module:core/decoder,ydk:entity:model/Report,ydk:core-module:core/config-loader
+    acceptance:
+      - "`dotnet build dotnet/` and `dotnet test dotnet/` exit 0"
+      - "Decode, normalize and text hash give the same results as Python on a shared fixture set"
+      - "Every model serializes byte-identically to pydantic model_dump_json"
+      - "Each INVALID_CONFIG case produces the same message as Python"
+
+  - id: S-dotnet-pipeline
+    title: "Load, match and compare"
+    epic: E-dotnet-port
+    spec_refs: matching.md,metrics.md,errors-and-edge-cases.md,docs/adrs/001-file-matching-by-tree-path.md,docs/adrs/003-buffered-text-comparison.md
+    component_refs: ydk:core-module:core/loader,ydk:core-module:core/tree-builder,ydk:core-module:core/matcher,ydk:core-module:core/text-comparer,ydk:core-module:core/pair-comparer
+    acceptance:
+      - "Loader, tree, matcher and comparers reproduce the Python PairFacts and ItemResult JSON for each test item"
+      - "Indel and SequenceMatcher ports match captured rapidfuzz / difflib outputs on every differential case"
+
+  - id: S-dotnet-outputs-runner
+    title: "Aggregates, outputs, workers, CLI and golden parity"
+    epic: E-dotnet-port
+    spec_refs: outputs.md,architecture.md,errors-and-edge-cases.md,testing-strategy.md,docs/adrs/006-tech-stack-and-scale.md,docs/adrs/009-dotnet-port.md
+    component_refs: ydk:core-module:core/aggregator,ydk:core-module:core/report-writer,ydk:core-module:core/html-renderer,ydk:core-module:core/runner,ydk:req:rules/deterministic-output
+    acceptance:
+      - "The C# run reproduces tests/golden/expected/{pairs.jsonl,items.jsonl,report.json} byte-for-byte (timings excluded) with --workers 1 and --workers 4"
+      - "The C# HTML render of the golden report equals tests/fixtures/report.golden.html"
+      - "Timeout, crash and startup failures behave as in ADR-006"
+
+tasks:
+  # ---------------- Foundation ----------------
+  - id: T-dn-skeleton
+    title: "Solution skeleton: dotnet/ sln, console project, xUnit project, CI build step"
+    story: S-dotnet-foundation
+    component_refs: ydk:cli-command:cli/compare
+    spec_refs: architecture.md,testing-strategy.md,docs/adrs/009-dotnet-port.md
+    description: |
+      First task of the port; every other port task depends on it.
+      - dotnet/ExtractorTester.sln with dotnet/src/ExtractorTester (net8.0 console, nullable enabled,
+        warnings as errors) and dotnet/tests/ExtractorTester.Tests (xUnit).
+      - Package references: YamlDotNet, Scriban, System.CommandLine, xUnit (System.Text.Json is in the BCL).
+      - Empty namespaces/classes mirroring the Python modules: Config, Loader, Decode, Families, Fields,
+        Tree, Matching, Compare, Aggregate, Output, Render, Runner, Pool, Channel, Profiling, Models, Cli.
+      - Program.cs: `compare` command stub that exits 0 with "not implemented yet".
+      - .github/workflows/ci.yml: add a job running `dotnet build` and `dotnet test` on dotnet/; Python job unchanged.
+      - .gitignore entries for bin/ and obj/.
+    acceptance:
+      - "`dotnet build dotnet/ExtractorTester.sln` exits 0 with no warnings"
+      - "`dotnet test dotnet/ExtractorTester.sln` passes with at least one smoke test"
+      - "`dotnet run --project dotnet/src/ExtractorTester -- compare --help` exits 0 and lists OLD, NEW, --config, --out, --overwrite, --workers"
+      - "CI workflow runs the dotnet build and test job alongside the Python job"
+    test_strategy: "Smoke test; CLI --help invocation."
+    depends_on: []
+
+  - id: T-dn-decode
+    title: "Parity helpers: code points, whitespace, splitlines, strict base64, counted UTF-8, text hash"
+    story: S-dotnet-foundation
+    component_refs: ydk:core-module:core/decoder,ydk:req:rules/decode-first,ydk:tool-error:errors/invalid-base64
+    spec_refs: metrics.md,errors-and-edge-cases.md,matching.md,docs/adrs/009-dotnet-port.md
+    description: |
+      Port src/extractor_tester/decode.py plus the string helpers every later task needs.
+      - Text as Unicode code points (int[] / Rune); code-point length, slicing and prefix helpers.
+      - IsPyWhitespace equal to Python str.split() (includes \x1c-\x1f); PySplit; PySplitLines equal to
+        str.splitlines() (\n \r \r\n \v \f \x1c \x1d \x1e \x85 U+2028 U+2029, keepends variant if used).
+      - Strict base64 equal to b64decode(validate=True) (whitespace rejected) -> INVALID_BASE64.
+      - UTF-8 decode with one U+FFFD per invalid sequence (Python errors="replace" boundaries) and the count.
+      - Normalize and text hash identical to Python (same hash function and hex output, prefix in code points).
+      A small Python script under dotnet/tests/tools/ dumps reference outputs to JSON fixtures; the C# tests read them.
+    acceptance:
+      - "Decode, normalize, split, splitlines and text hash match the Python reference fixtures on every case"
+      - "Fixture cases include astral characters, \\x1c-\\x1f, \\x85, \\u2028, lone surrogates in UTF-8 bytes and truncated sequences"
+      - "Base64 with embedded whitespace or bad padding yields INVALID_BASE64, as in Python"
+      - "Decode error count equals Python's replacement count for each invalid-UTF-8 case"
+    test_strategy: "Differential xUnit tests against JSON fixtures generated from Python."
+    depends_on:
+      - "T-dn-skeleton:blocks"
+
+  - id: T-dn-models
+    title: "Models and JSON serialization byte-identical to pydantic"
+    story: S-dotnet-foundation
+    component_refs: ydk:entity:model/Item,ydk:entity:model/FileRecord,ydk:entity:model/FilePair,ydk:entity:model/FieldDiff,ydk:entity:model/TextFacts,ydk:entity:model/PairFacts,ydk:entity:model/ItemResult,ydk:entity:model/ErrorRecord,ydk:entity:model/Example,ydk:entity:model/MetricResult,ydk:entity:model/FamilyAggregate,ydk:entity:model/RunStats,ydk:entity:model/Report
+    spec_refs: architecture.md,metrics.md,outputs.md,errors-and-edge-cases.md,docs/adrs/009-dotnet-port.md
+    description: |
+      Port src/extractor_tester/models.py to C# records with the same field names and declaration order.
+      JSON writer on System.Text.Json (custom converters where needed) producing output byte-identical to
+      pydantic model_dump_json: floats in Python repr form (1.0, 1e-05, 0.1), non-ASCII unescaped
+      (UnsafeRelaxedJsonEscaping or a custom encoder matching pydantic's escaping), null/default handling as
+      pydantic, compact for JSONL lines and indent=2 for report.json. Report also deserializes from report.json.
+      Error-code enum with all tool-error codes serialized by their string code.
+    acceptance:
+      - "Each model's field set and order equals the Python model (test reads a Python-dumped schema fixture)"
+      - "Serializing sample instances gives bytes equal to Python model_dump_json fixtures, compact and indent=2"
+      - "Float cases 1.0, 1e-05, 0.1, 1/3, 123456789.0 and 1e16 serialize as Python repr"
+      - "Report round-trips: deserialize(serialize(r)) serializes to the same bytes"
+    test_strategy: "Fixture comparison against Python dumps; round-trip tests."
+    depends_on:
+      - "T-dn-skeleton:blocks"
+
+  - id: T-dn-config
+    title: "Config loading and validation with the same INVALID_CONFIG messages"
+    story: S-dotnet-foundation
+    component_refs: ydk:core-module:core/config-loader,ydk:entity:model/CompareConfig,ydk:config-file:config/compare-config,ydk:config-file:config/type-families,ydk:tool-error:errors/invalid-config
+    spec_refs: config.md,errors-and-edge-cases.md,docs/adrs/005-compare-config.md
+    description: |
+      Port src/extractor_tester/config.py and families.py with YamlDotNet. Same keys, types, defaults and
+      constraints; unknown keys rejected; type_families_file resolved relative to the config file; MIME->family
+      map lowercased; one MIME in two families rejected; fileId/parentId/rootId and text_field always ignored.
+      INVALID_CONFIG messages must equal the Python messages text for text (YAML-type coercion rules follow
+      PyYAML safe_load: e.g. `yes`/`no`, ints vs floats).
+    acceptance:
+      - "A minimal config yields every documented default, equal to the Python CompareConfig dump"
+      - "Each invalid case in tests/test_config.py yields INVALID_CONFIG with the identical message"
+      - "type_families_file is resolved relative to the config file"
+      - "mime() and family() match tests/test_families.py cases"
+    test_strategy: "Port tests/test_config.py and tests/test_families.py to xUnit."
+    depends_on:
+      - "T-dn-models:blocks"
+
+  # ---------------- Pipeline ----------------
+  - id: T-dn-loader-tree
+    title: "Loader, field flattener and tree builder"
+    story: S-dotnet-pipeline
+    component_refs: ydk:core-module:core/loader,ydk:core-module:core/field-flattener,ydk:core-module:core/tree-builder,ydk:core-module:core/type-family,ydk:tool-error:errors/input-not-found,ydk:tool-error:errors/mixed-input-kinds,ydk:tool-error:errors/empty-input,ydk:tool-error:errors/invalid-json,ydk:tool-error:errors/item-too-large,ydk:tool-error:errors/item-id-mismatch,ydk:tool-error:errors/root-not-found,ydk:tool-error:errors/multiple-roots,ydk:tool-error:errors/duplicate-file-id,ydk:tool-error:errors/parent-cycle,ydk:tool-error:errors/orphan-file,ydk:tool-error:errors/missing-field
+    spec_refs: matching.md,errors-and-edge-cases.md,overview.md,metrics.md
+    description: |
+      Port src/extractor_tester/loader.py, fields.py and tree.py. Discovery sorted by item id with the same
+      ordering as Python (ordinal string sort), file mode and folder mode, ignored-entry count, size check
+      before parse, JSON parse to a generic tree preserving key order and number forms needed by field diffs.
+      Iterative flatten (no recursion limit), classify generic/specific/ignored. Tree paths with occurrence
+      markers, same error codes and messages.
+    acceptance:
+      - "Every case in tests/test_loader.py, tests/test_fields.py and tests/test_tree.py passes in the xUnit port"
+      - "Each of the 12 load/tree error codes is produced with the same message as Python"
+      - "Flattening a 2,000-level nested object succeeds"
+    test_strategy: "Port the Python unit tests; items built by a C# WriteItem helper equal to tests/helpers.write_item."
+    depends_on:
+      - "T-dn-decode:blocks"
+      - "T-dn-config:blocks"
+
+  - id: T-dn-matching
+    title: "Matcher and tiers: root, name, text-hash, type-family"
+    story: S-dotnet-pipeline
+    component_refs: ydk:core-module:core/matcher,ydk:contract:core/MatchTier,ydk:core-module:core/tier-name,ydk:core-module:core/tier-text-hash,ydk:core-module:core/tier-type-family,ydk:req:rules/matcher-pluggable
+    spec_refs: matching.md,docs/adrs/001-file-matching-by-tree-path.md
+    description: |
+      Port src/extractor_tester/matching/matcher.py and tiers.py. IMatchTier interface, ordered tier list,
+      top-down tree walk, same tie-break order (text hash + family, then position) and tie notes, one-sided
+      reasons 'parent unpaired' / 'no candidate'. Empty text never pairs in the text-hash tier.
+    acceptance:
+      - "Every case in tests/test_matcher.py and tests/test_tiers.py passes in the xUnit port"
+      - "The matching.md worked example yields exactly the documented pairs and tiers"
+      - "FilePair JSON for each test equals the Python output"
+    test_strategy: "Port the Python unit tests."
+    depends_on:
+      - "T-dn-loader-tree:blocks"
+
+  - id: T-dn-indel
+    title: "Indel port (distance + opcodes) with differential tests vs rapidfuzz"
+    story: S-dotnet-pipeline
+    component_refs: ydk:core-module:core/text-comparer
+    spec_refs: metrics.md,docs/adrs/002-comparison-metrics.md,docs/adrs/009-dotnet-port.md
+    description: |
+      Hand-port rapidfuzz.distance.Indel over code-point arrays: distance, normalized_similarity and opcodes
+      (equal/insert/delete blocks). The LCS backtrack must reproduce rapidfuzz's tie-break order, because
+      _first_equal in compare/text.py takes the first equal opcode. A Python script dumps rapidfuzz results
+      for a generated case set (random and edge cases: empty, identical, disjoint, repeated chars, astral
+      chars, long texts) to a JSON fixture.
+    acceptance:
+      - "Distance, normalized similarity and the full opcode list equal rapidfuzz on every fixture case"
+      - "Fixture has at least 500 cases including empty, identical, disjoint, repeated-char and astral-char inputs"
+      - "A 50,000-code-point pair completes within the full-compare NFR budget"
+    test_strategy: "Differential xUnit tests against rapidfuzz-generated fixtures."
+    depends_on:
+      - "T-dn-decode:blocks"
+
+  - id: T-dn-seqmatcher
+    title: "difflib.SequenceMatcher port (autojunk=False, get_opcodes) with differential tests"
+    story: S-dotnet-pipeline
+    component_refs: ydk:core-module:core/text-comparer
+    spec_refs: metrics.md,docs/adrs/003-buffered-text-comparison.md,docs/adrs/009-dotnet-port.md
+    description: |
+      Hand-port difflib.SequenceMatcher (find_longest_match, get_matching_blocks, get_opcodes, ratio) for
+      generic element sequences (lines as strings) with autojunk=False and no isjunk, matching CPython 3.12
+      exactly, including b2j insertion order and block ordering. A Python script dumps difflib results for a
+      generated case set to a JSON fixture.
+    acceptance:
+      - "Opcodes and matching blocks equal difflib on every fixture case"
+      - "Fixture has at least 300 cases including repeated lines, empty sides and >200-line inputs (where autojunk would differ)"
+    test_strategy: "Differential xUnit tests against difflib-generated fixtures."
+    depends_on:
+      - "T-dn-skeleton:blocks"
+
+  - id: T-dn-compare
+    title: "Compare: text, buffered, fields and item"
+    story: S-dotnet-pipeline
+    component_refs: ydk:core-module:core/text-comparer,ydk:core-module:core/field-differ,ydk:core-module:core/pair-comparer,ydk:entity:model/TextFacts,ydk:entity:model/PairFacts,ydk:tool-error:errors/item-processing-failed
+    spec_refs: metrics.md,errors-and-edge-cases.md,docs/adrs/002-comparison-metrics.md,docs/adrs/003-buffered-text-comparison.md
+    description: |
+      Port src/extractor_tester/compare/text.py, buffered.py, fields.py and item.py. Equal-text fast path,
+      full vs buffered method choice, relation labels, hints, identical flag, length_delta and snippets in
+      code points, cut-line warning, field diffs (generic/specific), per-item processing into ItemResult and
+      PairFacts. Round-half-even wherever Python uses round().
+    acceptance:
+      - "Every case in tests/test_text.py, tests/test_buffered.py, tests/test_compare_fields.py and tests/test_item.py passes in the xUnit port"
+      - "Each relation label is produced by its dedicated input"
+      - "PairFacts and ItemResult JSON equal Python output for every test item"
+    test_strategy: "Port the Python unit tests; JSON-equality checks against Python fixtures."
+    depends_on:
+      - "T-dn-matching:blocks"
+      - "T-dn-indel:blocks"
+      - "T-dn-seqmatcher:blocks"
+
+  # ---------------- Outputs, runner, golden ----------------
+  - id: T-dn-aggregate
+    title: "Aggregate and aggregate_util"
+    story: S-dotnet-outputs-runner
+    component_refs: ydk:core-module:core/aggregator,ydk:entity:model/FamilyAggregate,ydk:entity:model/MetricResult,ydk:entity:model/Example,ydk:req:rules/examples-on-every-result
+    spec_refs: metrics.md,outputs.md
+    description: |
+      Port src/extractor_tester/aggregate.py and aggregate_util.py. Mirror tie order of Counter.most_common
+      (insertion order on equal counts), heapq selections (stable on equal keys as Python), statistics.median
+      and statistics.quantiles (default method exclusive; p10 = quantiles(n=10)[0]), example capping and ordering,
+      round-half-even.
+    acceptance:
+      - "Every case in tests/test_aggregate.py and tests/test_aggregate_util.py passes in the xUnit port"
+      - "Tie-order tests: equal counts, equal heap keys and even-length median give the same result as Python"
+      - "FamilyAggregate JSON equals Python output for the aggregate test inputs"
+    test_strategy: "Port the Python unit tests; explicit tie-order cases."
+    depends_on:
+      - "T-dn-compare:blocks"
+
+  - id: T-dn-output-render
+    title: "Output writers and Scriban HTML render"
+    story: S-dotnet-outputs-runner
+    component_refs: ydk:core-module:core/report-writer,ydk:core-module:core/html-renderer,ydk:req:rules/json-is-source-of-truth,ydk:req:rules/escape-untrusted-content,ydk:tool-error:errors/output-exists,ydk:tool-error:errors/output-write-failed
+    spec_refs: outputs.md,docs/adrs/004-report-format.md
+    description: |
+      Port src/extractor_tester/output.py (streamed pairs.jsonl / items.jsonl, report.json indent=2, --overwrite
+      rules, OUTPUT_EXISTS / OUTPUT_WRITE_FAILED, UTF-8 without BOM, LF newlines) and render.py: the Jinja2
+      template becomes a Scriban template with the same markup, whitespace and HTML escaping as Jinja2 autoescape
+      (&, <, >, ", ' -> &#39;). Renderer reads report.json from disk only.
+    acceptance:
+      - "Rendering tests/fixtures/report.json gives bytes equal to tests/fixtures/report.golden.html"
+      - "Script tags in names, values and text render as visible text"
+      - "Every case in tests/test_output.py and tests/test_render.py passes in the xUnit port"
+    test_strategy: "HTML golden comparison; port the Python output and render tests."
+    depends_on:
+      - "T-dn-models:blocks"
+
+  - id: T-dn-pool
+    title: "Worker pool: child processes, pipe channel, timeout, crash, startup, ordering"
+    story: S-dotnet-outputs-runner
+    component_refs: ydk:core-module:core/runner,ydk:req:rules/deterministic-output,ydk:tool-error:errors/item-timeout,ydk:tool-error:errors/worker-crashed,ydk:tool-error:errors/internal-failure
+    spec_refs: architecture.md,errors-and-edge-cases.md,docs/adrs/006-tech-stack-and-scale.md,docs/adrs/009-dotnet-port.md
+    description: |
+      Port src/extractor_tester/pool.py and channel.py. The exe re-launches itself (Environment.ProcessPath)
+      with a hidden `worker` subcommand; length-prefixed JSON messages over stdin/stdout. One item at a time
+      per worker; per-item timeout kills the process tree and replaces it (ITEM_TIMEOUT); a dead worker is
+      replaced and only its item recorded (WORKER_CRASHED); startup timeout and give-up rule as Python;
+      send grace period; results buffered and released in item-id order; workers used for every count
+      including 1. Port test hooks EXTRACTOR_TESTER_TEST_CRASH_ITEM, _GARBAGE_ITEM, _HANG_STARTUP,
+      _DIE_BEFORE_TAKE with the same semantics.
+    acceptance:
+      - "Every case in tests/test_channel.py and tests/test_pool.py passes in the xUnit port"
+      - "A hung item is recorded as ITEM_TIMEOUT and its worker replaced; the run completes"
+      - "A crashing or garbage-sending worker yields WORKER_CRASHED for its item only"
+      - "A worker that hangs on startup triggers the startup-timeout path as in Python"
+      - "Results are emitted in item-id order regardless of completion order"
+    test_strategy: "Port the Python pool/channel tests using the env-var hooks."
+    depends_on:
+      - "T-dn-compare:blocks"
+
+  - id: T-dn-runner-cli
+    title: "Runner and CLI: exit codes, progress, stage timers, options"
+    story: S-dotnet-outputs-runner
+    component_refs: ydk:core-module:core/runner,ydk:cli-command:cli/compare,ydk:core-module:core/timers,ydk:entity:model/RunStats,ydk:req:rules/never-abort-on-bad-input
+    spec_refs: architecture.md,outputs.md,errors-and-edge-cases.md,docs/adrs/007-profiling.md,docs/adrs/009-dotnet-port.md
+    description: |
+      Port src/extractor_tester/runner.py, profiling.py (stage timers, run_stats, slowest N; no --profile)
+      and cli.py with System.CommandLine: `compare OLD NEW --config C [--out] [--overwrite] [--workers]`.
+      Exit codes 0 success, 1 run-level fatal error, 2 usage error, 130 on Ctrl-C (no report.json written).
+      Progress line on stderr in the same format. Same stdout/stderr messages as Python.
+    acceptance:
+      - "Every case in tests/test_cli.py and tests/test_runner*.py and tests/test_profiling.py passes in the xUnit port (--profile cases dropped)"
+      - "Exit codes 0, 1, 2 and 130 are each produced by a dedicated test"
+      - "--workers defaults to the CPU count; --overwrite and --out behave as in Python"
+      - "report.json run_stats has the same keys as Python"
+    test_strategy: "Port the CLI and runner tests; Ctrl-C test via process signal."
+    depends_on:
+      - "T-dn-aggregate:blocks"
+      - "T-dn-output-render:blocks"
+      - "T-dn-pool:blocks"
+
+  - id: T-dn-golden
+    title: "Golden parity acceptance (workers 1 and 4, HTML) and remaining test ports"
+    story: S-dotnet-outputs-runner
+    component_refs: ydk:req:rules/deterministic-output,ydk:req:rules/examples-on-every-result,ydk:entity:model/Report
+    spec_refs: testing-strategy.md,outputs.md,docs/adrs/009-dotnet-port.md
+    description: |
+      Port tests/test_golden.py, tests/golden/checks.py, tests/test_tool_error_coverage.py and tests/test_models*.py. Export the golden corpus inputs written by
+      tests/golden/corpus.py to a checked-in folder (or a script that writes them) so xUnit can run the C# exe
+      on them. Compare outputs to tests/golden/expected/{pairs.jsonl,items.jsonl,report.json} byte-for-byte with
+      timings excluded exactly as test_golden.py does. Port any remaining Python tests not covered by earlier
+      tasks (list them in the PR). Python package stays in place.
+    acceptance:
+      - "C# outputs equal tests/golden/expected/{pairs.jsonl,items.jsonl,report.json} byte-for-byte (timings excluded) with --workers 1"
+      - "Same with --workers 4"
+      - "Same from a corpus under a 200+ character folder path"
+      - "C# HTML render of the golden report equals tests/fixtures/report.golden.html"
+      - "Example-presence and metrics-key checks pass on the C# report"
+    test_strategy: "Golden xUnit tests invoking the built exe."
+    depends_on:
+      - "T-dn-runner-cli:blocks"
