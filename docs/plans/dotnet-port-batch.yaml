@@ -310,9 +310,9 @@ tasks:
     component_refs: ydk:req:rules/deterministic-output,ydk:req:rules/examples-on-every-result,ydk:entity:model/Report
     spec_refs: testing-strategy.md,outputs.md,docs/adrs/009-dotnet-port.md
     description: |
-      Port tests/test_golden.py, tests/golden/checks.py, tests/test_tool_error_coverage.py and tests/test_models*.py. Export the golden corpus inputs written by
-      tests/golden/corpus.py to a checked-in folder (or a script that writes them) so xUnit can run the C# exe
-      on them. Compare outputs to tests/golden/expected/{pairs.jsonl,items.jsonl,report.json} byte-for-byte with
+      Port tests/test_golden.py, tests/golden/checks.py, tests/test_tool_error_coverage.py and tests/test_models*.py. Golden corpus inputs are exported once by
+      the Python tests/golden/corpus.py into the checked-in folder dotnet/tests/golden/input/ (alongside copies or
+      references of tests/golden/expected/); C# golden tests read that folder, so no Python is needed at C# test time. Compare outputs to tests/golden/expected/{pairs.jsonl,items.jsonl,report.json} byte-for-byte with
       timings excluded exactly as test_golden.py does. Port any remaining Python tests not covered by earlier
       tasks (list them in the PR). Python package stays in place.
     acceptance:
@@ -321,6 +321,7 @@ tasks:
       - "Same from a corpus under a 200+ character folder path"
       - "C# HTML render of the golden report equals tests/fixtures/report.golden.html"
       - "Example-presence and metrics-key checks pass on the C# report"
+      - "Golden inputs checked in under dotnet/tests/golden/input/; C# golden tests run without Python."
     test_strategy: "Golden xUnit tests invoking the built exe."
     depends_on:
       - "T-dn-runner-cli:blocks"
