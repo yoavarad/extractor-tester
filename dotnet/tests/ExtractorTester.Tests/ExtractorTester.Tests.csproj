@@ -17,6 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="fixtures/**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
     <None Include="Fixtures/seqmatcher_cases.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
