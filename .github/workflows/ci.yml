@@ -46,3 +46,16 @@ jobs:
         run: uv sync --locked --all-extras --dev
       - name: pytest
         run: uv run pytest -q --tb=short
+
+  dotnet:
+    name: .NET build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: dotnet build
+        run: dotnet build dotnet/ExtractorTester.sln --configuration Release
+      - name: dotnet test
+        run: dotnet test dotnet/ExtractorTester.sln --configuration Release --no-build
