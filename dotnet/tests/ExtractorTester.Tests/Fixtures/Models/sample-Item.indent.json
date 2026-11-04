@@ -1,0 +1,87 @@
+{
+  "item_id": "i1",
+  "side": "old",
+  "metadata": {
+    "a": "q\"b\\s/\n\r\t\b\f\u0000\u001f é ✓ 😀   <&> ",
+    "f": [
+      1.0,
+      0.00001,
+      0.1,
+      0.3333333333333333,
+      123456789.0,
+      1e+16,
+      1e-6,
+      1.5e+300,
+      5e-324,
+      -0.0,
+      1000000000000000.0,
+      2.5e-7
+    ]
+  },
+  "files": [
+    {
+      "file_id": "r1",
+      "parent_id": "r1",
+      "index": 0,
+      "name": "q\"b\\s/\n\r\t\b\f\u0000\u001f é ✓ 😀   <&> ",
+      "mime": "application/pdf",
+      "family": "pdf",
+      "path": "root/r1",
+      "fields": {
+        "pages": 3,
+        "ratio": 0.5,
+        "big": 1180591620717411303424,
+        "nested": {
+          "a": [
+            1,
+            2.0,
+            null,
+            true
+          ]
+        },
+        "empty": {},
+        "list": []
+      },
+      "text": "q\"b\\s/\n\r\t\b\f\u0000\u001f é ✓ 😀   <&> ",
+      "text_hash": null,
+      "decode_errors": 2,
+      "children": [
+        {
+          "file_id": "c1",
+          "parent_id": "r1",
+          "index": 0,
+          "name": "q\"b\\s/\n\r\t\b\f\u0000\u001f é ✓ 😀   <&> ",
+          "mime": "application/pdf",
+          "family": "pdf",
+          "path": "root/c1",
+          "fields": {
+            "pages": 3,
+            "ratio": 0.5,
+            "big": 1180591620717411303424,
+            "nested": {
+              "a": [
+                1,
+                2.0,
+                null,
+                true
+              ]
+            },
+            "empty": {},
+            "list": []
+          },
+          "text": "q\"b\\s/\n\r\t\b\f\u0000\u001f é ✓ 😀   <&> ",
+          "text_hash": null,
+          "decode_errors": 2,
+          "children": [],
+          "missing_fields": [
+            "x"
+          ]
+        }
+      ],
+      "missing_fields": [
+        "x"
+      ]
+    }
+  ],
+  "source_path": "C:\\in\\i1.json"
+}

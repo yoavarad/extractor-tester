@@ -1,0 +1,27 @@
+{
+  "raw_equal": false,
+  "normalized_equal": false,
+  "method": "full",
+  "edit_similarity": 0.3333333333333333,
+  "jaccard": 0.00001,
+  "old_found_in_new": 1.0,
+  "new_found_in_old": 0.1,
+  "relation": "overlapping",
+  "old_chars": 10,
+  "new_chars": 0,
+  "length_delta": -10,
+  "old_empty": false,
+  "new_empty": true,
+  "lines_total": 3,
+  "lines_cut": 1,
+  "lines_cut_pct": 33.33333333333333,
+  "oversized_runs": 0,
+  "snippets": [
+    {
+      "old": "q\"b\\s/\n\r\t\b\f\u0000\u001f é ✓ 😀   <&> ",
+      "new": "",
+      "pos": 4
+    }
+  ],
+  "seconds": 123456789.0
+}

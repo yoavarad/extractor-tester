@@ -1,0 +1,145 @@
+{
+  "family": "pdf",
+  "pairs": 3,
+  "only_in_old": {
+    "key": "k",
+    "count": 1,
+    "denominator": 3,
+    "rate": 0.3333333333333333,
+    "examples": [
+      {
+        "item_id": "i1",
+        "path_old": null,
+        "path_new": "p",
+        "old_value": 1e+16,
+        "new_value": [
+          "q\"b\\s/\n\r\t\b\f\u0000\u001f é ✓ 😀   <&> "
+        ],
+        "similarity": 1e-6,
+        "note": null
+      }
+    ]
+  },
+  "only_in_new": {
+    "key": "e",
+    "count": 0,
+    "denominator": 0,
+    "rate": 0.0,
+    "examples": []
+  },
+  "identical": {
+    "key": "e",
+    "count": 0,
+    "denominator": 0,
+    "rate": 0.0,
+    "examples": []
+  },
+  "mime_changed": {
+    "key": "e",
+    "count": 0,
+    "denominator": 0,
+    "rate": 0.0,
+    "examples": []
+  },
+  "family_changed": {
+    "key": "e",
+    "count": 0,
+    "denominator": 0,
+    "rate": 0.0,
+    "examples": []
+  },
+  "fields": [
+    {
+      "key": "k",
+      "count": 1,
+      "denominator": 3,
+      "rate": 0.3333333333333333,
+      "examples": [
+        {
+          "item_id": "i1",
+          "path_old": null,
+          "path_new": "p",
+          "old_value": 1e+16,
+          "new_value": [
+            "q\"b\\s/\n\r\t\b\f\u0000\u001f é ✓ 😀   <&> "
+          ],
+          "similarity": 1e-6,
+          "note": null
+        }
+      ]
+    },
+    {
+      "key": "e",
+      "count": 0,
+      "denominator": 0,
+      "rate": 0.0,
+      "examples": []
+    }
+  ],
+  "edit_similarity": {
+    "mean": 0.1,
+    "buckets": [
+      0,
+      1,
+      2
+    ]
+  },
+  "jaccard": {},
+  "relations": [],
+  "methods": {
+    "full": 2,
+    "fast-path": 1
+  },
+  "lines_cut_pct": 0.0,
+  "cut_lines_warning": false,
+  "tiers": [
+    {
+      "key": "k",
+      "count": 1,
+      "denominator": 3,
+      "rate": 0.3333333333333333,
+      "examples": [
+        {
+          "item_id": "i1",
+          "path_old": null,
+          "path_new": "p",
+          "old_value": 1e+16,
+          "new_value": [
+            "q\"b\\s/\n\r\t\b\f\u0000\u001f é ✓ 😀   <&> "
+          ],
+          "similarity": 1e-6,
+          "note": null
+        }
+      ]
+    }
+  ],
+  "hints": [],
+  "decode_errors": {
+    "key": "e",
+    "count": 0,
+    "denominator": 0,
+    "rate": 0.0,
+    "examples": []
+  },
+  "file_errors": [
+    {
+      "key": "k",
+      "count": 1,
+      "denominator": 3,
+      "rate": 0.3333333333333333,
+      "examples": [
+        {
+          "item_id": "i1",
+          "path_old": null,
+          "path_new": "p",
+          "old_value": 1e+16,
+          "new_value": [
+            "q\"b\\s/\n\r\t\b\f\u0000\u001f é ✓ 😀   <&> "
+          ],
+          "similarity": 1e-6,
+          "note": null
+        }
+      ]
+    }
+  ]
+}
