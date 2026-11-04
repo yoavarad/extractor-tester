@@ -154,6 +154,24 @@ public sealed class RenderTests : IDisposable
     public void FloatReprMatchesPython(double value, string expected) =>
         Assert.Equal(expected, PyText.FloatRepr(value));
 
+    // Code points given as numbers; expected text is Python repr() output with BS for a backslash.
+    [Theory]
+    [InlineData(new[] { 0x61, 0xA0, 0x62 }, "'aBSxa0b'")]
+    [InlineData(new[] { 0x85, 0xAD }, "'BSx85BSxad'")]
+    [InlineData(new[] { 0x7A, 0x200B, 0x77, 0x2028 }, "'zBSu200bwBSu2028'")]
+    [InlineData(new[] { 0xD800, 0x78 }, "'BSud800x'")]
+    [InlineData(new[] { 0x1F600, 0xE0001 }, "'\U0001F600BSU000e0001'")]
+    [InlineData(new[] { 0xE9, 0x20, 0xFC }, "'é ü'")]
+    public void ReprStringEscapesNonPrintable(int[] codePoints, string expected)
+    {
+        var sb = new StringBuilder();
+        foreach (var cp in codePoints)
+        {
+            sb.Append(cp is >= 0xD800 and <= 0xDFFF ? ((char)cp).ToString() : char.ConvertFromUtf32(cp));
+        }
+        Assert.Equal(expected.Replace("BS", "\\"), PyText.Repr(sb.ToString()));
+    }
+
     [Fact]
     public void ReprOfDictMatchesPython()
     {

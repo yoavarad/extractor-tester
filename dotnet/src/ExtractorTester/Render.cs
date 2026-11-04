@@ -274,34 +274,67 @@ internal static class PyText
         sb.Append(quote);
         for (var i = 0; i < s.Length; i++)
         {
-            var c = s[i];
-            if (c == quote || c == '\\')
+            int cp = s[i];
+            if (char.IsHighSurrogate(s[i]) && i + 1 < s.Length && char.IsLowSurrogate(s[i + 1]))
             {
-                sb.Append('\\').Append(c);
+                cp = char.ConvertToUtf32(s[i], s[i + 1]);
             }
-            else if (c == '\n')
+            if (cp == quote || cp == '\\')
             {
-                sb.Append("\\n");
+                sb.Append('\\').Append((char)cp);
             }
-            else if (c == '\r')
+            else if (cp == '\n')
             {
-                sb.Append("\\r");
+                sb.Append(@"\n");
             }
-            else if (c == '\t')
+            else if (cp == '\r')
             {
-                sb.Append("\\t");
+                sb.Append(@"\r");
             }
-            else if (c < 0x20 || c == 0x7f)
+            else if (cp == '\t')
             {
-                sb.Append("\\x").Append(((int)c).ToString("x2", CultureInfo.InvariantCulture));
+                sb.Append(@"\t");
+            }
+            else if (!IsPrintable(cp))
+            {
+                var hex = cp.ToString("x", CultureInfo.InvariantCulture);
+                sb.Append(cp < 0x100 ? @"\x" + hex.PadLeft(2, '0')
+                    : cp < 0x10000 ? @"\u" + hex.PadLeft(4, '0')
+                    : @"\U" + hex.PadLeft(8, '0'));
             }
             else
             {
-                sb.Append(c);
+                sb.Append(char.ConvertFromUtf32(cp));
+            }
+            if (cp > 0xFFFF)
+            {
+                i++;
             }
         }
         sb.Append(quote);
         return sb.ToString();
+    }
+
+    // str.isprintable(): everything except categories Cc, Cf, Cs, Co, Cn, Zl, Zp and Zs other
+    // than the ASCII space. Lone surrogates (Cs) are escaped like Python does.
+    private static bool IsPrintable(int cp)
+    {
+        if (cp == ' ')
+        {
+            return true;
+        }
+        if (cp is >= 0xD800 and <= 0xDFFF)
+        {
+            return false;
+        }
+        return CharUnicodeInfo.GetUnicodeCategory(cp) switch
+        {
+            UnicodeCategory.Control or UnicodeCategory.Format or UnicodeCategory.Surrogate
+                or UnicodeCategory.PrivateUse or UnicodeCategory.OtherNotAssigned
+                or UnicodeCategory.LineSeparator or UnicodeCategory.ParagraphSeparator
+                or UnicodeCategory.SpaceSeparator => false,
+            _ => true,
+        };
     }
 
     /// <summary>Python repr(float): shortest round-trip digits, exponent form outside 1e-4..1e16.</summary>
