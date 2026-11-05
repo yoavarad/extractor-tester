@@ -62,6 +62,11 @@ public static class FieldDiffer
     // Python int/float comparison is exact; NaN == NaN only via the isnan check in fields._equal.
     private static bool NumberEqual(object a, object b)
     {
+        // math.isnan(a) converts an int to float first; past the double range Python raises OverflowError.
+        if (a is not double && double.IsInfinity((double)ToBig(a)))
+        {
+            throw new OverflowException("int too large to convert to float");
+        }
         if (a is double x && b is double y) return x == y || (double.IsNaN(x) && double.IsNaN(y));
         if (a is double da) return IntEqualsDouble(ToBig(b), da);
         if (b is double db) return IntEqualsDouble(ToBig(a), db);

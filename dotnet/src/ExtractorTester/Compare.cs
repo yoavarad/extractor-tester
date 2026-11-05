@@ -152,7 +152,7 @@ public static class TextComparer
             {
                 if (op.Tag == "equal") return op;
             }
-            if (i + window >= a.Length && j + window >= b.Length) return null;
+            if (window >= a.Length - i && window >= b.Length - j) return null;
             window = window > long.MaxValue / 2 ? long.MaxValue : window * 2;
         }
     }

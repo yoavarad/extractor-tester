@@ -542,6 +542,17 @@
    "facts": []
   },
   {
+   "name": "int_past_float_range_overflow_error",
+   "old_name": "I.json",
+   "new_name": "I.json",
+   "old_side": "old",
+   "new_side": "new",
+   "old_file": "{\"itemId\": \"I\", \"big\": 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, \"files\": [{\"fileId\": \"I\", \"parentId\": \"I\", \"rootId\": \"I\", \"name\": \"root\", \"mp\": \"application\", \"ms\": \"pdf\", \"text\": \"aGVsbG8=\"}]}",
+   "new_file": "{\"itemId\": \"I\", \"big\": 1, \"files\": [{\"fileId\": \"I\", \"parentId\": \"I\", \"rootId\": \"I\", \"name\": \"root\", \"mp\": \"application\", \"ms\": \"pdf\", \"text\": \"aGVsbG8=\"}]}",
+   "result": "{\"item_id\":\"I\",\"status\":\"error\",\"metadata_diffs\":[],\"files_identical\":0,\"files_changed\":0,\"files_only_old\":0,\"files_only_new\":0,\"errors\":[{\"code\":\"ITEM_PROCESSING_FAILED\",\"scope\":\"item\",\"severity\":\"error\",\"item_id\":\"I\",\"side\":null,\"file_path\":null,\"message\":\"OverflowError: int too large to convert to float\"}],\"seconds\":0.0,\"stage_seconds\":{\"load\":0.0,\"decode\":0.0,\"tree\":0.0,\"match\":0.0,\"field_compare\":0.0,\"text_fast\":0.0}}",
+   "facts": []
+  },
+  {
    "name": "int_digit_limit_value_error",
    "old_name": "I.json",
    "new_name": "I.json",

@@ -84,6 +84,7 @@ public static class ItemComparer
     {
         FlattenCollisionException or JsonIntDigitsException => "ValueError",
         JsonRecursionException => "RecursionError",
+        OverflowException => "OverflowError",
         _ => e.GetType().Name,
     };
 

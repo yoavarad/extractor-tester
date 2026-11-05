@@ -138,6 +138,7 @@ public sealed class ItemComparerTests
     [InlineData("file_flatten_collision_value_error", "ValueError: flatten path collision: 'x.y'")]
     [InlineData("int_digit_limit_value_error", "ValueError: Exceeds the limit (4300 digits)")]
     [InlineData("nesting_limit_recursion_error", "RecursionError: maximum recursion depth exceeded")]
+    [InlineData("int_past_float_range_overflow_error", "OverflowError: int too large to convert to float")]
     public void PortExceptionsSurfaceAsPythonErrors(string name, string messageStart)
     {
         var (result, facts) = Run(name);

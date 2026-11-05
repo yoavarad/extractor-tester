@@ -281,6 +281,8 @@ def item_cases(tmp: Path) -> list[dict[str, Any]]:
     out.append(item_case("metadata_flatten_collision_value_error", o, n))
     o, n = sides([root], [f("I", "I", "root", **{"x.y": 1, "x": {"y": 2}})])
     out.append(item_case("file_flatten_collision_value_error", o, n))
+    o, n = sides([root], [root], {"big": 10**400}, {"big": 1})
+    out.append(item_case("int_past_float_range_overflow_error", o, n))
     o, n = sides([root], [root])
     n.write_text(
         n.read_text(encoding="utf-8").replace('"files"', '"big": ' + "7" * 4301 + ', "files"'),
