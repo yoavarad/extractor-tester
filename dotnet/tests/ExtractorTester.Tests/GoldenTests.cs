@@ -167,4 +167,18 @@ public sealed class GoldenTests : IDisposable
     {
         Assert.Equal(expected, GoldenCorpus.FloatRepr(value));
     }
+
+    [Fact]
+    public void NormalizerMatchesPythonForIntegerNegativeZeroAndLineBreaks()
+    {
+        // Expected text from Python: json.dumps(json.loads(l)) over str.splitlines() of this input.
+        File.WriteAllText(Path.Combine(_tmp, "items.jsonl"),
+            "{\"a\": -0}\u001c{\"b\": -0.0}\u0085{\"c\": [-0, 0, -5]}\u2028{\"d\": 1}\r\n{\"e\": -0}\r{\"f\": 2}\n");
+        foreach (var other in new[] { "pairs.jsonl", "report.json" })
+        {
+            File.WriteAllText(Path.Combine(_tmp, other), "{}");
+        }
+        var actual = GoldenCorpus.NormalizedOutputs(_tmp, "<base>")["items.jsonl"];
+        Assert.Equal("{\"a\": 0}\n{\"b\": -0.0}\n{\"c\": [0, 0, -5]}\n{\"d\": 1}\n{\"e\": 0}\n{\"f\": 2}\n", actual);
+    }
 }

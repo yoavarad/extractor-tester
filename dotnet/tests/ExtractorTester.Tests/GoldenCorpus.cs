@@ -74,7 +74,7 @@ internal static class GoldenCorpus
             var sb = new StringBuilder();
             if (name.EndsWith(".jsonl", StringComparison.Ordinal))
             {
-                foreach (var line in text.Replace("\r\n", "\n").Split('\n').Where(l => l.Length > 0))
+                foreach (var line in ExtractorTester.Decode.Text.PySplitLines(text))
                 {
                     using var doc = JsonDocument.Parse(line);
                     Dumps(sb, doc.RootElement, @base, indent: null, depth: 0);
@@ -116,7 +116,8 @@ internal static class GoldenCorpus
                 break;
             case JsonValueKind.Number:
                 var raw = v.GetRawText();
-                sb.Append(raw.IndexOfAny(['.', 'e', 'E']) >= 0 ? FloatRepr(v.GetDouble()) : raw);
+                // Python reads an integer -0 as int 0, so it dumps as 0 (a float -0.0 keeps its sign).
+                sb.Append(raw.IndexOfAny(['.', 'e', 'E']) >= 0 ? FloatRepr(v.GetDouble()) : raw == "-0" ? "0" : raw);
                 break;
             case JsonValueKind.True:
                 sb.Append("true");
