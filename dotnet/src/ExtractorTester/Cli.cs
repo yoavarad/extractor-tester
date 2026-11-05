@@ -1,4 +1,5 @@
 using System.CommandLine;
+using ExtractorTester.Pool;
 
 namespace ExtractorTester.Cli;
 
@@ -23,6 +24,15 @@ public static class CliApp
             return 0;
         });
 
-        return new RootCommand("Compare JSON outputs of two extraction pipelines.") { compare };
+        // Internal: the pool re-launches this exe as a worker that talks over stdin/stdout.
+        var workerConfig = new Argument<string>("CONFIG_JSON");
+        var worker = new Command(WorkerPool.WorkerCommandName, "Run one compare worker (internal).")
+        {
+            workerConfig,
+        };
+        worker.Hidden = true;
+        worker.SetAction(r => WorkerPool.RunWorker(r.GetValue(workerConfig)!));
+
+        return new RootCommand("Compare JSON outputs of two extraction pipelines.") { compare, worker };
     }
 }
