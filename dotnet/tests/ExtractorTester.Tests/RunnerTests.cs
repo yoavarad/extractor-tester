@@ -156,6 +156,19 @@ public class RunnerTests : IDisposable
     }
 
     [Fact]
+    public void ToolVersionEqualsPyprojectVersion()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (!File.Exists(Path.Combine(dir!.FullName, "pyproject.toml")))
+        {
+            dir = dir.Parent;
+        }
+        var toml = File.ReadAllText(Path.Combine(dir.FullName, "pyproject.toml"));
+        var version = System.Text.RegularExpressions.Regex.Match(toml, "^version = \"([^\"]+)\"", System.Text.RegularExpressions.RegexOptions.Multiline);
+        Assert.Equal(CompareRunner.ToolVersion, version.Groups[1].Value);
+    }
+
+    [Fact]
     public void MalformedItemIsReportedAndOthersCompared()
     {
         var (old, @new) = Folders(_tmp);
@@ -558,23 +571,28 @@ public class RunnerTests : IDisposable
     public void CtrlCExits130WithoutReport()
     {
         var (old, @new) = Folders(_tmp);
-        var big = string.Concat(Enumerable.Repeat("word ", 100_000));
-        for (var i = 0; i < 60; i++)
+        // Random texts under a full compare take seconds per item, so the run cannot finish
+        // between the first progress line and the interrupt even on a fast machine.
+        var cfg = Path.Combine(_tmp, "full.yaml");
+        File.WriteAllText(cfg, Config + "full_compare_max_chars: 1000000\n");
+        var rng = new Random(0);
+        const string alphabet = "abcdefghij \n";
+        for (var i = 0; i < 20; i++)
         {
-            foreach (var (d, text) in new[] { (old, big + "a"), (@new, big + "b") })
+            foreach (var d in new[] { old, @new })
             {
-                var files = ItemFiles($"i{i}");
-                files[1]["text"] = text;
-                TestItems.WriteItem(d, $"i{i}", files);
+                var files = ItemFiles($"i{i:D2}");
+                files[1]["text"] = new string(Enumerable.Range(0, 200_000).Select(_ => alphabet[rng.Next(alphabet.Length)]).ToArray());
+                TestItems.WriteItem(d, $"i{i:D2}", files);
             }
         }
         var outDir = Path.Combine(_tmp, "out");
-        string[] args = ["compare", old, @new, "--config", _cfg, "--out", outDir, "--workers", "1"];
+        string[] args = ["compare", old, @new, "--config", cfg, "--out", outDir, "--workers", "1"];
         var (code, err) = OperatingSystem.IsWindows()
             ? Interrupt.RunWindows(ExePath(), args, Path.Combine(_tmp, "stderr.txt"))
             : Interrupt.RunPosix(ExeStart(args));
         Assert.True(code == 130, err);
-        Assert.EndsWith(Environment.NewLine + "Interrupted" +Environment.NewLine, err);
+        Assert.EndsWith(Environment.NewLine + "Interrupted" + Environment.NewLine, err);
         Assert.False(File.Exists(Path.Combine(outDir, "report.json")));
         Assert.False(File.Exists(Path.Combine(outDir, "report.html")));
         Assert.DoesNotContain("Exception", err);

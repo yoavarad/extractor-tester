@@ -142,10 +142,15 @@ public static class CompareRunner
     {
         var err = stderr ?? Console.Error;
         options ??= new RunOptions();
-        using var interrupt = CancellationTokenSource.CreateLinkedTokenSource(options.Interrupt);
+        // Not disposed: an interrupted run thread may outlive this call.
+        var interrupt = CancellationTokenSource.CreateLinkedTokenSource(options.Interrupt);
         var run = new RunOptions { Pool = options.Pool, BeforeFinish = options.BeforeFinish, Interrupt = interrupt.Token };
         void OnCancel(object? sender, ConsoleCancelEventArgs e)
         {
+            if (interrupt.IsCancellationRequested)
+            {
+                return; // a second Ctrl-C ends the process
+            }
             e.Cancel = true;
             interrupt.Cancel();
         }
@@ -177,27 +182,28 @@ public static class CompareRunner
         try
         {
             thread.Start();
-            if (WaitHandle.WaitAny([interrupt.Token.WaitHandle, finished.WaitHandle]) == 0)
+            WaitHandle.WaitAny([interrupt.Token.WaitHandle, finished.WaitHandle]);
+            if (!finished.IsSet)
             {
                 // Interrupted: let the run stop its workers, but do not wait on it forever.
-                thread.Join(InterruptGraceMs);
-                failure = new OperationCanceledException();
+                finished.Wait(InterruptGraceMs);
+                return Exit(new OperationCanceledException(), err, interrupted: true);
             }
         }
         finally
         {
             Console.CancelKeyPress -= OnCancel;
         }
-        return Exit(failure, err);
+        return Exit(failure, err, interrupt.IsCancellationRequested);
     }
 
-    private static int Exit(Exception? failure, TextWriter err)
+    private static int Exit(Exception? failure, TextWriter err, bool interrupted)
     {
         switch (failure)
         {
             case null:
                 return 0;
-            case OperationCanceledException:
+            case OperationCanceledException when interrupted:
                 err.WriteLine(Environment.NewLine + "Interrupted");
                 return 130;
             case ConfigException e:
