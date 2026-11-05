@@ -324,6 +324,16 @@ public sealed class LoaderTests : IDisposable
     [Fact]
     public void NestingLimitMatchesPython()
     {
+        // Debug frames are large; run on a big explicit stack so the test never depends on the host thread's size.
+        Exception? failure = null;
+        var t = new Thread(() => { try { NestingLimitCore(); } catch (Exception ex) { failure = ex; } }, 256 * 1024 * 1024);
+        t.Start();
+        t.Join();
+        if (failure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
+    }
+
+    private static void NestingLimitCore()
+    {
         var ok = string.Concat(Enumerable.Repeat("[", PyJsonDecoder.MaxDepth)) + string.Concat(Enumerable.Repeat("]", PyJsonDecoder.MaxDepth));
         Assert.IsType<List<object?>>(Parse(ok));
         var deep = string.Concat(Enumerable.Repeat("{\"a\":", 5000)) + "1" + string.Concat(Enumerable.Repeat("}", 5000));
