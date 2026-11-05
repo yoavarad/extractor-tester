@@ -21,6 +21,12 @@ public sealed class ChannelHooks
 
     /// <summary>Queue a received message on its slot and wake the pool.</summary>
     public Action<Slot, WorkerMessage, ManualResetEventSlim> Deliver { get; init; } = WorkerChannel.DefaultDeliver;
+
+    /// <summary>Called for a replaced worker after its reader was joined, just before its process is disposed.</summary>
+    public Action<Slot>? BeforeDispose { get; init; }
+
+    /// <summary>Longest wait for a replaced worker's reader thread; a stuck reader is left running (background).</summary>
+    public int ReaderJoinMilliseconds { get; init; } = 5000;
 }
 
 /// <summary>One worker process, its pipes and what the pool knows about it.</summary>
@@ -75,6 +81,9 @@ public sealed class Slot
 
     public ConcurrentQueue<WorkerMessage> Msgs { get; } = new();
     public Thread? Thread { get; set; }
+
+    /// <summary>Wait up to the timeout for the reader thread to exit; false if it is still running.</summary>
+    public bool JoinReader(int milliseconds) => Thread?.Join(milliseconds) ?? true;
 
     /// <summary>Close the item pipe; the reader closes the message pipe when it reaches EOF.</summary>
     public void Close()
@@ -173,7 +182,13 @@ public static class WorkerChannel
         s.BusySince = null; // nothing more is arriving
         s.Conn.Dispose();
         s.Broken = true;
-        wake.Set();
+        try
+        {
+            wake.Set();
+        }
+        catch (ObjectDisposedException) // a reader left running after a bounded join can outlive the pool
+        {
+        }
     }
 
     /// <summary>Build the slot for a started worker and start its reader thread.</summary>

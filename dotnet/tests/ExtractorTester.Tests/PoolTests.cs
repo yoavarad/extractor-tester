@@ -217,6 +217,56 @@ public class PoolTests : IDisposable
         Assert.Equal(1, replaced);
     }
 
+    /// <summary>A replaced worker's reader thread has exited by the time its process is disposed.</summary>
+    [Fact]
+    public void ReplacedWorkerReaderIsJoinedBeforeDispose()
+    {
+        var seen = new List<(bool ReaderAlive, bool Exited)>();
+        var hooks = new ChannelHooks
+        {
+            BeforeDispose = s => { lock (seen) { seen.Add((s.Thread!.IsAlive, s.Proc.HasExited)); } },
+        };
+        var options = new PoolOptions
+        {
+            Hooks = hooks,
+            WorkerEnvironment = new Dictionary<string, string?> { [WorkerPool.CrashItemEnv] = "b" },
+        };
+        var (_, replaced) = CompareAll(options: options);
+        Assert.Equal(1, replaced);
+        Assert.Equal([(false, true)], seen);
+    }
+
+    /// <summary>A reader stuck in delivery does not hang the pool: the join is bounded.</summary>
+    [Fact]
+    public void StuckReaderDoesNotHangReplacement()
+    {
+        using var release = new ManualResetEventSlim(false);
+        var stuck = 0;
+        var hooks = new ChannelHooks
+        {
+            ReaderJoinMilliseconds = 50,
+            Deliver = (s, m, w) =>
+            {
+                if (m.Index == 1 && Interlocked.Exchange(ref stuck, 1) == 0)
+                {
+                    release.Wait(TimeSpan.FromSeconds(60)); // reader stays alive past the join bound
+                }
+                WorkerChannel.DefaultDeliver(s, m, w);
+            },
+        };
+        try
+        {
+            var options = new PoolOptions { Hooks = hooks, WorkerEnvironment = new Dictionary<string, string?> { [WorkerPool.CrashItemEnv] = "b" } };
+            var (results, replaced) = CompareAll(options: options);
+            Assert.Equal(3, results.Count);
+            Assert.True(replaced >= 1);
+        }
+        finally
+        {
+            release.Set();
+        }
+    }
+
     [Fact]
     [CoversError("WORKER_CRASHED")]
     public void CrashedWorkerMarksOnlyItsItem()
