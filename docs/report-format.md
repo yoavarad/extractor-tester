@@ -48,7 +48,7 @@ Every reported number has this shape:
 
 ## run_stats
 
-`wall_seconds`, `workers`, `stage_seconds` (keys `load`, `decode`, `tree`, `match`, `field_compare`, `text_fast`, `text_full`, `text_buffered`, `aggregate`, `render`), `text_seconds_by_family`, `slowest_items` (the ten slowest: `item_id`, `seconds`, `status`), `workers_replaced`, and `profile_dir` (`"profile"` when run with `--profile`, else null).
+`wall_seconds`, `workers`, `stage_seconds` (keys `load`, `decode`, `tree`, `match`, `field_compare`, `text_fast`, `text_full`, `text_buffered`, `aggregate`, `render`), `text_seconds_by_family`, `slowest_items` (the ten slowest: `item_id`, `seconds`, `status`), `workers_replaced`, and `profile_dir` (`"profile"` when run with `--profile`, else null; always null in the [.NET port](dotnet.md)).
 
 ## Other output files
 

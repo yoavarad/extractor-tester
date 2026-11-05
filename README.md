@@ -2,7 +2,7 @@
 
 Compares the JSON outputs of two binary-file extraction pipelines (old vs new) and reports the differences grouped by file type family, with examples for every result.
 
-Status: implemented. The `compare` command runs end to end and writes `report.json`, `report.html`, `pairs.jsonl` and `items.jsonl`.
+Status: implemented. The `compare` command runs end to end and writes `report.json`, `report.html`, `pairs.jsonl` and `items.jsonl`. A C# .NET 8 port with the same behaviour lives in `dotnet/` (see [.NET port](docs/dotnet.md)); the Python version is the reference.
 
 ## Installation and quick start
 
@@ -19,7 +19,7 @@ Run a comparison (OLD and NEW are each a file or a folder of the same kind; the 
 uv run extractor-tester compare OLD NEW --config compare-config.yaml --out compare-out
 ```
 
-Optional flags: `--overwrite` (write into a non-empty output folder), `--workers N` (default: CPU count), `--profile` (cProfile output per worker).
+Optional flags: `--overwrite` (write into a non-empty output folder), `--workers N` (default: CPU count), `--profile` (cProfile output per worker; Python only).
 
 Run the tests (slow benchmarks are excluded by default) and lint:
 
@@ -28,13 +28,21 @@ uv run pytest -q
 uv run ruff check
 ```
 
+.NET version (prerequisite: .NET 8 SDK; the exe has no `.exe` suffix on Linux/macOS; same `compare` arguments, no `--profile`):
+
+```
+dotnet build dotnet/ExtractorTester.sln --configuration Release
+dotnet test dotnet/ExtractorTester.sln --configuration Release
+dotnet/src/ExtractorTester/bin/Release/net8.0/ExtractorTester.exe compare OLD NEW --config compare-config.yaml --out compare-out
+```
+
 ## Input format
 
 OLD and NEW are each one `.json` file or a folder of top-level `*.json` files (items are paired by file name without `.json`; `itemId` inside must equal it). Each item file is an object with `itemId` and a `files` list. Every file entry has `fileId`, `parentId` (its own id for the root), `rootId`, the fields named in the config for name and MIME parts, and `text` as base64 (UTF-8). Any other keys are compared as metadata.
 
 ## Output
 
-`--out` (default `./compare-out`) receives `report.json` (aggregates and capped examples), `report.html` (self-contained, rendered from `report.json`), `pairs.jsonl` (one line per file pair), `items.jsonl` (one line per item) and, with `--profile`, `profile/worker-<n>.prof`. Exit code: 0 success, 1 fatal error (code and reason on stderr), 130 interrupted.
+`--out` (default `./compare-out`) receives `report.json` (aggregates and capped examples), `report.html` (self-contained, rendered from `report.json`), `pairs.jsonl` (one line per file pair), `items.jsonl` (one line per item) and, with `--profile`, `profile/worker-<n>.prof`. Exit code: 0 success, 1 fatal error (code and reason on stderr), 2 usage error, 130 interrupted.
 
 Reference: [Configuration keys](docs/config-reference.md) and [JSON report structure](docs/report-format.md).
 
@@ -50,6 +58,7 @@ Reference: [Configuration keys](docs/config-reference.md) and [JSON report struc
 - [Scope](docs/specs/scope.md)
 - [Testing strategy](docs/specs/testing-strategy.md)
 - [Glossary](docs/specs/glossary.md)
+- [.NET port](docs/dotnet.md): build, test, run and known deviations from Python
 - Decisions: [docs/adrs/](docs/adrs/)
 - Conventions: [docs/project-rules.md](docs/project-rules.md)
 - Component manifests (machine-readable spec): `.ydk/components/`
