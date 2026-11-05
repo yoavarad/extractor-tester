@@ -51,6 +51,7 @@ public class ConfigTests : IDisposable
     }
 
     [Fact]
+    [CoversError("INVALID_CONFIG")]
     public void MissingFile()
     {
         var p = Path.Combine(_dir, "nope.yaml");

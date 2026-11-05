@@ -278,6 +278,7 @@ public class RunnerTests : IDisposable
     }
 
     [Fact]
+    [CoversError("INTERNAL_FAILURE")]
     public void UnexpectedFailureIsInternalFailure()
     {
         var (old, @new) = Folders(_tmp);

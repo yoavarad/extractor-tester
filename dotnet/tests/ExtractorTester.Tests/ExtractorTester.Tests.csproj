@@ -29,4 +29,14 @@
     <None Include="Fixtures/**/*.json;Fixtures/**/*.jsonl;Fixtures/**/*.html" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <!-- Golden corpus (task 140): inputs exported by tests/golden/corpus.py (dotnet export); expected outputs,
+       metrics.md and tool-error manifests are linked from the Python side so there is one source. -->
+  <ItemGroup>
+    <None Include="../golden/input/**" Link="Golden/input/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../tests/golden/expected/*" Link="Golden/expected/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../docs/specs/metrics.md" Link="Golden/metrics.md" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../.ydk/components/tool-error/errors/*.yaml" Link="Golden/tool-errors/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../.ydk/components/entity/model/*.yaml" Link="Manifests/model/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

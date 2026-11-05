@@ -125,6 +125,7 @@ public sealed class ItemComparerTests
     }
 
     [Fact]
+    [CoversError("ITEM_PROCESSING_FAILED")]
     public void ExceptionBecomesItemProcessingFailed()
     {
         var (o, n) = Write("item_metadata_diffs");
@@ -206,6 +207,7 @@ public sealed class ItemComparerTests
     }
 
     [Fact]
+    [CoversError("INVALID_BASE64")]
     public void InvalidBase64SkipsTextButKeepsFieldDiffs()
     {
         var (_, facts) = Run("invalid_base64");
