@@ -1,0 +1,304 @@
+{
+ "schema_version": 1,
+ "tool_version": "0.1.0",
+ "started_at": "2026-01-01T00:00:00Z",
+ "inputs": {
+  "old": "/data/old",
+  "new": "/data/new",
+  "mode": "folder"
+ },
+ "config": {},
+ "totals": {
+  "compared": 7990,
+  "errors": 1
+ },
+ "items_only_old": {
+  "key": "o",
+  "count": 6,
+  "denominator": 8000,
+  "rate": 0.001,
+  "examples": []
+ },
+ "items_only_new": {
+  "key": "n",
+  "count": 4,
+  "denominator": 8000,
+  "rate": 0.0005,
+  "examples": []
+ },
+ "item_fields": [
+  {
+   "key": "title",
+   "count": 3,
+   "denominator": 7990,
+   "rate": 0.0004,
+   "examples": [
+    {
+     "item_id": "123",
+     "path_old": "root.eml/a.pdf",
+     "path_new": "root.eml/a.pdf",
+     "old_value": "Jane Doe",
+     "new_value": "<script>alert(1)</script>",
+     "note": "n"
+    }
+   ]
+  }
+ ],
+ "families": [
+  {
+   "family": "pdf",
+   "pairs": 10,
+   "only_in_old": {
+    "key": "only-in-old",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0,
+    "examples": []
+   },
+   "only_in_new": {
+    "key": "only-in-new",
+    "count": 1,
+    "denominator": 10,
+    "rate": 0.1,
+    "examples": []
+   },
+   "identical": {
+    "key": "identical",
+    "count": 7,
+    "denominator": 10,
+    "rate": 0.7,
+    "examples": []
+   },
+   "mime_changed": {
+    "key": "mime",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0,
+    "examples": []
+   },
+   "family_changed": {
+    "key": "family",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0,
+    "examples": []
+   },
+   "fields": [
+    {
+     "key": "author",
+     "count": 1,
+     "denominator": 10,
+     "rate": 0.1,
+     "examples": [
+      {
+       "item_id": "123",
+       "path_old": null,
+       "path_new": "root.eml/a.pdf",
+       "old_value": "Jane Doe",
+       "new_value": "<script>alert(1)</script>",
+       "note": "n"
+      }
+     ]
+    }
+   ],
+   "edit_similarity": {
+    "median": 0.97,
+    "p10": 0.9,
+    "min": 0.5
+   },
+   "jaccard": {
+    "median": 0.95
+   },
+   "relations": [
+    {
+     "key": "equal",
+     "count": 8,
+     "denominator": 10,
+     "rate": 0.8,
+     "examples": []
+    }
+   ],
+   "methods": {
+    "full": 10
+   },
+   "lines_cut_pct": 12.5,
+   "cut_lines_warning": false,
+   "tiers": [
+    {
+     "key": "name",
+     "count": 9,
+     "denominator": 10,
+     "rate": 0.9,
+     "examples": []
+    }
+   ],
+   "hints": [
+    {
+     "key": "new-more-text",
+     "count": 2,
+     "denominator": 10,
+     "rate": 0.2,
+     "examples": []
+    }
+   ],
+   "decode_errors": {
+    "key": "decode-errors",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0,
+    "examples": []
+   },
+   "file_errors": [
+    {
+     "key": "INVALID_BASE64",
+     "count": 1,
+     "denominator": 10,
+     "rate": 0.1,
+     "examples": []
+    }
+   ]
+  },
+  {
+   "family": "email",
+   "pairs": 10,
+   "only_in_old": {
+    "key": "only-in-old",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0,
+    "examples": []
+   },
+   "only_in_new": {
+    "key": "only-in-new",
+    "count": 1,
+    "denominator": 10,
+    "rate": 0.1,
+    "examples": []
+   },
+   "identical": {
+    "key": "identical",
+    "count": 7,
+    "denominator": 10,
+    "rate": 0.7,
+    "examples": []
+   },
+   "mime_changed": {
+    "key": "mime",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0,
+    "examples": []
+   },
+   "family_changed": {
+    "key": "family",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0,
+    "examples": []
+   },
+   "fields": [
+    {
+     "key": "author",
+     "count": 1,
+     "denominator": 10,
+     "rate": 0.1,
+     "examples": [
+      {
+       "item_id": "123",
+       "path_old": "root.eml/a.pdf",
+       "path_new": "root.eml/a.pdf",
+       "old_value": "Jane Doe",
+       "new_value": "<script>alert(1)</script>",
+       "note": "n"
+      }
+     ]
+    }
+   ],
+   "edit_similarity": {
+    "median": null,
+    "p10": 0.9,
+    "min": 0.5
+   },
+   "jaccard": {
+    "median": 0.95
+   },
+   "relations": [
+    {
+     "key": "equal",
+     "count": 8,
+     "denominator": 10,
+     "rate": 0.8,
+     "examples": []
+    }
+   ],
+   "methods": {
+    "full": 10
+   },
+   "lines_cut_pct": 12.5,
+   "cut_lines_warning": true,
+   "tiers": [
+    {
+     "key": "name",
+     "count": 9,
+     "denominator": 10,
+     "rate": 0.9,
+     "examples": []
+    }
+   ],
+   "hints": [
+    {
+     "key": "new-more-text",
+     "count": 2,
+     "denominator": 10,
+     "rate": 0.2,
+     "examples": []
+    }
+   ],
+   "decode_errors": {
+    "key": "decode-errors",
+    "count": 0,
+    "denominator": 10,
+    "rate": 0,
+    "examples": []
+   },
+   "file_errors": [
+    {
+     "key": "INVALID_BASE64",
+     "count": 1,
+     "denominator": 10,
+     "rate": 0.1,
+     "examples": []
+    }
+   ]
+  }
+ ],
+ "errors": [
+  {
+   "key": "ITEM_TIMEOUT",
+   "count": 1,
+   "denominator": 8000,
+   "rate": 0.0001,
+   "examples": []
+  }
+ ],
+ "warnings": [
+  "something <b>odd</b>"
+ ],
+ "run_stats": {
+  "wall_seconds": 12.5,
+  "workers": 4,
+  "stage_seconds": {
+   "load": 1.0
+  },
+  "text_seconds_by_family": {
+   "pdf": 2.0
+  },
+  "slowest_items": [
+   {
+    "item_id": "9",
+    "seconds": 3.0
+   }
+  ],
+  "workers_replaced": 0
+ }
+}

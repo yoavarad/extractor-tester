@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>extractor-tester report</title>
+<style>
+body{font-family:sans-serif;margin:1.5em;color:#222}
+table{border-collapse:collapse;margin:.5em 0}
+th,td{border:1px solid #ccc;padding:.2em .6em;text-align:left}
+th.sortable{cursor:pointer}
+.warn{color:#b45309;font-weight:bold}
+details{margin:.4em 0 .4em 1em}
+code,pre{background:#f4f4f4}
+</style></head><body><h1>extractor-tester report</h1>
+<p>old: /data/old &nbsp; new: /data/new
+ &nbsp; started 2026-01-01T00:00:00+00:00 &nbsp; v0.1.0</p>
+<p id="totals">Items compared 7990 &middot; errors 1
+ &middot; 6 only old &middot; 4 only new</p>
+<h2>Warnings</h2>
+<ul><li class="warn">something &lt;b&gt;odd&lt;/b&gt;</li></ul>
+<h2>Type families</h2>
+<table id="families"><thead><tr>
+<th class="sortable">family</th>
+<th class="sortable">pairs</th>
+<th class="sortable">identical</th>
+<th class="sortable">only old</th>
+<th class="sortable">only new</th>
+<th class="sortable">median sim</th>
+<th class="sortable">warning</th></tr></thead><tbody>
+<tr><td>pdf</td><td>10</td>
+<td>70%</td>
+<td>0</td><td>1</td>
+<td>0.97</td>
+<td></td></tr>
+<tr><td>email</td><td>10</td>
+<td>70%</td>
+<td>0</td><td>1</td>
+<td>—</td>
+<td><span class="warn">&#9888;</span></td></tr></tbody></table>
+
+<details class="family"><summary>pdf</summary>
+<h3>Fields</h3>
+<ul><li>author: 1/10 (10.0%)
+<details><summary>1 examples</summary>
+<div>item 123 &middot; — / root.eml/a.pdf
+ &middot; old <code>Jane Doe</code> &middot; new <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> &middot; n</div>
+</details></li></ul>
+<h3>Text</h3>
+<ul>
+<li>edit similarity: median 0.97; p10 0.9; min 0.5; </li>
+<li>word-set similarity: median 0.95; </li>
+<li>equal: 8/10 (80.0%)</li>
+<li>methods: full 10; </li>
+<li>cut lines: 12.5%</li>
+</ul>
+<h3>Matching tiers</h3>
+<ul><li>name: 9/10 (90.0%)</li></ul>
+<h3>Hints</h3>
+<ul><li>new-more-text: 2/10 (20.0%)</li></ul>
+<h3>File errors</h3>
+<ul><li>decode-errors: 0/10 (0.0%)</li>
+<li>INVALID_BASE64: 1/10 (10.0%)</li></ul>
+</details>
+
+<details class="family"><summary>email <span class="warn">&#9888;</span></summary>
+<h3>Fields</h3>
+<ul><li>author: 1/10 (10.0%)
+<details><summary>1 examples</summary>
+<div>item 123 &middot; root.eml/a.pdf / root.eml/a.pdf
+ &middot; old <code>Jane Doe</code> &middot; new <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> &middot; n</div>
+</details></li></ul>
+<h3>Text</h3>
+<ul>
+<li>edit similarity: median —; p10 0.9; min 0.5; </li>
+<li>word-set similarity: median 0.95; </li>
+<li>equal: 8/10 (80.0%)</li>
+<li>methods: full 10; </li>
+<li>cut lines: 12.5%</li>
+</ul>
+<h3>Matching tiers</h3>
+<ul><li>name: 9/10 (90.0%)</li></ul>
+<h3>Hints</h3>
+<ul><li>new-more-text: 2/10 (20.0%)</li></ul>
+<h3>File errors</h3>
+<ul><li>decode-errors: 0/10 (0.0%)</li>
+<li>INVALID_BASE64: 1/10 (10.0%)</li></ul>
+</details>
+
+<h2>Item metadata changes</h2>
+<ul><li>title: 3/7990 (0.0%)
+<details><summary>1 examples</summary>
+<div>item 123 &middot; root.eml/a.pdf / root.eml/a.pdf
+ &middot; old <code>Jane Doe</code> &middot; new <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> &middot; n</div>
+</details></li></ul>
+<h2>Errors by code</h2>
+<ul><li>ITEM_TIMEOUT: 1/8000 (0.0%)</li></ul>
+<h2>Run statistics</h2>
+<ul>
+<li>wall seconds: 12.5</li>
+<li>workers: 4 (replaced 0)</li>
+
+<li>stage load: 1.0s</li>
+
+<li>text pdf: 2.0s</li>
+<li>slow item: {&#39;item_id&#39;: &#39;9&#39;, &#39;seconds&#39;: 3.0}</li>
+</ul>
+<script>
+document.querySelectorAll("th.sortable").forEach(function(th){
+th.addEventListener("click",function(){
+var t=th.closest("table"),b=t.tBodies[0],i=th.cellIndex,
+d=th.dataset.dir==="asc"?-1:1;th.dataset.dir=d===1?"asc":"desc";
+Array.from(b.rows).sort(function(x,y){
+var a=x.cells[i].textContent.trim(),c=y.cells[i].textContent.trim(),
+n=parseFloat(a),m=parseFloat(c);
+return(isNaN(n)||isNaN(m)?a.localeCompare(c):n-m)*d;
+}).forEach(function(r){b.appendChild(r);});});});
+</script>
+</body></html>
