@@ -1,0 +1,317 @@
+[
+  {
+    "name": "roots_pair_with_tier_root",
+    "tier": "match",
+    "old": "{\"item_id\":\"I\",\"side\":\"old\",\"metadata\":{},\"files\":[{\"file_id\":\"O\",\"parent_id\":\"P\",\"index\":0,\"name\":\"root.eml\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"root.eml\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"source_path\":\"\"}",
+    "new": "{\"item_id\":\"I\",\"side\":\"new\",\"metadata\":{},\"files\":[{\"file_id\":\"N\",\"parent_id\":\"P\",\"index\":0,\"name\":\"other.eml\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"other.eml\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"source_path\":\"\"}",
+    "pairs": [
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"O\",\"parent_id\":\"P\",\"index\":0,\"name\":\"root.eml\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"root.eml\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"N\",\"parent_id\":\"P\",\"index\":0,\"name\":\"other.eml\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"other.eml\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"root\",\"tie_break\":\"none\",\"unmatched_reason\":null}"
+    ]
+  },
+  {
+    "name": "children_pair_and_leftovers_have_no_candidate",
+    "tier": "match",
+    "old": "{\"item_id\":\"I\",\"side\":\"old\",\"metadata\":{},\"files\":[{\"file_id\":\"O\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"source_path\":\"\"}",
+    "new": "{\"item_id\":\"I\",\"side\":\"new\",\"metadata\":{},\"files\":[{\"file_id\":\"N\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"c\",\"mime\":\"application/pdf\",\"family\":\"doc\",\"path\":\"c\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"source_path\":\"\"}",
+    "pairs": [
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"O\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]},\"new\":{\"file_id\":\"N\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"c\",\"mime\":\"application/pdf\",\"family\":\"doc\",\"path\":\"c\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]},\"tier\":\"root\",\"tie_break\":\"none\",\"unmatched_reason\":null}",
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"none\",\"unmatched_reason\":null}",
+      "{\"kind\":\"only-in-old\",\"old\":{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":null,\"tier\":null,\"tie_break\":\"none\",\"unmatched_reason\":\"no-candidate\"}",
+      "{\"kind\":\"only-in-new\",\"old\":null,\"new\":{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"c\",\"mime\":\"application/pdf\",\"family\":\"doc\",\"path\":\"c\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":null,\"tie_break\":\"none\",\"unmatched_reason\":\"no-candidate\"}"
+    ]
+  },
+  {
+    "name": "same_name_empty_text_siblings_pair_by_position",
+    "tier": "match",
+    "old": "{\"item_id\":\"I\",\"side\":\"old\",\"metadata\":{},\"files\":[{\"file_id\":\"O\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"img.png\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"img.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"img.png\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"img.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"source_path\":\"\"}",
+    "new": "{\"item_id\":\"I\",\"side\":\"new\",\"metadata\":{},\"files\":[{\"file_id\":\"N\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"img.png\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"img.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"img.png\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"img.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"source_path\":\"\"}",
+    "pairs": [
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"O\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"img.png\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"img.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"img.png\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"img.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]},\"new\":{\"file_id\":\"N\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"img.png\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"img.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"img.png\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"img.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]},\"tier\":\"root\",\"tie_break\":\"none\",\"unmatched_reason\":null}",
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"img.png\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"img.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"img.png\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"img.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"position\",\"unmatched_reason\":null}",
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"img.png\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"img.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"img.png\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"img.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"position\",\"unmatched_reason\":null}"
+    ]
+  },
+  {
+    "name": "descendants_of_unpaired_parent_are_parent_unpaired",
+    "tier": "match",
+    "old": "{\"item_id\":\"I\",\"side\":\"old\",\"metadata\":{},\"files\":[{\"file_id\":\"O\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"x\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"deep\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"deep\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o111\",\"parent_id\":\"P\",\"index\":0,\"name\":\"deeper\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"deeper\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"missing_fields\":[]}],\"missing_fields\":[]}],\"source_path\":\"\"}",
+    "new": "{\"item_id\":\"I\",\"side\":\"new\",\"metadata\":{},\"files\":[{\"file_id\":\"N\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"y\",\"path\":\"b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"deep\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"deep\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"missing_fields\":[]}],\"source_path\":\"\"}",
+    "pairs": [
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"O\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"x\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"deep\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"deep\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o111\",\"parent_id\":\"P\",\"index\":0,\"name\":\"deeper\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"deeper\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"missing_fields\":[]}],\"missing_fields\":[]},\"new\":{\"file_id\":\"N\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"y\",\"path\":\"b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"deep\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"deep\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"missing_fields\":[]},\"tier\":\"root\",\"tie_break\":\"none\",\"unmatched_reason\":null}",
+      "{\"kind\":\"only-in-old\",\"old\":{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"x\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"deep\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"deep\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o111\",\"parent_id\":\"P\",\"index\":0,\"name\":\"deeper\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"deeper\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"missing_fields\":[]},\"new\":null,\"tier\":null,\"tie_break\":\"none\",\"unmatched_reason\":\"no-candidate\"}",
+      "{\"kind\":\"only-in-old\",\"old\":{\"file_id\":\"o11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"deep\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"deep\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o111\",\"parent_id\":\"P\",\"index\":0,\"name\":\"deeper\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"deeper\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]},\"new\":null,\"tier\":null,\"tie_break\":\"none\",\"unmatched_reason\":\"parent-unpaired\"}",
+      "{\"kind\":\"only-in-old\",\"old\":{\"file_id\":\"o111\",\"parent_id\":\"P\",\"index\":0,\"name\":\"deeper\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"deeper\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":null,\"tier\":null,\"tie_break\":\"none\",\"unmatched_reason\":\"parent-unpaired\"}",
+      "{\"kind\":\"only-in-new\",\"old\":null,\"new\":{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"y\",\"path\":\"b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"deep\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"deep\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]},\"tier\":null,\"tie_break\":\"none\",\"unmatched_reason\":\"no-candidate\"}",
+      "{\"kind\":\"only-in-new\",\"old\":null,\"new\":{\"file_id\":\"n11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"deep\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"deep\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":null,\"tie_break\":\"none\",\"unmatched_reason\":\"parent-unpaired\"}"
+    ]
+  },
+  {
+    "name": "paired_children_are_walked_in_turn",
+    "tier": "match",
+    "old": "{\"item_id\":\"I\",\"side\":\"old\",\"metadata\":{},\"files\":[{\"file_id\":\"O\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"missing_fields\":[]}],\"source_path\":\"\"}",
+    "new": "{\"item_id\":\"I\",\"side\":\"new\",\"metadata\":{},\"files\":[{\"file_id\":\"N\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"missing_fields\":[]}],\"source_path\":\"\"}",
+    "pairs": [
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"O\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"missing_fields\":[]},\"new\":{\"file_id\":\"N\",\"parent_id\":\"P\",\"index\":0,\"name\":\"r\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"missing_fields\":[]},\"tier\":\"root\",\"tie_break\":\"none\",\"unmatched_reason\":null}",
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]},\"new\":{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"none\",\"unmatched_reason\":null}",
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n11\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"none\",\"unmatched_reason\":null}"
+    ]
+  },
+  {
+    "name": "worked_example",
+    "tier": "match",
+    "old": "{\"item_id\":\"I\",\"side\":\"old\",\"metadata\":{},\"files\":[{\"file_id\":\"O\",\"parent_id\":\"P\",\"index\":0,\"name\":\"root.eml\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"root.eml\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"invoice.pdf\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"invoice.pdf\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"image001.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"image001.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"o3\",\"parent_id\":\"P\",\"index\":0,\"name\":\"image001.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"image001.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"source_path\":\"\"}",
+    "new": "{\"item_id\":\"I\",\"side\":\"new\",\"metadata\":{},\"files\":[{\"file_id\":\"N\",\"parent_id\":\"P\",\"index\":0,\"name\":\"root.eml\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"root.eml\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"Invoice 2026.pdf\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"Invoice 2026.pdf\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"image001.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"image001.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"n3\",\"parent_id\":\"P\",\"index\":0,\"name\":\"image001.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"image001.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"n4\",\"parent_id\":\"P\",\"index\":0,\"name\":\"logo.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"logo.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]}],\"source_path\":\"\"}",
+    "pairs": [
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"O\",\"parent_id\":\"P\",\"index\":0,\"name\":\"root.eml\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"root.eml\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"invoice.pdf\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"invoice.pdf\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"image001.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"image001.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"o3\",\"parent_id\":\"P\",\"index\":0,\"name\":\"image001.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"image001.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]},\"new\":{\"file_id\":\"N\",\"parent_id\":\"P\",\"index\":0,\"name\":\"root.eml\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"root.eml\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"Invoice 2026.pdf\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"Invoice 2026.pdf\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"image001.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"image001.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"n3\",\"parent_id\":\"P\",\"index\":0,\"name\":\"image001.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"image001.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},{\"file_id\":\"n4\",\"parent_id\":\"P\",\"index\":0,\"name\":\"logo.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"logo.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}],\"missing_fields\":[]},\"tier\":\"root\",\"tie_break\":\"none\",\"unmatched_reason\":null}",
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"image001.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"image001.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"image001.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"image001.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"position\",\"unmatched_reason\":null}",
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o3\",\"parent_id\":\"P\",\"index\":0,\"name\":\"image001.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"image001.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n3\",\"parent_id\":\"P\",\"index\":0,\"name\":\"image001.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"image001.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"position\",\"unmatched_reason\":null}",
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"invoice.pdf\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"invoice.pdf\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"Invoice 2026.pdf\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"Invoice 2026.pdf\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"text-hash\",\"tie_break\":\"none\",\"unmatched_reason\":null}",
+      "{\"kind\":\"only-in-new\",\"old\":null,\"new\":{\"file_id\":\"n4\",\"parent_id\":\"P\",\"index\":0,\"name\":\"logo.png\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"logo.png\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":null,\"tie_break\":\"none\",\"unmatched_reason\":\"no-candidate\"}"
+    ]
+  },
+  {
+    "name": "unique_names_pair_without_tie_break",
+    "tier": "name",
+    "old": [
+      "{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "new": [
+      "{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"n3\",\"parent_id\":\"P\",\"index\":0,\"name\":\"c\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/c\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "pairs": [
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"none\",\"unmatched_reason\":null}",
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"none\",\"unmatched_reason\":null}"
+    ],
+    "old_rest": [],
+    "new_rest": [
+      "n3"
+    ]
+  },
+  {
+    "name": "names_are_case_sensitive",
+    "tier": "name",
+    "old": [
+      "{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"A\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/A\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "new": [
+      "{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "pairs": [],
+    "old_rest": [
+      "o1"
+    ],
+    "new_rest": [
+      "n1"
+    ]
+  },
+  {
+    "name": "empty_names_never_pair",
+    "tier": "name",
+    "old": [
+      "{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "new": [
+      "{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "pairs": [],
+    "old_rest": [
+      "o1"
+    ],
+    "new_rest": [
+      "n1"
+    ]
+  },
+  {
+    "name": "same_name_empty_text_pairs_by_position",
+    "tier": "name",
+    "old": [
+      "{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":1,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":2,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "new": [
+      "{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":1,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":2,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "pairs": [
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":1,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":1,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"position\",\"unmatched_reason\":null}",
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":2,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":2,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"position\",\"unmatched_reason\":null}"
+    ],
+    "old_rest": [],
+    "new_rest": []
+  },
+  {
+    "name": "same_name_text_hash_breaks_tie_before_position",
+    "tier": "name",
+    "old": [
+      "{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h1\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h2\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "new": [
+      "{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h2\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h1\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "pairs": [
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h1\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h1\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"text-hash\",\"unmatched_reason\":null}",
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h2\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h2\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"text-hash\",\"unmatched_reason\":null}"
+    ],
+    "old_rest": [],
+    "new_rest": []
+  },
+  {
+    "name": "hash_tie_break_requires_same_family",
+    "tier": "name",
+    "old": [
+      "{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "new": [
+      "{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "pairs": [
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"position\",\"unmatched_reason\":null}",
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"position\",\"unmatched_reason\":null}"
+    ],
+    "old_rest": [],
+    "new_rest": []
+  },
+  {
+    "name": "extra_same_name_files_pass_on_in_order",
+    "tier": "name",
+    "old": [
+      "{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"y\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/y\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "new": [
+      "{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"z\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/z\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"n3\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"n4\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "pairs": [
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"x\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/x\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"name\",\"tie_break\":\"position\",\"unmatched_reason\":null}"
+    ],
+    "old_rest": [
+      "o2"
+    ],
+    "new_rest": [
+      "n2",
+      "n3",
+      "n4"
+    ]
+  },
+  {
+    "name": "text_hash_tier_pairs_unique_hash_and_family",
+    "tier": "text-hash",
+    "old": [
+      "{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/a\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/b\",\"fields\":{},\"text\":\"\",\"text_hash\":\"k\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "new": [
+      "{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"c\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/c\",\"fields\":{},\"text\":\"\",\"text_hash\":\"k\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"d\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/d\",\"fields\":{},\"text\":\"\",\"text_hash\":\"z\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "pairs": [
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/b\",\"fields\":{},\"text\":\"\",\"text_hash\":\"k\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"c\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/c\",\"fields\":{},\"text\":\"\",\"text_hash\":\"k\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"text-hash\",\"tie_break\":\"none\",\"unmatched_reason\":null}"
+    ],
+    "old_rest": [
+      "o1"
+    ],
+    "new_rest": [
+      "n2"
+    ]
+  },
+  {
+    "name": "text_hash_tier_none_hash_never_pairs",
+    "tier": "text-hash",
+    "old": [
+      "{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "new": [
+      "{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "pairs": [],
+    "old_rest": [
+      "o1"
+    ],
+    "new_rest": [
+      "n1"
+    ]
+  },
+  {
+    "name": "text_hash_tier_requires_same_family",
+    "tier": "text-hash",
+    "old": [
+      "{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/a\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "new": [
+      "{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"r/b\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "pairs": [],
+    "old_rest": [
+      "o1"
+    ],
+    "new_rest": [
+      "n1"
+    ]
+  },
+  {
+    "name": "text_hash_tier_ambiguous_not_paired",
+    "tier": "text-hash",
+    "old": [
+      "{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/a\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/b\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "new": [
+      "{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"c\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/c\",\"fields\":{},\"text\":\"\",\"text_hash\":\"h\",\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "pairs": [],
+    "old_rest": [
+      "o1",
+      "o2"
+    ],
+    "new_rest": [
+      "n1"
+    ]
+  },
+  {
+    "name": "type_family_tier_pairs_single_per_family",
+    "tier": "type-family",
+    "old": [
+      "{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"r/b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "new": [
+      "{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"c\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"r/c\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"d\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/d\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "pairs": [
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"d\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/d\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"type-family\",\"tie_break\":\"none\",\"unmatched_reason\":null}",
+      "{\"kind\":\"paired\",\"old\":{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"r/b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"new\":{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"c\",\"mime\":\"application/pdf\",\"family\":\"image\",\"path\":\"r/c\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]},\"tier\":\"type-family\",\"tie_break\":\"none\",\"unmatched_reason\":null}"
+    ],
+    "old_rest": [],
+    "new_rest": []
+  },
+  {
+    "name": "type_family_tier_two_same_family_on_one_side_not_paired",
+    "tier": "type-family",
+    "old": [
+      "{\"file_id\":\"o1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"a\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/a\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}",
+      "{\"file_id\":\"o2\",\"parent_id\":\"P\",\"index\":0,\"name\":\"b\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/b\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "new": [
+      "{\"file_id\":\"n1\",\"parent_id\":\"P\",\"index\":0,\"name\":\"c\",\"mime\":\"application/pdf\",\"family\":\"pdf\",\"path\":\"r/c\",\"fields\":{},\"text\":\"\",\"text_hash\":null,\"decode_errors\":0,\"children\":[],\"missing_fields\":[]}"
+    ],
+    "pairs": [],
+    "old_rest": [
+      "o1",
+      "o2"
+    ],
+    "new_rest": [
+      "n1"
+    ]
+  }
+]

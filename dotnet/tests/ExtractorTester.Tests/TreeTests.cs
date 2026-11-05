@@ -1,13 +1,13 @@
 using System.Text;
 using ExtractorTester.Config;
 using ExtractorTester.Decode;
+using ExtractorTester.Matching;
 using ExtractorTester.Models;
 using ExtractorTester.Tree;
 
 namespace ExtractorTester.Tests;
 
-// Port of tests/test_tree.py. The two match_item cases belong to the matcher port (T-dn-matching);
-// their tree-side preconditions are asserted here instead.
+// Port of tests/test_tree.py.
 public sealed class TreeTests
 {
     private static readonly CompareConfig Cfg = new()
@@ -211,14 +211,12 @@ public sealed class TreeTests
     }
 
     [Fact]
-    public void RenamedFileSameTextHashesEqual()
+    public void MatcherPairsRenamedFileByTextHash()
     {
-        // Tree-side precondition of test_matcher_pairs_renamed_file_by_text_hash.
         var old = TreeBuilder.Build(Item(F("I", "I", "r"), F("c", "I", "old.txt", "same body")), Cfg, "old").Item;
         var @new = TreeBuilder.Build(Item(F("I", "I", "r"), F("c", "I", "new.txt", "same  body")), Cfg, "new").Item;
-        var (o, n) = (old.Files[0].Children[0], @new.Files[0].Children[0]);
-        Assert.NotNull(o.TextHash);
-        Assert.Equal((o.TextHash, o.Family), (n.TextHash, n.Family));
+        var pairs = Matcher.MatchItem(old, @new);
+        Assert.Equal([("paired", "text-hash")], pairs.Skip(1).Select(p => (p.Kind, p.Tier)).ToList());
     }
 
     private static Dictionary<string, object?> Bad(string fid, string parent, string name, byte[] raw)
@@ -239,13 +237,11 @@ public sealed class TreeTests
     }
 
     [Fact]
-    public void BrokenFilesHaveNoTextHash()
+    public void MatcherDoesNotPairBrokenFilesByTextHash()
     {
-        // Tree-side precondition of test_matcher_does_not_pair_broken_files_by_text_hash.
         var old = TreeBuilder.Build(Item(F("I", "I", "r"), Bad("c", "I", "old.txt", [0xFF, 0xFE, 0xFD])), Cfg, "old").Item;
         var @new = TreeBuilder.Build(Item(F("I", "I", "r"), Bad("c", "I", "new.txt", [0xFA, 0xFB, 0xFC])), Cfg, "new").Item;
-        Assert.Null(old.Files[0].Children[0].TextHash);
-        Assert.Null(@new.Files[0].Children[0].TextHash);
+        Assert.All(Matcher.MatchItem(old, @new), p => Assert.NotEqual("text-hash", p.Tier));
     }
 
     [Fact]
