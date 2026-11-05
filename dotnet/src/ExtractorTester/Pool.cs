@@ -273,6 +273,8 @@ public static class WorkerPool
             old.Close();
             stats.Replaced++;
             Start(i, startupFailures);
+            old.JoinReader(hooks.ReaderJoinMilliseconds); // bounded: a stuck reader must not hang the pool
+            hooks.BeforeDispose?.Invoke(old);
             old.Proc.Dispose(); // after Start: if it throws, the finally block still sees a usable (exited) slot
         }
 
