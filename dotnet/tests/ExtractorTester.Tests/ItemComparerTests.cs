@@ -36,7 +36,12 @@ public sealed class ItemComparerTests
     private static (ItemResult Result, List<PairFacts> Facts) Run(string name)
     {
         var (o, n) = Write(name);
-        return ItemComparer.CompareItem(o, n, Cfg);
+        // The worker's stack (WorkerPool runs items on it): nesting-limit items overflow a 1 MB Debug stack.
+        (ItemResult, List<PairFacts>) r = default;
+        var t = new Thread(() => r = ItemComparer.CompareItem(o, n, Cfg), Channel.WorkerChannel.BigStackBytes);
+        t.Start();
+        t.Join();
+        return r;
     }
 
     private static PairFacts PairEndingWith(List<PairFacts> facts, string suffix) =>
