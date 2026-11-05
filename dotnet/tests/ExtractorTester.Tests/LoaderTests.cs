@@ -110,6 +110,7 @@ public sealed class LoaderTests : IDisposable
     }
 
     [Fact]
+    [CoversError("INPUT_NOT_FOUND")]
     public void InputNotFound()
     {
         var e = Assert.Throws<LoaderException>(() =>
@@ -119,6 +120,7 @@ public sealed class LoaderTests : IDisposable
     }
 
     [Fact]
+    [CoversError("MIXED_INPUT_KINDS")]
     public void MixedKinds()
     {
         var (old, @new) = Dirs();
@@ -131,6 +133,7 @@ public sealed class LoaderTests : IDisposable
     }
 
     [Fact]
+    [CoversError("EMPTY_INPUT")]
     public void EmptyInputWarning()
     {
         var (old, @new) = Dirs();
@@ -160,6 +163,7 @@ public sealed class LoaderTests : IDisposable
     [InlineData("{\"itemId\": \"a\", \"files\": [1]}", "files entry is not an object")]
     [InlineData("{\"itemId\": \"a\", \"files\": [{\"parentId\": \"\"}]}", "files entry missing fileId or parentId")]
     [InlineData("{\"itemId\": \"a\", \"files\": [{\"fileId\": \"1\"}]}", "files entry missing fileId or parentId")]
+    [CoversError("INVALID_JSON")]
     public void InvalidJson(string content, string reason)
     {
         var p = Path.Combine(_tmp, "a.json");
@@ -179,6 +183,7 @@ public sealed class LoaderTests : IDisposable
     }
 
     [Fact]
+    [CoversError("ITEM_TOO_LARGE")]
     public void TooLargeNotParsed()
     {
         var p = Path.Combine(_tmp, "a.json");
@@ -189,6 +194,7 @@ public sealed class LoaderTests : IDisposable
     }
 
     [Fact]
+    [CoversError("ITEM_ID_MISMATCH")]
     public void IdMismatchFolderMode()
     {
         var p = TestItems.WriteItem(_tmp, "a", []);
@@ -198,6 +204,7 @@ public sealed class LoaderTests : IDisposable
     }
 
     [Fact]
+    [CoversError("ITEM_ID_MISMATCH")]
     public void IdMismatchFileMode()
     {
         var (old, @new) = Dirs();

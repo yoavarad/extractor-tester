@@ -75,6 +75,7 @@ public sealed class OutputTests : IDisposable
     public void PrepareEmptyOk() => ReportWriter.PrepareOut(_tmp, false);
 
     [Fact]
+    [CoversError("OUTPUT_EXISTS")]
     public void PrepareNonEmptyRefused()
     {
         File.WriteAllText(Path.Combine(_tmp, "x"), "1");
@@ -91,6 +92,7 @@ public sealed class OutputTests : IDisposable
     }
 
     [Fact]
+    [CoversError("OUTPUT_WRITE_FAILED")]
     public void PrepareUnwritable()
     {
         var f = Path.Combine(_tmp, "file");

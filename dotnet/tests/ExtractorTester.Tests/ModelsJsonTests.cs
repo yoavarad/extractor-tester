@@ -97,6 +97,51 @@ public class ModelsJsonTests
         Assert.Equal(expected, PyJson.FormatFloat(value));
     }
 
+    // ---- tests/test_models.py and tests/test_models_report.py: models against the entity manifests ----
+    // (test_frozen is not ported: pydantic frozen models have no runtime C# equal; the records use init.)
+
+    private static readonly string Manifests = Path.Combine(AppContext.BaseDirectory, "Manifests");
+
+    private static List<string> ManifestFields(string name)
+    {
+        var yaml = new YamlDotNet.Serialization.DeserializerBuilder().Build();
+        var doc = yaml.Deserialize<Dictionary<string, object>>(File.ReadAllText(Path.Combine(Manifests, "model", $"{name}.yaml"), Encoding.UTF8));
+        return ((Dictionary<object, object>)doc["fields"]).Keys.Select(k => k.ToString()!).ToList();
+    }
+
+    [Theory]
+    [InlineData("Item")]
+    [InlineData("FileRecord")]
+    [InlineData("FilePair")]
+    [InlineData("FieldDiff")]
+    [InlineData("TextFacts")]
+    [InlineData("PairFacts")]
+    [InlineData("ItemResult")]
+    [InlineData("ErrorRecord")]
+    public void FieldsMatchManifest(string model)
+    {
+        Assert.Equal(ManifestFields(model), PyJson.FieldNames(ModelTypes[model]));
+    }
+
+    [Theory]
+    [InlineData("Example")]
+    [InlineData("MetricResult")]
+    [InlineData("FamilyAggregate")]
+    [InlineData("RunStats")]
+    [InlineData("Report")]
+    public void ReportModelFieldSetsMatchManifests(string model)
+    {
+        Assert.Equal(ManifestFields(model).ToHashSet(), PyJson.FieldNames(ModelTypes[model]).ToHashSet());
+    }
+
+    [Fact]
+    public void ErrorCodesMatchManifests()
+    {
+        var codes = GoldenChecks.ToolErrorCodes();
+        Assert.Equal(20, codes.Count);
+        Assert.Equal(codes.ToHashSet(), Enum.GetNames<ErrorCode>().ToHashSet());
+    }
+
     [Fact]
     public void ErrorCodeSerializesByStringCode()
     {

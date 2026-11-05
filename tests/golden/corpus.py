@@ -6,9 +6,15 @@ Regenerate the expected files after an intended output change:
 
 This builds the corpus in a temporary folder, runs `compare` with one worker and writes
 normalized pairs.jsonl, items.jsonl and report.json into tests/golden/expected/.
+
+Export the corpus inputs for the C# golden tests (dotnet/tests/golden/input/):
+
+    uv run python -m tests.golden.corpus --dotnet
 """
 
 import json
+import shutil
+import sys
 import tempfile
 from pathlib import Path
 
@@ -16,6 +22,7 @@ from tests.helpers import write_item
 from tests.runner_common import CONFIG, f, invoke
 
 EXPECTED = Path(__file__).parent / "expected"
+DOTNET_INPUT = Path(__file__).resolve().parents[2] / "dotnet" / "tests" / "golden" / "input"
 OUTPUT_FILES = ("pairs.jsonl", "items.jsonl", "report.json")
 # Fields that differ between any two runs: timings, the run start and the input paths.
 _VOLATILE = {"seconds", "stage_seconds", "started_at", "run_stats", "inputs"}
@@ -109,5 +116,18 @@ def regenerate() -> None:
             (EXPECTED / name).write_text(text, encoding="utf-8", newline="\n")
 
 
+def export_dotnet() -> None:
+    """Rewrite dotnet/tests/golden/input/ with the corpus folders and the config."""
+    shutil.rmtree(DOTNET_INPUT, ignore_errors=True)
+    old, new = DOTNET_INPUT / "old", DOTNET_INPUT / "new"
+    old.mkdir(parents=True)
+    new.mkdir()
+    build(old, new)
+    (DOTNET_INPUT / "c.yaml").write_text(CONFIG, encoding="utf-8", newline="\n")
+
+
 if __name__ == "__main__":
-    regenerate()
+    if sys.argv[1:] == ["--dotnet"]:
+        export_dotnet()
+    else:
+        regenerate()

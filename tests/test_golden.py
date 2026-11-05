@@ -19,7 +19,8 @@ from tests.golden.checks import (
     undefined_keys,
     undefined_keys_message,
 )
-from tests.golden.corpus import EXPECTED, OUTPUT_FILES, run
+from tests.golden.corpus import DOTNET_INPUT, EXPECTED, OUTPUT_FILES, build, run
+from tests.runner_common import CONFIG
 
 
 @pytest.fixture(scope="module")
@@ -48,6 +49,19 @@ def test_golden_outputs_match_from_long_temp_path(tmp_path: Path) -> None:
     actual = run(base, 1)
     for name in OUTPUT_FILES:
         assert actual[name] == (EXPECTED / name).read_text(encoding="utf-8"), name
+
+
+def test_dotnet_golden_input_is_current(tmp_path: Path) -> None:
+    """dotnet/tests/golden/input/ equals build() (refresh: tests.golden.corpus --dotnet)."""
+    old, new = tmp_path / "old", tmp_path / "new"
+    old.mkdir()
+    new.mkdir()
+    build(old, new)
+    for side in (old, new):
+        built = {p.name: p.read_bytes() for p in side.iterdir()}
+        checked_in = {p.name: p.read_bytes() for p in (DOTNET_INPUT / side.name).iterdir()}
+        assert checked_in == built, side.name
+    assert (DOTNET_INPUT / "c.yaml").read_text(encoding="utf-8") == CONFIG
 
 
 def _report() -> dict:

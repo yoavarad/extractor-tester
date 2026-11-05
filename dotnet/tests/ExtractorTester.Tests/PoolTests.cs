@@ -193,6 +193,7 @@ public class PoolTests : IDisposable
     /// <summary>A hung item is ITEM_TIMEOUT and its worker replaced; results stay in item-id order
     /// although the slow item finishes (times out) after the items that follow it.</summary>
     [Fact]
+    [CoversError("ITEM_TIMEOUT")]
     public void SlowItemTimesOutAndOthersAreCompared()
     {
         var dirs = ThreeItems();
@@ -217,6 +218,7 @@ public class PoolTests : IDisposable
     }
 
     [Fact]
+    [CoversError("WORKER_CRASHED")]
     public void CrashedWorkerMarksOnlyItsItem()
     {
         var (results, replaced) = CompareAll(options: Env(WorkerPool.CrashItemEnv, "b"));

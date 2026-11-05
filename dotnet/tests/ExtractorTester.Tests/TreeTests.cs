@@ -76,6 +76,7 @@ public sealed class TreeTests
     }
 
     [Fact]
+    [CoversError("ROOT_NOT_FOUND")]
     public void RootNotFound()
     {
         var e = Fails(Item(F("x", "I")));
@@ -84,6 +85,7 @@ public sealed class TreeTests
     }
 
     [Fact]
+    [CoversError("MULTIPLE_ROOTS")]
     public void MultipleRoots()
     {
         var e = Fails(Item(F("I", "I"), F("I", "I")));
@@ -92,6 +94,7 @@ public sealed class TreeTests
     }
 
     [Fact]
+    [CoversError("DUPLICATE_FILE_ID")]
     public void DuplicateFileId()
     {
         var e = Fails(Item(F("I", "I"), F("a", "I"), F("a", "I")));
@@ -100,6 +103,7 @@ public sealed class TreeTests
     }
 
     [Fact]
+    [CoversError("PARENT_CYCLE")]
     public void ParentCycle()
     {
         var e = Fails(Item(F("I", "I"), F("a", "b"), F("b", "a")));
@@ -108,6 +112,7 @@ public sealed class TreeTests
     }
 
     [Fact]
+    [CoversError("ORPHAN_FILE")]
     public void OrphanKeepsRest()
     {
         var res = TreeBuilder.Build(Item(F("I", "I", "r"), F("a", "I", "ok"), F("o", "zz"), F("p", "o")), Cfg, "old");
@@ -120,6 +125,7 @@ public sealed class TreeTests
     }
 
     [Fact]
+    [CoversError("MISSING_FIELD")]
     public void MissingFieldWarning()
     {
         var res = TreeBuilder.Build(Item(F("I", "I", "r"), F("a", "I", name: null, text: null)), Cfg, "old");
