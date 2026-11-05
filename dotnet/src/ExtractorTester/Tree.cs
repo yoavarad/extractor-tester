@@ -4,6 +4,7 @@ using ExtractorTester.Decode;
 using ExtractorTester.Families;
 using ExtractorTester.Fields;
 using ExtractorTester.Models;
+using ExtractorTester.Profiling;
 using ExtractorTester.Render;
 
 namespace ExtractorTester.Tree;
@@ -214,6 +215,7 @@ public static class TreeBuilder
         }));
         string text;
         int bad;
+        var tDec = Stages.Clock();
         try
         {
             if (rawText is not null and not string)
@@ -236,6 +238,7 @@ public static class TreeBuilder
                 Message = e.Message,
             });
         }
+        Stages.Add("decode", Stages.Clock() - tDec);
         var m = FamilyResolver.Mime(
             flat.GetValueOrDefault(config.MimePrimaryField) as string,
             flat.GetValueOrDefault(config.MimeSecondaryField) as string);
