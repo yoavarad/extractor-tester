@@ -145,9 +145,10 @@ public static class CompareRunner
         // Not disposed: an interrupted run thread may outlive this call.
         var interrupt = CancellationTokenSource.CreateLinkedTokenSource(options.Interrupt);
         var run = new RunOptions { Pool = options.Pool, BeforeFinish = options.BeforeFinish, Interrupt = interrupt.Token };
+        var ctrlC = 0;
         void OnCancel(object? sender, ConsoleCancelEventArgs e)
         {
-            if (interrupt.IsCancellationRequested)
+            if (Interlocked.Exchange(ref ctrlC, 1) == 1)
             {
                 return; // a second Ctrl-C ends the process
             }
@@ -186,8 +187,10 @@ public static class CompareRunner
             if (!finished.IsSet)
             {
                 // Interrupted: let the run stop its workers, but do not wait on it forever.
-                finished.Wait(InterruptGraceMs);
-                return Exit(new OperationCanceledException(), err, interrupted: true);
+                if (!finished.Wait(InterruptGraceMs))
+                {
+                    return Exit(new OperationCanceledException(), err, interrupted: true);
+                }
             }
         }
         finally

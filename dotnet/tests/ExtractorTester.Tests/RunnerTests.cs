@@ -161,7 +161,7 @@ public class RunnerTests : IDisposable
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
         while (!File.Exists(Path.Combine(dir!.FullName, "pyproject.toml")))
         {
-            dir = dir.Parent;
+            dir = dir.Parent ?? throw new FileNotFoundException("pyproject.toml not found above the test output");
         }
         var toml = File.ReadAllText(Path.Combine(dir.FullName, "pyproject.toml"));
         var version = System.Text.RegularExpressions.Regex.Match(toml, "^version = \"([^\"]+)\"", System.Text.RegularExpressions.RegexOptions.Multiline);
