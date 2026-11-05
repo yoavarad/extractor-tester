@@ -324,7 +324,7 @@ public sealed class LoaderTests : IDisposable
     [Fact]
     public void NestingLimitMatchesPython()
     {
-        // Debug frames are large; run on a big explicit stack so the test never depends on the host thread's size.
+        // Debug frames are large (MaxDepth recursion exceeds the default 1MB stack); product runs Release, so only the test needs the big stack.
         Exception? failure = null;
         var t = new Thread(() => { try { NestingLimitCore(); } catch (Exception ex) { failure = ex; } }, 256 * 1024 * 1024);
         t.Start();
