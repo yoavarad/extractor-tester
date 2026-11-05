@@ -1,0 +1,38 @@
+{
+  "task_id": null,
+  "timestamp": "2026-11-05T19:20:16Z",
+  "checks": [
+    {
+      "name": "src-file-length",
+      "passed": true,
+      "output": "PASS: all src/ Python files <= 300 lines",
+      "duration_seconds": 0.0,
+      "detail": {
+        "failures": 0
+      }
+    },
+    {
+      "name": "tests-scoped",
+      "passed": true,
+      "output": "No test files match changed source files — skipped",
+      "duration_seconds": 0.0,
+      "detail": {
+        "level": "scoped",
+        "changed_files": [
+          ".ydk/proofs/136/orchestrator-progress.md",
+          "dotnet/src/ExtractorTester/Aggregate.cs",
+          "dotnet/src/ExtractorTester/AggregateUtil.cs",
+          "dotnet/src/ExtractorTester/Config.cs",
+          "dotnet/src/ExtractorTester/Slowest.cs",
+          "dotnet/tests/ExtractorTester.Tests/AggregateTests.cs",
+          "dotnet/tests/ExtractorTester.Tests/Fixtures/Aggregate/aggregate_cases.json",
+          "dotnet/tests/ExtractorTester.Tests/Fixtures/Aggregate/gen_aggregate_fixtures.py"
+        ],
+        "status": "SKIPPED",
+        "skip_reason": "No test files match changed source files — skipped"
+      }
+    }
+  ],
+  "all_passed": true,
+  "total_duration_seconds": 0.4
+}

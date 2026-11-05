@@ -1,0 +1,3 @@
+PASSED (0.0s)
+
+PASS: all src/ Python files <= 300 lines
