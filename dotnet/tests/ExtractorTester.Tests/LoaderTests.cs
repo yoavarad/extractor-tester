@@ -329,5 +329,21 @@ public sealed class LoaderTests : IDisposable
         var deep = string.Concat(Enumerable.Repeat("{\"a\":", 5000)) + "1" + string.Concat(Enumerable.Repeat("}", 5000));
         var e = Assert.Throws<JsonRecursionException>(() => Parse(deep));
         Assert.Equal("maximum recursion depth exceeded while decoding a JSON object from a unicode string", e.Message);
+        var over = PyJsonDecoder.MaxDepth + 1;
+        var arrays = string.Concat(Enumerable.Repeat("[", over)) + string.Concat(Enumerable.Repeat("]", over));
+        e = Assert.Throws<JsonRecursionException>(() => Parse(arrays));
+        Assert.Equal("maximum recursion depth exceeded while decoding a JSON array from a unicode string", e.Message);
+    }
+
+    [Fact]
+    public void IntDigitLimitMatchesPython()
+    {
+        Assert.IsType<BigInteger>(Parse(new string('1', 4300)));
+        Assert.IsType<double>(Parse(new string('1', 5000) + ".5"));
+        var e = Assert.Throws<JsonIntDigitsException>(() => Parse("-" + new string('1', 4301)));
+        Assert.Equal(
+            "Exceeds the limit (4300 digits) for integer string conversion: value has 4301 digits; "
+            + "use sys.set_int_max_str_digits() to increase the limit",
+            e.Message);
     }
 }

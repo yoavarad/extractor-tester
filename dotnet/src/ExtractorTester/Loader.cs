@@ -107,7 +107,8 @@ public static class ItemLoader
     /// <remarks>
     /// Folder mode callers pass the file stem as expectedItemId; file mode callers load OLD
     /// with null, then NEW with expectedItemId = old["itemId"].
-    /// Throws <see cref="JsonRecursionException"/> (Python RecursionError) on nesting past the limit.
+    /// Throws <see cref="JsonRecursionException"/> (Python RecursionError) on nesting past the limit and
+    /// <see cref="JsonIntDigitsException"/> (Python ValueError) on an int literal over 4300 digits.
     /// </remarks>
     public static Dictionary<string, object?> LoadItem(
         string path, string? expectedItemId, CompareConfig config, string? side = null)
@@ -119,7 +120,7 @@ public static class ItemLoader
         {
             size = new FileInfo(path).Length;
         }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
         {
             throw Invalid(prefix, path, $"cannot read file ({StrError(e)})");
         }
@@ -134,7 +135,7 @@ public static class ItemLoader
         {
             raw = ReadUpTo(path, config.MaxItemBytes + 1);
         }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
         {
             throw Invalid(prefix, path, $"cannot read file ({StrError(e)})");
         }
@@ -243,6 +244,12 @@ public sealed class PyDecodeException : Exception
     public PyDecodeException(string message) : base(message) { }
 }
 
+/// <summary>Python ValueError for an int literal over 4300 digits (not caught by load_item).</summary>
+public sealed class JsonIntDigitsException : Exception
+{
+    public JsonIntDigitsException(string message) : base(message) { }
+}
+
 /// <summary>Python RecursionError raised by json.loads on deep nesting (not caught by load_item).</summary>
 public sealed class JsonRecursionException : Exception
 {
@@ -259,19 +266,23 @@ public static class PyJsonDecoder
     /// <summary>Nesting depth CPython 3.12 accepts before RecursionError (measured at shallow stack).</summary>
     public const int MaxDepth = 2997;
 
+    /// <summary>Python 3.12 default sys.get_int_max_str_digits().</summary>
+    public const int MaxIntDigits = 4300;
+
     /// <summary>Strict UTF-8 decode after stripping one BOM; returns code points.</summary>
     public static int[] DecodeUtf8Sig(byte[] input)
     {
         var start = input.Length >= 3 && input[0] == 0xEF && input[1] == 0xBB && input[2] == 0xBF ? 3 : 0;
         var s = input.AsSpan(start);
-        var cps = new List<int>(s.Length);
+        var cps = new int[s.Length];
+        var n = 0;
         var i = 0;
         while (i < s.Length)
         {
             int b = s[i];
             if (b < 0x80)
             {
-                cps.Add(b);
+                cps[n++] = b;
                 i++;
                 continue;
             }
@@ -301,10 +312,11 @@ public static class PyJsonDecoder
                 3 => ((b & 0x0F) << 12) | ((s[i + 1] & 0x3F) << 6) | (s[i + 2] & 0x3F),
                 _ => ((b & 0x07) << 18) | ((s[i + 1] & 0x3F) << 12) | ((s[i + 2] & 0x3F) << 6) | (s[i + 3] & 0x3F),
             };
-            cps.Add(cp);
+            cps[n++] = cp;
             i += need;
         }
-        return cps.ToArray();
+        Array.Resize(ref cps, n);
+        return cps;
     }
 
     private static bool IsCont(int b) => (b & 0xC0) == 0x80;
@@ -498,6 +510,13 @@ public static class PyJsonDecoder
             if (isFloat)
             {
                 return (double.Parse(text, NumberStyles.Float, CultureInfo.InvariantCulture), idx);
+            }
+            var digits = text.Length - (text[0] == '-' ? 1 : 0);
+            if (digits > MaxIntDigits)
+            {
+                throw new JsonIntDigitsException(
+                    $"Exceeds the limit ({MaxIntDigits} digits) for integer string conversion: value has {digits} digits; "
+                    + "use sys.set_int_max_str_digits() to increase the limit");
             }
             // Cast each branch: a bare ternary would widen long to BigInteger.
             var value = long.TryParse(text, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var l)
