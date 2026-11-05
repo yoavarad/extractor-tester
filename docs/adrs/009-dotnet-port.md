@@ -1,7 +1,7 @@
 # ADR-009: Port to C# .NET 8
 
 ## Status
-Proposed (2026-11-04)
+Accepted (2026-11-05). Proposed 2026-11-04; acceptance criteria met by PR #157.
 
 ## Context
 The team knows C# far better than Python. The tool (`src/extractor_tester/`, ~2,800 LOC)
@@ -29,7 +29,9 @@ Specs and component manifests describe behaviour, not language, and stay valid.
   replace (`ITEM_TIMEOUT`), dead worker replaced with only its item recorded
   (`WORKER_CRASHED`), worker startup timeout, results written in item-id order, worker
   processes for every worker count including 1. The test-hook env vars of `pool.py`
-  (`EXTRACTOR_TESTER_TEST_*`) are ported so the same failure tests can run.
+  (`EXTRACTOR_TESTER_TEST_*`: crash item, garbage item, hang startup, die before take) are
+  ported in `Pool.cs`. Timeout and replacement tests use in-process `PoolOptions` /
+  `ChannelHooks` (`Channel.cs`) instead of env vars.
 - `--profile` is dropped (supersedes ADR-007's cProfile flag). Stage timers and `run_stats`
   stay. For deeper profiling run `dotnet-trace` externally.
 
@@ -50,6 +52,11 @@ Parity rules (C# must match Python exactly):
 - Tie order mirrored for `Counter.most_common`, `heapq` and `statistics.median` /
   `statistics.quantiles`.
 - Rounding is round-half-even, as Python `round()`.
+
+Deviations (full list in [docs/dotnet.md](../dotnet.md)):
+- Items nested deeper than Python's ~496-level `RecursionError` limit are compared in .NET,
+  not failed with `ITEM_PROCESSING_FAILED`. The loader's JSON nesting limit (~2997) still
+  matches Python.
 
 Acceptance:
 - The C# run reproduces `tests/golden/expected/{pairs.jsonl,items.jsonl,report.json}`
