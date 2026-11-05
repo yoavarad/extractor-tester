@@ -39,8 +39,14 @@ public sealed class CompareConfig
     public long TextHashChars { get; set; } = 1_000_000;
     public long FullCompareMaxChars { get; set; } = 100_000;
     public long MaxBlockChars { get; set; } = 4000;
-    public double CutLinesWarnPct { get; set; } = 20;
-    public double ContainmentPct { get; set; } = 98;
+    // pydantic does not validate defaults: an unset 20 / 98 dumps as the int 20 / 98, a set value as a float.
+    // Public fields (not properties) so PyJson leaves them out of the dump.
+    public bool CutLinesWarnPctSet;
+    public bool ContainmentPctSet;
+    private double _cutLinesWarnPct = 20;
+    private double _containmentPct = 98;
+    public double CutLinesWarnPct { get => _cutLinesWarnPct; set { _cutLinesWarnPct = value; CutLinesWarnPctSet = true; } }
+    public double ContainmentPct { get => _containmentPct; set { _containmentPct = value; ContainmentPctSet = true; } }
     public long ExamplesPerResult { get; set; } = 5;
     public long SnippetChars { get; set; } = 300;
     public long MaxItemBytes { get; set; } = 52_428_800;
