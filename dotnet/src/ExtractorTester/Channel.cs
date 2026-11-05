@@ -98,6 +98,9 @@ public static class WorkerChannel
 
     private static readonly JsonSerializerOptions ReadOptions = new(PyJson.Options) { MaxDepth = 8192 };
 
+    /// <summary>Larger frames are corrupt: results are far smaller than the 50 MB item cap allows.</summary>
+    private const int MaxFrameBytes = 1 << 30;
+
     public static double MonotonicClock() => Stopwatch.GetTimestamp() / (double)Stopwatch.Frequency;
 
     public static void DefaultDeliver(Slot s, WorkerMessage msg, ManualResetEventSlim wake)
@@ -129,7 +132,7 @@ public static class WorkerChannel
         header[0] = (byte)first;
         stream.ReadExactly(header, 1, 3);
         var length = BinaryPrimitives.ReadInt32LittleEndian(header);
-        if (length < 0)
+        if (length < 0 || length > MaxFrameBytes) // e.g. stray text on the worker's stdout
         {
             throw new InvalidDataException($"bad frame length {length}");
         }

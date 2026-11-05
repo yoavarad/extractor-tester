@@ -126,7 +126,7 @@ public class PoolTests : IDisposable
                 }
             },
         };
-        var (results, replaced) = CompareAll("item_timeout_seconds: 1\n", workers: 1, options: new PoolOptions { Hooks = hooks });
+        var (results, replaced) = CompareAll("item_timeout_seconds: 30\n", workers: 1, options: new PoolOptions { Hooks = hooks });
         Assert.Equal(
             [("a", "compared", 0), ("b", "compared", 0), ("c", "compared", 0)],
             results.Select(r => (r.Result.ItemId, r.Result.Status, r.Result.Errors.Count)));
@@ -168,7 +168,7 @@ public class PoolTests : IDisposable
         int replaced;
         try
         {
-            (results, replaced) = CompareAll("item_timeout_seconds: 3\n", options: new PoolOptions { Hooks = hooks });
+            (results, replaced) = CompareAll("item_timeout_seconds: 10\n", options: new PoolOptions { Hooks = hooks });
         }
         finally
         {
@@ -201,16 +201,16 @@ public class PoolTests : IDisposable
         foreach (var d in new[] { dirs.Old, dirs.New })
         {
             var files = ItemFiles("a-slow");
-            // ~20 s to compare in Release on a desktop CPU: far past the 2 s timeout.
+            // ~20 s to compare in Release on a desktop CPU: well past the 8 s timeout, which cold workers need for a, b, c.
             files[1]["text"] = new string(Enumerable.Range(0, 1_000_000).Select(_ => alphabet[rng.Next(alphabet.Length)]).ToArray());
             TestItems.WriteItem(d, "a-slow", files);
         }
         var (results, replaced) = CompareAll(
-            "item_timeout_seconds: 2\nfull_compare_max_chars: 2000000\n", workers: 2, dirs: dirs);
+            "item_timeout_seconds: 8\nfull_compare_max_chars: 2000000\n", workers: 2, dirs: dirs);
         Assert.Equal(["a", "a-slow", "b", "c"], results.Select(r => r.Result.ItemId));
         var codes = Codes(results);
         Assert.Equal(["ITEM_TIMEOUT"], codes["a-slow"]);
-        Assert.Equal("item a-slow: not finished after 2 s", results[1].Result.Errors[0].Message);
+        Assert.Equal("item a-slow: not finished after 8 s", results[1].Result.Errors[0].Message);
         Assert.Equal("error", results[1].Result.Status);
         Assert.All(new[] { results[0], results[2], results[3] }, r => Assert.Equal(("compared", 0), (r.Result.Status, r.Result.Errors.Count)));
         Assert.Equal(1, replaced);

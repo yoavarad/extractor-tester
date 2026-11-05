@@ -179,7 +179,7 @@ public static class WorkerPool
         {
             return (appHost, []);
         }
-        var muxer = Path.GetFullPath(Path.Combine(
+        var muxer = Environment.GetEnvironmentVariable("DOTNET_HOST_PATH") ?? Path.GetFullPath(Path.Combine(
             RuntimeEnvironment.GetRuntimeDirectory(), "..", "..", "..", OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet"));
         return (muxer, [asm.Location]);
     }
@@ -271,9 +271,9 @@ public static class WorkerPool
             var old = slots[i];
             Kill(old.Proc); // the pipe now reaches EOF, which ends the old reader thread
             old.Close();
-            old.Proc.Dispose();
             stats.Replaced++;
             Start(i, startupFailures);
+            old.Proc.Dispose(); // after Start: if it throws, the finally block still sees a usable (exited) slot
         }
 
         var held = new Dictionary<int, (int Index, double Since)>(); // worker slot -> (item index, since)
