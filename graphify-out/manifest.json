@@ -1,1418 +1,1424 @@
 {
   ".claude/hooks/check-task-complete.sh": {
-    "mtime": 1794812758.127042,
-    "seen": 1794812921.694629,
-    "ast_hash": "71f0fcc01bfc9800463586cdb6ae9ac6",
+    "mtime": 1794813190.3715672,
+    "seen": 1794813205.7272656,
+    "ast_hash": "ad595983107ce3f61e476dec447f3c5f",
     "semantic_hash": ""
   },
   ".claude/hooks/guard.py": {
-    "mtime": 1794812758.127042,
-    "seen": 1794812921.6946392,
-    "ast_hash": "32c3f921c144c358e4b63106b0b2799e",
+    "mtime": 1794813190.372299,
+    "seen": 1794813205.7272718,
+    "ast_hash": "392cb255c44b8e5a6854fb624d8af7be",
     "semantic_hash": ""
   },
   ".claude/settings.json": {
-    "mtime": 1794812758.127042,
-    "seen": 1794812921.6946437,
-    "ast_hash": "eb0e719c1caf17b14d18055ecce582a6",
+    "mtime": 1794813190.372299,
+    "seen": 1794813205.7272747,
+    "ast_hash": "b5fe36b05a5d91884c57d80dabca01c9",
     "semantic_hash": ""
   },
   ".github/workflows/ci.yml": {
-    "mtime": 1794812758.1290507,
-    "seen": 1794812921.6946464,
-    "ast_hash": "27da13ddf7a0ba7a4bdaa479c5a12635",
+    "mtime": 1794813190.3723834,
+    "seen": 1794813205.7272766,
+    "ast_hash": "a88dbb613ba22ea4c76ddce27b918725",
     "semantic_hash": ""
   },
   ".github/workflows/ydk-delete-merged-branch.yml": {
-    "mtime": 1794812758.1290507,
-    "seen": 1794812921.6946487,
-    "ast_hash": "3fea88cc0b55f1e8bd0c4fcd7d1f8766",
+    "mtime": 1794813190.3724427,
+    "seen": 1794813205.7272778,
+    "ast_hash": "4a55c24460ed010f80727c200f86a9c0",
     "semantic_hash": ""
   },
   ".github/workflows/ydk-pr-body.yml": {
-    "mtime": 1794812758.1290507,
-    "seen": 1794812921.694651,
-    "ast_hash": "b9db8cb399f05320697284c9049ca783",
+    "mtime": 1794813190.3724427,
+    "seen": 1794813205.7272809,
+    "ast_hash": "6e894228829b30212925095a9a19a0de",
     "semantic_hash": ""
   },
   ".github/workflows/ydk-pr-checks.yml": {
-    "mtime": 1794812758.1290507,
-    "seen": 1794812921.694653,
-    "ast_hash": "b3020976ddeb0eb8669f13c3fc218ff6",
+    "mtime": 1794813190.3724427,
+    "seen": 1794813205.7272823,
+    "ast_hash": "4a07ecd4a03246dba7b8f0feae07ab2c",
     "semantic_hash": ""
   },
   ".github/workflows/ydk-spec-integrity.yml": {
-    "mtime": 1794812758.1290507,
-    "seen": 1794812921.6946545,
-    "ast_hash": "d5cae929382705c792980454f7c77afa",
+    "mtime": 1794813190.3724427,
+    "seen": 1794813205.7272832,
+    "ast_hash": "c2ec34643b4a595bfe132d5591b6f544",
     "semantic_hash": ""
   },
   ".github/workflows/ydk-sync.yml": {
-    "mtime": 1794812758.1290507,
-    "seen": 1794812921.6946557,
-    "ast_hash": "994cbeaed50a0f1eea245c256a496dd4",
+    "mtime": 1794813190.3724427,
+    "seen": 1794813205.727284,
+    "ast_hash": "81e94e392a3755e9c564d317b25d3ad6",
     "semantic_hash": ""
   },
   "docs/plans/dotnet-port-batch.yaml": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6946573,
-    "ast_hash": "2e0bf5bdcc49e6b0d76622c8361503f2",
+    "mtime": 1794813190.374986,
+    "seen": 1794813205.7272851,
+    "ast_hash": "1cd6e7769eb802285121133fddc48b5c",
     "semantic_hash": ""
   },
   "docs/plans/initial-batch.yaml": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6946588,
-    "ast_hash": "c64936846257bf278866146145b8cda0",
+    "mtime": 1794813190.3752937,
+    "seen": 1794813205.7272863,
+    "ast_hash": "f1b7ae0b4338e9b721d8a6d23f421b56",
     "semantic_hash": ""
   },
   "dotnet/ExtractorTester.sln": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.6946607,
-    "ast_hash": "7cd4f856af2005686fb97d0b35bbbc39",
+    "mtime": 1794813190.3759062,
+    "seen": 1794813205.7272873,
+    "ast_hash": "25b7cc96a1bcec38d40d86c3f07653f0",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Aggregate.cs": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.694662,
-    "ast_hash": "2ca7375141761f8a3815befca2834bbd",
+    "mtime": 1794813190.3759363,
+    "seen": 1794813205.7272882,
+    "ast_hash": "d39f094a44ed9cae420965da1f876aa1",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/AggregateUtil.cs": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.6946638,
-    "ast_hash": "66e101c93628557f98c3cde79c249804",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7272892,
+    "ast_hash": "4f4ff6dbebf363aac1293229bed002b0",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Buffered.cs": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.6946652,
-    "ast_hash": "b46feb19e29f46180da63770ccd266ae",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7272902,
+    "ast_hash": "3b58c3644e95b59cfc072212ce9f2ef2",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Channel.cs": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.6946664,
-    "ast_hash": "8b1f8e8ac9ac02c6fb1a4786c8f157c4",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.727291,
+    "ast_hash": "9f3015eebcc580caf06385c48dc97557",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Cli.cs": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.6946678,
-    "ast_hash": "a6fc75499ae6c6b0444c678bb2a8aa09",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7272918,
+    "ast_hash": "7c9984fd84c703b526d60df1bdebd0f4",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Compare.cs": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.6946692,
-    "ast_hash": "ab28f12bfed834291c25b03347f1a635",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.727293,
+    "ast_hash": "411761d4a8c7587d3dddabd2d67af76e",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Config.cs": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.694671,
-    "ast_hash": "47ab627938491ea71bab63dcc6a2bf90",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.727294,
+    "ast_hash": "7fe8f02fdccab4b7cd5d8e2b11c34989",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Decode.cs": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.694672,
-    "ast_hash": "68843598140e6c0710f2d4d381b147f0",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7272947,
+    "ast_hash": "e6d720a572785fb14996cc02c3f11182",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/ExtractorTester.csproj": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.6946738,
-    "ast_hash": "36cbfe400c27f9be8c82973678373221",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.727296,
+    "ast_hash": "1bdb3d3eca2d677a99179ac9ca118a0b",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Families.cs": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.694675,
-    "ast_hash": "4280d7066c77c27b7794448ddf7f5f4a",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.727297,
+    "ast_hash": "c83727d9ec481acd2c72f5a5e01f331b",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/FieldDiffer.cs": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.6946776,
-    "ast_hash": "509de36574c87fb67dbf34e207b8aff3",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.727298,
+    "ast_hash": "9aa78917a78c6e71945aa0c834fd0f20",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Fields.cs": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.6946788,
-    "ast_hash": "e59cef77f31b6db1ba30c54fa960d626",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.727299,
+    "ast_hash": "0fdc1f7874ab7464e41b6b7941443025",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Indel.cs": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.6946802,
-    "ast_hash": "910fb3d7010a42e509f3d3aeb1e1327f",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7273002,
+    "ast_hash": "65e5db165e57f6b937284063e38fa9b4",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/ItemComparer.cs": {
-    "mtime": 1794812758.190727,
-    "seen": 1794812921.694682,
-    "ast_hash": "2713c2f89fa136403448c69a90a43e84",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7273011,
+    "ast_hash": "4574e33a182335ea922fedb36717542d",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Loader.cs": {
-    "mtime": 1794812758.1963315,
-    "seen": 1794812921.6946833,
-    "ast_hash": "23ade7522489558e7708a2c53193f867",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.727302,
+    "ast_hash": "3a043e5c4727266c5f38c4dc1b033483",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Matching.cs": {
-    "mtime": 1794812758.196851,
-    "seen": 1794812921.6946847,
-    "ast_hash": "f5ed1ad12a53c8c870eeb8a985bdea51",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7273033,
+    "ast_hash": "476e153a723f537659e7ad81dd33b82f",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Models.cs": {
-    "mtime": 1794812758.196851,
-    "seen": 1794812921.6946862,
-    "ast_hash": "a4f761fd8eb32f811c6dabdff58aecf3",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7273042,
+    "ast_hash": "3a27676b2420fe85153e6812c5cf1ece",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Output.cs": {
-    "mtime": 1794812758.196851,
-    "seen": 1794812921.6946876,
-    "ast_hash": "7738721e70a1f50fd90cfa712561db56",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7273054,
+    "ast_hash": "981766d3f80326d53e2e6ae26db9f5d8",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Pool.cs": {
-    "mtime": 1794812758.197867,
-    "seen": 1794812921.694689,
-    "ast_hash": "c6fb9ebbb580704d5408a1ad6d431cc4",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7273061,
+    "ast_hash": "64bc74e2e11c1039f2194b1460451dd1",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Profiling.cs": {
-    "mtime": 1794812758.197867,
-    "seen": 1794812921.6946902,
-    "ast_hash": "0f2b5f17b1d7139cee34aa9508e49f53",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.727307,
+    "ast_hash": "2173e7415e45f2642c91c6369d2e4e34",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Program.cs": {
-    "mtime": 1794812758.1983812,
-    "seen": 1794812921.694692,
-    "ast_hash": "482c7eadb671d786b8220b1923aa4658",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7273085,
+    "ast_hash": "415a7de250cd2790bebb22d54af6945e",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/PyJson.cs": {
-    "mtime": 1794812758.1983812,
-    "seen": 1794812921.6946933,
-    "ast_hash": "b81e5f5cf7d202f7c82a9cbe496c1e06",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7273095,
+    "ast_hash": "70ecf593612d7a3b829ebc61f305c75a",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Render.cs": {
-    "mtime": 1794812758.1983812,
-    "seen": 1794812921.6946948,
-    "ast_hash": "4c04f6955c131fe22723cd36acd78543",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7273107,
+    "ast_hash": "42cc79ae183841129b9b9af97f14db9a",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Runner.cs": {
-    "mtime": 1794812758.1983812,
-    "seen": 1794812921.6946962,
-    "ast_hash": "0ff32625da83afe6e489dd5f1e8a983d",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7273114,
+    "ast_hash": "0ebe9842fe4e72e76102fd4216577978",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/SequenceMatcher.cs": {
-    "mtime": 1794812758.1983812,
-    "seen": 1794812921.6946974,
-    "ast_hash": "12246cc55e8eb72db7eea891a8b8b08f",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7273123,
+    "ast_hash": "03824eca16f5f45ed2f57cac8123c99e",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Slowest.cs": {
-    "mtime": 1794812758.1983812,
-    "seen": 1794812921.694699,
-    "ast_hash": "687775be0cc10240aa2219d11b1a6efe",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7273135,
+    "ast_hash": "2c55e72bb106e01c706b7bc5cd871ec1",
     "semantic_hash": ""
   },
   "dotnet/src/ExtractorTester/Tree.cs": {
-    "mtime": 1794812758.1983812,
-    "seen": 1794812921.6947002,
-    "ast_hash": "07bc0f2ef6a87e4ae631976d9ed27a38",
+    "mtime": 1794813190.3759997,
+    "seen": 1794813205.7273142,
+    "ast_hash": "f1be97f073a5e8d71667184afed4fdb2",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/AggregateTests.cs": {
-    "mtime": 1794812758.1983812,
-    "seen": 1794812921.694702,
-    "ast_hash": "e0c9ec309392899b422dec497a585ab1",
+    "mtime": 1794813190.3770094,
+    "seen": 1794813205.7273152,
+    "ast_hash": "840827cd4bce36165aad73770420a055",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/ChannelTests.cs": {
-    "mtime": 1794812758.1983812,
-    "seen": 1794812921.694703,
-    "ast_hash": "e9451295632251d8ad2670947f3e06d7",
+    "mtime": 1794813190.3770642,
+    "seen": 1794813205.727316,
+    "ast_hash": "9b9852829f6159e3d574f6ac17b61c8b",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/CompareFixtures.cs": {
-    "mtime": 1794812758.1983812,
-    "seen": 1794812921.6947045,
-    "ast_hash": "459e31c420663f393f194b61ba4c357c",
+    "mtime": 1794813190.3770642,
+    "seen": 1794813205.727317,
+    "ast_hash": "0b8b064ed405008804aeed5ddca46005",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/CompareTextTests.cs": {
-    "mtime": 1794812758.1983812,
-    "seen": 1794812921.6947062,
-    "ast_hash": "ca654ccd184ee75d0b13d6bf951a5606",
+    "mtime": 1794813190.3770642,
+    "seen": 1794813205.727318,
+    "ast_hash": "098b88bef9060c33344d84170cc826a3",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/ConfigTests.cs": {
-    "mtime": 1794812758.1983812,
-    "seen": 1794812921.6947088,
-    "ast_hash": "0b09e6a89164a79ad57bc0344580b377",
+    "mtime": 1794813190.3770642,
+    "seen": 1794813205.727319,
+    "ast_hash": "c4b0e2fbc968860d2d0877dc77b3d52e",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/DecodeParityTests.cs": {
-    "mtime": 1794812758.1983812,
-    "seen": 1794812921.6947103,
-    "ast_hash": "a3e548f33a23670cf0863de3ca2419e9",
+    "mtime": 1794813190.3770642,
+    "seen": 1794813205.7273197,
+    "ast_hash": "bf76e5174dda9399eafe904cf4a532d4",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/ExtractorTester.Tests.csproj": {
-    "mtime": 1794812758.2033563,
-    "seen": 1794812921.6947114,
-    "ast_hash": "418ca4cc5efc12a8a7910567e9bd65d2",
+    "mtime": 1794813190.3770642,
+    "seen": 1794813205.727321,
+    "ast_hash": "150f14e5529c50b0735c8f8af524f0b4",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/FieldDifferTests.cs": {
-    "mtime": 1794812758.2033563,
-    "seen": 1794812921.694713,
-    "ast_hash": "7e68aea35e18bfda0dffacfe2d5729f1",
+    "mtime": 1794813190.3770642,
+    "seen": 1794813205.7273216,
+    "ast_hash": "8adfbde3ba812c6f712d4f91451dc7fb",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/FieldsTests.cs": {
-    "mtime": 1794812758.2033563,
-    "seen": 1794812921.6947145,
-    "ast_hash": "db085b3c70631e3cad1dbefbf093301e",
+    "mtime": 1794813190.3770642,
+    "seen": 1794813205.7273226,
+    "ast_hash": "d3833cbf64f821d01470a8efd42e9d83",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Aggregate/aggregate_cases.json": {
-    "mtime": 1794812758.2033563,
-    "seen": 1794812921.694716,
+    "mtime": 1794813190.3772795,
+    "seen": 1794813205.7273235,
     "ast_hash": "cc6baf2f6b6453c47075bcb8a7176f2c",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Aggregate/gen_aggregate_fixtures.py": {
-    "mtime": 1794812758.2053616,
-    "seen": 1794812921.6947172,
+    "mtime": 1794813190.37739,
+    "seen": 1794813205.7273247,
     "ast_hash": "f27fd1dfa982c0dd3ee449d862537f6e",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Compare/compare_cases.json": {
-    "mtime": 1794812758.2063675,
-    "seen": 1794812921.6947188,
+    "mtime": 1794813190.37739,
+    "seen": 1794813205.7273257,
     "ast_hash": "4cd28b60fb6e205f70860e6c3d526967",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Compare/gen_compare_fixtures.py": {
-    "mtime": 1794812758.2063675,
-    "seen": 1794812921.69472,
+    "mtime": 1794813190.3782606,
+    "seen": 1794813205.7273266,
     "ast_hash": "8bcfb1168345f147ddc5d37faf1b8529",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Matching/gen_matcher_fixtures.py": {
-    "mtime": 1794812758.2078748,
-    "seen": 1794812921.6947215,
+    "mtime": 1794813190.3782606,
+    "seen": 1794813205.7273278,
     "ast_hash": "39c650b5a00893a5f0b754a17b07b618",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Matching/matcher_cases.json": {
-    "mtime": 1794812758.2082396,
-    "seen": 1794812921.694723,
+    "mtime": 1794813190.3783715,
+    "seen": 1794813205.7273288,
     "ast_hash": "95688ba221bd77bdba3349e2ce319915",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/generate_fixtures.py": {
-    "mtime": 1794812758.2082396,
-    "seen": 1794812921.694724,
+    "mtime": 1794813190.3783715,
+    "seen": 1794813205.7273295,
     "ast_hash": "a91e0032d7cc68b7c6d21b6cf8d3448a",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/golden-report.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947255,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273304,
     "ast_hash": "b79b8717da7e100fbd3dcd33c804bfb4",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-ErrorRecord.indent.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.694727,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273316,
     "ast_hash": "c3b8e8b6ab73ad3eb40b329ae755f9b6",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-ErrorRecord.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947284,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273326,
     "ast_hash": "30ef84b51f54a1e44528cc31716546b2",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-Example.indent.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947298,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273335,
     "ast_hash": "bb74b1f3cc03ede5873a3c0f36cee73b",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-Example.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.694731,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273345,
     "ast_hash": "3be21a16bca6ed2b0a4b251490f43a78",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-FamilyAggregate.indent.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947324,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273355,
     "ast_hash": "73750a2647f00136a720bcb2f1dd068a",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-FamilyAggregate.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.694734,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273364,
     "ast_hash": "7842a3b302d6ea3ab1e99fbabc18bfec",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-FieldDiff.indent.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947353,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273371,
     "ast_hash": "829f992b56646134ff10da91e38bdb02",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-FieldDiff.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.694737,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273383,
     "ast_hash": "84b2149b0a3f9ee87fb6752a3fbc36be",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-FilePair.indent.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947381,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273393,
     "ast_hash": "3deb6ffb73f2b7ececd1d0d12a89aeab",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-FilePair.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947398,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.72734,
     "ast_hash": "8db79840a1b50c8d80b472a965eea35b",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-FileRecord.indent.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.694741,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273414,
     "ast_hash": "b8481b54ad43ffd41cb27ee441f8189f",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-FileRecord.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947422,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273421,
     "ast_hash": "745d72b65e714604c93f3e78ba28441d",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-Item.indent.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947439,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273433,
     "ast_hash": "e5a6095ab8ff4678436911bfe73e6572",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-Item.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.694745,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.727344,
     "ast_hash": "19d07980d9206ab040785a6e1363c4b6",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-ItemResult.indent.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947467,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273452,
     "ast_hash": "07f96c00340394e4450a863cc3791616",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-ItemResult.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.694748,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273462,
     "ast_hash": "7bbd20c1822d270252ced276a4d25274",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-MetricResult.indent.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.694749,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273471,
     "ast_hash": "bb114d6c2c56adcb1a1d5adc507b27dc",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-MetricResult.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947508,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273483,
     "ast_hash": "cdf65b5ff077210a641ba70726c844b7",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-PairFacts.indent.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947522,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.727349,
     "ast_hash": "85d4d2aba0532b86729e8948e9cb8128",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-PairFacts.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947536,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.72735,
     "ast_hash": "059cd216e2a47182621d4c36aecb0009",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-Report.indent.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.694755,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.727351,
     "ast_hash": "dbec6637523864560e56dd73eb8cc069",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-Report.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947563,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273521,
     "ast_hash": "51409e4db2d18027bcbe8d9d31486d89",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-RunStats.indent.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.694758,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.727353,
     "ast_hash": "67b18ab0602b2124b267089ca28b9887",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-RunStats.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947594,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.727354,
     "ast_hash": "8e4e71543df56924f335819198107ff5",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-TextFacts.indent.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947608,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7273548,
     "ast_hash": "fc98821093259fcbca1f1ed23357c77f",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/sample-TextFacts.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947622,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.727356,
     "ast_hash": "d9449ec5771684f9a2b0d21d1edffc97",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Models/schema.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947637,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.727357,
     "ast_hash": "755e42b14769812e66ec7590c8309595",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Render/report-edge.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947653,
+    "mtime": 1794813190.3790672,
+    "seen": 1794813205.7273579,
     "ast_hash": "908a27f8fdf588e05bf4048700c91d3e",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Render/report.json": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947665,
+    "mtime": 1794813190.3790672,
+    "seen": 1794813205.7273588,
     "ast_hash": "c96ad9cf4734ce7819b44586cfc4d262",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/gen_indel_fixtures.py": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947682,
+    "mtime": 1794813190.3790672,
+    "seen": 1794813205.7273598,
     "ast_hash": "915b7018f84f58fa441dbd19defde46c",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/gen_seqmatcher_fixtures.py": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6947713,
+    "mtime": 1794813190.3790672,
+    "seen": 1794813205.7273607,
     "ast_hash": "b2f0d3d5d4d54cce452bbcaeba0cf205",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/indel_cases.json": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947725,
+    "mtime": 1794813190.3795455,
+    "seen": 1794813205.7273617,
     "ast_hash": "b0bc2f875d5038cedcd8d34e011ba12f",
     "semantic_hash": ""
   },
-  "dotnet/tests/ExtractorTester.Tests/Fixtures/parity.json": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.694774,
-    "ast_hash": "5966b68fe6790d7039a64e8ae9de5710",
-    "semantic_hash": ""
-  },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/seqmatcher_cases.json": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947753,
+    "mtime": 1794813190.3795455,
+    "seen": 1794813205.7273629,
     "ast_hash": "1381634a47c316a3ccaa0fcc47a2a914",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/GoldenChecks.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947768,
-    "ast_hash": "1ba7bc50ae8130f94ad12113f6cfc6f3",
+    "mtime": 1794813190.3795455,
+    "seen": 1794813205.7273638,
+    "ast_hash": "88a37bd8cc7e61239c8d341727825617",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/GoldenCorpus.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947782,
-    "ast_hash": "a49363da122727e3841ecc7ba1f175ba",
+    "mtime": 1794813190.3795455,
+    "seen": 1794813205.7273645,
+    "ast_hash": "2cfc1f9ffde3cf1e62b2da7b5d8fdaa0",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/GoldenTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947796,
-    "ast_hash": "f7321c2ff70b58f62d3f554f5f6990ab",
+    "mtime": 1794813190.3795455,
+    "seen": 1794813205.7273657,
+    "ast_hash": "4b1828b039f8efe06cca0c10705cd746",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/IndelTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.694781,
-    "ast_hash": "5380c7d29b68ef9f7daf7d59dce3e49b",
+    "mtime": 1794813190.3795455,
+    "seen": 1794813205.7273667,
+    "ast_hash": "1cc01e878e1db041991e677a5e912fc9",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Interrupt.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947827,
-    "ast_hash": "0f95d537208e26ffb15dcc19b152ac47",
+    "mtime": 1794813190.3795455,
+    "seen": 1794813205.7273676,
+    "ast_hash": "51b0b73ee815fffe8ce7439def1f9f5e",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/ItemComparerTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.694784,
-    "ast_hash": "a5dc64e7410d9348e6f39bc89783b9c0",
+    "mtime": 1794813190.3795455,
+    "seen": 1794813205.7273686,
+    "ast_hash": "a9c8cca04576b04c9c75bb831ce4814f",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/LoaderTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947856,
-    "ast_hash": "c7ee757bef100d6a117f97ecc3061f59",
+    "mtime": 1794813190.3795455,
+    "seen": 1794813205.7273698,
+    "ast_hash": "58e0a5c8acbcb6aee56a1a984ddd96e4",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/MatchingTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947868,
-    "ast_hash": "5dcb113beae9ae7290649e2966420443",
+    "mtime": 1794813190.3795455,
+    "seen": 1794813205.7273707,
+    "ast_hash": "1214ce0ed9eadf2153459753ed302bee",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/ModelsJsonTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947885,
-    "ast_hash": "c165b3a2bcfe554dec12331fae65ac9a",
+    "mtime": 1794813190.3805454,
+    "seen": 1794813205.7273717,
+    "ast_hash": "03082353317b9ed8de8125f13ffaeeca",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/OutputTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.69479,
-    "ast_hash": "6ca0e68a53c4efedf18051a7882d5a47",
+    "mtime": 1794813190.3805454,
+    "seen": 1794813205.727373,
+    "ast_hash": "073fb18b473e548b4de125c68e157c71",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/PoolTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947913,
-    "ast_hash": "f63e131bbfaf02af0d5b93f00506839e",
+    "mtime": 1794813190.3805454,
+    "seen": 1794813205.7273738,
+    "ast_hash": "20eba0a5e466926490f6fab9b6c46690",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/ProfilingTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947927,
-    "ast_hash": "f265ea9450fcdda15b2d908028991da6",
+    "mtime": 1794813190.3805454,
+    "seen": 1794813205.7273746,
+    "ast_hash": "f0d938a7a7ad27e673edc0778746a119",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/RenderTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.694794,
-    "ast_hash": "8c9f1e67964ae560e8cdf7fc773a5fd6",
+    "mtime": 1794813190.3805454,
+    "seen": 1794813205.7273755,
+    "ast_hash": "6c29805580ca3b49fb325b4b3c252c59",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/RunnerTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947958,
-    "ast_hash": "dbb3b566684232fdfdb3c42c8c5a96b6",
+    "mtime": 1794813190.3805454,
+    "seen": 1794813205.7273767,
+    "ast_hash": "c671a62c20d1e37f630ee20326225223",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/SequenceMatcherTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947973,
-    "ast_hash": "4b1e98a05ec7c657178a6c3c74327cbe",
+    "mtime": 1794813190.3805454,
+    "seen": 1794813205.7273774,
+    "ast_hash": "6670674e56f9434f2e5cd41e4e0768b7",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/SmokeTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6947987,
-    "ast_hash": "c5281e47e9fe43ccf0135052658dc12a",
+    "mtime": 1794813190.3805454,
+    "seen": 1794813205.7273786,
+    "ast_hash": "03b4a5fccbcad630938db4ff10c382ca",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/TestItems.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6948001,
-    "ast_hash": "54817a50c9769d4ac2c391510af6dac0",
+    "mtime": 1794813190.3805454,
+    "seen": 1794813205.7273798,
+    "ast_hash": "6691279919f757faa77a3eedf807e862",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/ToolErrorCoverageTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6948013,
-    "ast_hash": "5626d8c270ff773a393d3bbbb64fcf16",
+    "mtime": 1794813190.3805454,
+    "seen": 1794813205.7273808,
+    "ast_hash": "00f2efe594d069291e1727bc054c6bcd",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/TreeTests.cs": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.694803,
-    "ast_hash": "efa4c48916c9b4e79e6bab942adfc113",
+    "mtime": 1794813190.3805454,
+    "seen": 1794813205.7273817,
+    "ast_hash": "d405df0130556e1642e03641560fe8fd",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/c.yaml": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6948044,
-    "ast_hash": "1d6ae733e9aafc01e68d9006dc544353",
+    "mtime": 1794813190.3819835,
+    "seen": 1794813205.7273839,
+    "ast_hash": "1e01515955b7072c3033955611889d30",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/new/g01-identical.json": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.694806,
+    "mtime": 1794813190.3820024,
+    "seen": 1794813205.7273848,
     "ast_hash": "58bfe05e0ae71d3770e164e05d3760b9",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/new/g02-metadata.json": {
-    "mtime": 1794812758.2233317,
-    "seen": 1794812921.6948073,
+    "mtime": 1794813190.3820274,
+    "seen": 1794813205.7273858,
     "ast_hash": "c1861ab81f3a29ce71efa79ed7a8fb8a",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/new/g03-type-change.json": {
-    "mtime": 1794812758.2339425,
-    "seen": 1794812921.6948087,
+    "mtime": 1794813190.3820274,
+    "seen": 1794813205.727387,
     "ast_hash": "bbda2dbe73f7b9fdd0eccd528ee2fbc4",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/new/g04-text-extension.json": {
-    "mtime": 1794812758.2339425,
-    "seen": 1794812921.6948102,
+    "mtime": 1794813190.3820274,
+    "seen": 1794813205.727388,
     "ast_hash": "23e2037f2131e7676cbb772e72eb7fa4",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/new/g05-text-loss.json": {
-    "mtime": 1794812758.2339425,
-    "seen": 1794812921.6948116,
+    "mtime": 1794813190.3820274,
+    "seen": 1794813205.7273886,
     "ast_hash": "42be10dc3d2e56627abe27b7cc879308",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/new/g06-rewritten.json": {
-    "mtime": 1794812758.2339425,
-    "seen": 1794812921.6948133,
+    "mtime": 1794813190.3820274,
+    "seen": 1794813205.7273898,
     "ast_hash": "0dd9d50aa6238c10f0d707bd1ad0e65b",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/new/g07-renamed.json": {
-    "mtime": 1794812758.2339425,
-    "seen": 1794812921.6948144,
+    "mtime": 1794813190.3820274,
+    "seen": 1794813205.7273908,
     "ast_hash": "c2f6380da2e076e54c82964b3bc368ee",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/new/g08-same-name-siblings.json": {
-    "mtime": 1794812758.2339425,
-    "seen": 1794812921.694816,
+    "mtime": 1794813190.3820274,
+    "seen": 1794813205.7273917,
     "ast_hash": "6c2388d8fada40dc42058f3d1c040b80",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/new/g09-one-sided-subfile.json": {
-    "mtime": 1794812758.2339425,
-    "seen": 1794812921.6948173,
+    "mtime": 1794813190.3820274,
+    "seen": 1794813205.7273927,
     "ast_hash": "149c6e3cfd03f077ea7b3c4ec5855217",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/new/g10-invalid-base64.json": {
-    "mtime": 1794812758.2355835,
-    "seen": 1794812921.6948187,
+    "mtime": 1794813190.3820274,
+    "seen": 1794813205.7273939,
     "ast_hash": "4c1b6de032e04d29b16fdc8151c2d198",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/new/g11-malformed-json.json": {
-    "mtime": 1794812758.2361004,
-    "seen": 1794812921.6948204,
+    "mtime": 1794813190.3820274,
+    "seen": 1794813205.7273948,
     "ast_hash": "3dc44617c0740f37498f572c319693e4",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/old/g01-identical.json": {
-    "mtime": 1794812758.2361004,
-    "seen": 1794812921.6948218,
+    "mtime": 1794813190.3820274,
+    "seen": 1794813205.7273958,
     "ast_hash": "58bfe05e0ae71d3770e164e05d3760b9",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/old/g02-metadata.json": {
-    "mtime": 1794812758.2361004,
-    "seen": 1794812921.6948233,
+    "mtime": 1794813190.3821445,
+    "seen": 1794813205.727397,
     "ast_hash": "f7f759a6d2b1d5fcbfb6f0dfb5825d23",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/old/g03-type-change.json": {
-    "mtime": 1794812758.2361004,
-    "seen": 1794812921.6948247,
+    "mtime": 1794813190.3821445,
+    "seen": 1794813205.727398,
     "ast_hash": "be30c1b6297c64a344cb8dd1e263cb31",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/old/g04-text-extension.json": {
-    "mtime": 1794812758.2361004,
-    "seen": 1794812921.694826,
+    "mtime": 1794813190.3821445,
+    "seen": 1794813205.7273989,
     "ast_hash": "0679787af851b4f96c8e6dc6f510b068",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/old/g05-text-loss.json": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948276,
+    "mtime": 1794813190.3821445,
+    "seen": 1794813205.7273996,
     "ast_hash": "a65cf336b8efa7a28ca96d036e8bd70a",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/old/g06-rewritten.json": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948287,
+    "mtime": 1794813190.3821445,
+    "seen": 1794813205.7274008,
     "ast_hash": "49a39db8deb43262ccc3654ce6eb9acc",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/old/g07-renamed.json": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948304,
+    "mtime": 1794813190.3821445,
+    "seen": 1794813205.7274017,
     "ast_hash": "d6ae20e07c9c7580c5a8cb444bce1725",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/old/g08-same-name-siblings.json": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948318,
+    "mtime": 1794813190.3821445,
+    "seen": 1794813205.7274027,
     "ast_hash": "6c2388d8fada40dc42058f3d1c040b80",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/old/g09-one-sided-subfile.json": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948335,
+    "mtime": 1794813190.3821445,
+    "seen": 1794813205.7274039,
     "ast_hash": "5781d0e7206f7dc4c612100974584a68",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/old/g10-invalid-base64.json": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948347,
+    "mtime": 1794813190.3821445,
+    "seen": 1794813205.7274048,
     "ast_hash": "17a72e38d6a0ea0d027d264828f2a51c",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/old/g11-malformed-json.json": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948361,
+    "mtime": 1794813190.3821445,
+    "seen": 1794813205.7274055,
     "ast_hash": "3916df124f3cf1a5a7f226cab67d5491",
     "semantic_hash": ""
   },
   "dotnet/tests/golden/input/old/g12-one-sided-item.json": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948378,
+    "mtime": 1794813190.3821445,
+    "seen": 1794813205.7274067,
     "ast_hash": "49be3b129e78dc2fddd9817a07d7d4cc",
     "semantic_hash": ""
   },
   "dotnet/tests/tools/dump_parity_fixtures.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.694839,
-    "ast_hash": "ac8804d515e9f3bf75c4b5366f239c6b",
+    "mtime": 1794813190.3821445,
+    "seen": 1794813205.727408,
+    "ast_hash": "43dc85eb10bd72618a877715ac01472a",
     "semantic_hash": ""
   },
   "pyproject.toml": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948407,
-    "ast_hash": "199f66fa4c604d58b80b9c4080ddaa1b",
+    "mtime": 1794813190.3905454,
+    "seen": 1794813205.727409,
+    "ast_hash": "3d97b42b31961d0d30415399f2fdd992",
     "semantic_hash": ""
   },
   "src/extractor_tester/__init__.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948419,
+    "mtime": 1794813190.3922784,
+    "seen": 1794813205.7274098,
     "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
     "semantic_hash": ""
   },
   "src/extractor_tester/aggregate.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948433,
-    "ast_hash": "e11b45a6694fcaadbf575387bba8482c",
+    "mtime": 1794813190.3922951,
+    "seen": 1794813205.727411,
+    "ast_hash": "bacadcea5df90a316dc7488833b6b056",
     "semantic_hash": ""
   },
   "src/extractor_tester/aggregate_util.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.694845,
-    "ast_hash": "d9658fddbb99f707f9e5229e4a9fd19c",
+    "mtime": 1794813190.3922951,
+    "seen": 1794813205.727412,
+    "ast_hash": "357337bfab2ebeafc49f4b51daac4293",
     "semantic_hash": ""
   },
   "src/extractor_tester/channel.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948462,
-    "ast_hash": "9875a33d277f9c0d2ca1c19742c64fb5",
+    "mtime": 1794813190.3922951,
+    "seen": 1794813205.7274127,
+    "ast_hash": "4e353e3ffdf90746e74670a5e8cfc901",
     "semantic_hash": ""
   },
   "src/extractor_tester/cli.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948478,
-    "ast_hash": "adaa2e788ca3bd51d895bd573ab6a182",
+    "mtime": 1794813190.3922951,
+    "seen": 1794813205.7274137,
+    "ast_hash": "a8bc5e372b26db630ae64d8533f2e838",
     "semantic_hash": ""
   },
   "src/extractor_tester/compare/__init__.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948493,
+    "mtime": 1794813190.3922951,
+    "seen": 1794813205.7274148,
     "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
     "semantic_hash": ""
   },
   "src/extractor_tester/compare/buffered.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948504,
-    "ast_hash": "3bf7a09b6deb0effdc56aad977e21b64",
+    "mtime": 1794813190.3924222,
+    "seen": 1794813205.7274158,
+    "ast_hash": "7daecf1ef06709ed1be26c3f5c95835e",
     "semantic_hash": ""
   },
   "src/extractor_tester/compare/fields.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948524,
-    "ast_hash": "88af08c680b61f512e31c5e2bae1900c",
+    "mtime": 1794813190.3924222,
+    "seen": 1794813205.7274165,
+    "ast_hash": "bbd0095112e8613ded30b9adee520d47",
     "semantic_hash": ""
   },
   "src/extractor_tester/compare/item.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948535,
-    "ast_hash": "5ac49e2b527c9ce2b952c15e0a20979e",
+    "mtime": 1794813190.3924222,
+    "seen": 1794813205.7274177,
+    "ast_hash": "efc2cce168ac9ce7c5ef3ca2b9e9ad40",
     "semantic_hash": ""
   },
   "src/extractor_tester/compare/text.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.694855,
-    "ast_hash": "186884a012fc71fc0014c0db6622f2c4",
+    "mtime": 1794813190.3924222,
+    "seen": 1794813205.7274187,
+    "ast_hash": "9e3116acb3d90a65c44e3e32bf519d96",
     "semantic_hash": ""
   },
   "src/extractor_tester/config.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948564,
-    "ast_hash": "5092c0580c7c467c51f63be7a7b9b71e",
+    "mtime": 1794813190.3924222,
+    "seen": 1794813205.7274194,
+    "ast_hash": "3fab9b7db0b80132fe72e0a6541e1996",
     "semantic_hash": ""
   },
   "src/extractor_tester/decode.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948578,
-    "ast_hash": "30c8ae524a137e1d50ce9d89cdff72df",
+    "mtime": 1794813190.3924222,
+    "seen": 1794813205.7274203,
+    "ast_hash": "4d1de045fbe09287676cfbf9b49a70d3",
     "semantic_hash": ""
   },
   "src/extractor_tester/families.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948593,
-    "ast_hash": "4c68eb18a2fda8fd2a2cafe5ed0ebff3",
+    "mtime": 1794813190.3924222,
+    "seen": 1794813205.7274213,
+    "ast_hash": "6e947d5e3e1b25ad98a212e1ecf28b64",
     "semantic_hash": ""
   },
   "src/extractor_tester/fields.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948607,
-    "ast_hash": "332bfb555926e46ad099b7988e1d3e2f",
+    "mtime": 1794813190.3924222,
+    "seen": 1794813205.7274222,
+    "ast_hash": "55ef0c80770ccb5039dfc8d63392b017",
     "semantic_hash": ""
   },
   "src/extractor_tester/loader.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948621,
-    "ast_hash": "05dd209692b10d022cc2d394e2e79691",
+    "mtime": 1794813190.3924222,
+    "seen": 1794813205.7274232,
+    "ast_hash": "7638e7f685c0887d45d858288f305776",
     "semantic_hash": ""
   },
   "src/extractor_tester/matching/__init__.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948636,
+    "mtime": 1794813190.3924222,
+    "seen": 1794813205.7274241,
     "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
     "semantic_hash": ""
   },
   "src/extractor_tester/matching/matcher.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948652,
-    "ast_hash": "58d3c731804bbfb94a93cc98509b6926",
+    "mtime": 1794813190.3926806,
+    "seen": 1794813205.727425,
+    "ast_hash": "dc48d6eade8b38abc578bf5cbf2fe262",
     "semantic_hash": ""
   },
   "src/extractor_tester/matching/tiers.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948667,
-    "ast_hash": "756dbdb26bd6e311d280be07400010fa",
+    "mtime": 1794813190.3926806,
+    "seen": 1794813205.727426,
+    "ast_hash": "6621ca321a5d75656e90a5d0aac7fde9",
     "semantic_hash": ""
   },
   "src/extractor_tester/models.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948678,
-    "ast_hash": "7925c081deb9dd92d24304a8ef8d5b1a",
+    "mtime": 1794813190.3926806,
+    "seen": 1794813205.7274268,
+    "ast_hash": "8fe56923a0133afa0bd6288558d75e69",
     "semantic_hash": ""
   },
   "src/extractor_tester/output.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948695,
-    "ast_hash": "5330367435298146409224c59120baf5",
+    "mtime": 1794813190.3926806,
+    "seen": 1794813205.7274277,
+    "ast_hash": "11b60b5a5416784515bb94dbb3b38c36",
     "semantic_hash": ""
   },
   "src/extractor_tester/pool.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948707,
-    "ast_hash": "f6babdb0f1a0c03a5a6db145deb45bfc",
+    "mtime": 1794813190.3926806,
+    "seen": 1794813205.7274287,
+    "ast_hash": "f1cb53370b12f99193826c901893bec6",
     "semantic_hash": ""
   },
   "src/extractor_tester/profiling.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948724,
-    "ast_hash": "a34a9a7ed9f26a3fe4064c057d4f40ec",
+    "mtime": 1794813190.3926806,
+    "seen": 1794813205.7274299,
+    "ast_hash": "870ea1e388352f1af07d058ad444acaa",
     "semantic_hash": ""
   },
   "src/extractor_tester/render.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948736,
-    "ast_hash": "b22b4b941ffa5c7f389c6dc50fbd707d",
+    "mtime": 1794813190.3926806,
+    "seen": 1794813205.7274308,
+    "ast_hash": "a76c8aa12b7639f113894456c13b423c",
     "semantic_hash": ""
   },
   "src/extractor_tester/runner.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948752,
-    "ast_hash": "d240568b031342ee5dc6636e8b355e4a",
+    "mtime": 1794813190.3926806,
+    "seen": 1794813205.727432,
+    "ast_hash": "bdb6122f992d70794cade5e2549aad81",
     "semantic_hash": ""
   },
   "src/extractor_tester/tree.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948767,
-    "ast_hash": "394f4141f2c4e97fb5ef0a0b0ee50f68",
+    "mtime": 1794813190.3926806,
+    "seen": 1794813205.7274327,
+    "ast_hash": "1346e040cccd8be354ddf0b8a860d40f",
     "semantic_hash": ""
   },
   "tests/__init__.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.694878,
+    "mtime": 1794813190.3926806,
+    "seen": 1794813205.7274337,
     "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
     "semantic_hash": ""
   },
   "tests/bench/__init__.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948795,
+    "mtime": 1794813190.3929884,
+    "seen": 1794813205.7274346,
     "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
     "semantic_hash": ""
   },
   "tests/bench/generator.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.694881,
-    "ast_hash": "1b342b95e1fa44c02a12e0f5c4b709ac",
+    "mtime": 1794813190.3929994,
+    "seen": 1794813205.7274356,
+    "ast_hash": "16ba0640ec148082126308f8a4cf60e7",
     "semantic_hash": ""
   },
   "tests/bench/test_generator.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948824,
-    "ast_hash": "d3b3c88c531d6b3f4495edccc8a560d9",
+    "mtime": 1794813190.3929994,
+    "seen": 1794813205.7274365,
+    "ast_hash": "d2197cfccf9e5f755f377549cea46c57",
     "semantic_hash": ""
   },
   "tests/bench/test_nfr.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948836,
-    "ast_hash": "38dda3deb83e32291d8e5ab64439362c",
+    "mtime": 1794813190.3929994,
+    "seen": 1794813205.7274373,
+    "ast_hash": "358dd323c093926febcbfb2df6cceeea",
     "semantic_hash": ""
   },
   "tests/conftest.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.694885,
-    "ast_hash": "9a110f33af351942a7d33239919d0281",
+    "mtime": 1794813190.3929994,
+    "seen": 1794813205.7274384,
+    "ast_hash": "a4e164d07775484ef3951ecef3011030",
     "semantic_hash": ""
   },
   "tests/fixtures/report.json": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948867,
-    "ast_hash": "59f8a9b89a4469d77d1e27dd32004257",
+    "mtime": 1794813190.3930867,
+    "seen": 1794813205.7274394,
+    "ast_hash": "c96ad9cf4734ce7819b44586cfc4d262",
     "semantic_hash": ""
   },
   "tests/golden/__init__.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.694888,
+    "mtime": 1794813190.3930867,
+    "seen": 1794813205.7274404,
     "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
     "semantic_hash": ""
   },
   "tests/golden/checks.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6948895,
-    "ast_hash": "cb8166056d4810661f61c6db13e2023d",
+    "mtime": 1794813190.3931296,
+    "seen": 1794813205.7274413,
+    "ast_hash": "4b6f3845144e49d126f1fa2e7ed4b01e",
     "semantic_hash": ""
   },
   "tests/golden/corpus.py": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.694891,
-    "ast_hash": "48d47cebae64c5b04070d0ae4fe27a43",
+    "mtime": 1794813190.3931296,
+    "seen": 1794813205.7274425,
+    "ast_hash": "c4a5e32fa1fafd9142c4986466cfb2bb",
     "semantic_hash": ""
   },
   "tests/golden/expected/report.json": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6948924,
-    "ast_hash": "c2e5a994b52da518252ee96f1cb0acea",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274435,
+    "ast_hash": "9e26d1d9ea60f5fce5f689b9fc974bdf",
     "semantic_hash": ""
   },
   "tests/helpers.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.694897,
-    "ast_hash": "4e1157be35f66f26e41c92c7b5868253",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274444,
+    "ast_hash": "20c9fda645f08bebb38336de622b9411",
     "semantic_hash": ""
   },
   "tests/runner_common.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6948984,
-    "ast_hash": "511a9b8657b347780d6bce3483bae1b8",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274456,
+    "ast_hash": "f41c0fc6c2d4e9e321352b0951d7802c",
     "semantic_hash": ""
   },
   "tests/test_aggregate.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6948998,
-    "ast_hash": "8871419c10ba43edf9513ad1b1215b10",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274466,
+    "ast_hash": "1889a0ed2b68ffe807659e76a785a366",
     "semantic_hash": ""
   },
   "tests/test_aggregate_util.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949012,
-    "ast_hash": "d507348c1468573f0975eb845b88b3ac",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274475,
+    "ast_hash": "6e6e4abc68c5fd0f4fc4cea6ed54cbab",
     "semantic_hash": ""
   },
   "tests/test_buffered.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.694903,
-    "ast_hash": "820622b5a88071f003c9cad341f833d2",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274485,
+    "ast_hash": "21cf4a11c3b593406a7fc1544dcccb2b",
     "semantic_hash": ""
   },
   "tests/test_channel.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.694904,
-    "ast_hash": "29265d966602a405e0a9db4db1d4256b",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274497,
+    "ast_hash": "d121aa9c8b3522d440dc3035c71c3f60",
     "semantic_hash": ""
   },
   "tests/test_cli.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949055,
-    "ast_hash": "fac32bd901199f03202b3fff986fdd74",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274506,
+    "ast_hash": "edf5b5e8acf36a972f00102272997f25",
     "semantic_hash": ""
   },
   "tests/test_compare_fields.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.694907,
-    "ast_hash": "5471fdaa72b8aae051607499f61ebc04",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274516,
+    "ast_hash": "89edf298ceb732f4006e6e8ad5a71e7c",
     "semantic_hash": ""
   },
   "tests/test_config.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949084,
-    "ast_hash": "993bd6ef645118e3843f7bde048222d3",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274525,
+    "ast_hash": "29b7a5369c8eab9ce16fb4c0474b3cf5",
     "semantic_hash": ""
   },
   "tests/test_decode.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949098,
-    "ast_hash": "0ff0c1964f89bba676f8ce4f25b1ad50",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274535,
+    "ast_hash": "33b2ab46a830e15c64c55aa213712a39",
     "semantic_hash": ""
   },
   "tests/test_families.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949112,
-    "ast_hash": "f7f5e933a47d48892316636349042d58",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274542,
+    "ast_hash": "a32979722eba7702e57fd93906b5a722",
     "semantic_hash": ""
   },
   "tests/test_fields.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949124,
-    "ast_hash": "63ab287ac23ffa80e82fce1e3db4f855",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274551,
+    "ast_hash": "7de854819d481a9ea7ba0cfd0b91de9e",
     "semantic_hash": ""
   },
   "tests/test_golden.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.694914,
-    "ast_hash": "de17465d995a4db9e27ea93556be796a",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.727456,
+    "ast_hash": "24fa74925b7a2b0540c323dd6b2dada4",
     "semantic_hash": ""
   },
   "tests/test_import_path.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949153,
-    "ast_hash": "48b92404f53a637483feefed6bb24968",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.727457,
+    "ast_hash": "74641f97f8a7de435419c65354378596",
     "semantic_hash": ""
   },
   "tests/test_item.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.694917,
-    "ast_hash": "4a13e9198379c119aee7dba3364e62b1",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.727458,
+    "ast_hash": "3caedeb12861e743f588adc25b053cf9",
     "semantic_hash": ""
   },
   "tests/test_loader.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949184,
-    "ast_hash": "38af900fe6272b628eb82d6631e200e1",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.727459,
+    "ast_hash": "7f5fd48540e5bb76f6a73c96904dd448",
     "semantic_hash": ""
   },
   "tests/test_matcher.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949196,
-    "ast_hash": "0cf66c05b0a8ef28b7ec33258a55b03b",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.72746,
+    "ast_hash": "e6410c2cc336fa282642c082a6ce5a71",
     "semantic_hash": ""
   },
   "tests/test_models.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949213,
-    "ast_hash": "f39ad423dc2c0360bf419460e6a10378",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274609,
+    "ast_hash": "cb1d37252027e38daca321838e7a6ba5",
     "semantic_hash": ""
   },
   "tests/test_models_report.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949224,
-    "ast_hash": "9ea26a938fd025fd2be38feea62d9a99",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274618,
+    "ast_hash": "40caa2b44cbf7dcc9813961029fdaed4",
     "semantic_hash": ""
   },
   "tests/test_output.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949239,
-    "ast_hash": "9ae1ae7179a2064bde99e4a8d778e866",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.727463,
+    "ast_hash": "e7f4340ef031710e8efe619ba072e7b4",
     "semantic_hash": ""
   },
   "tests/test_pool.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949253,
-    "ast_hash": "2941b994059e4242475312a728863673",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.727464,
+    "ast_hash": "4b54e02f337ece4f5d333d83231aabbc",
     "semantic_hash": ""
   },
   "tests/test_profiling.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949267,
-    "ast_hash": "b1a9c2abe570503910a6d2fc15d81e0a",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.727465,
+    "ast_hash": "e7620971746330b2caec6ebc1b87c40f",
     "semantic_hash": ""
   },
   "tests/test_render.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949282,
-    "ast_hash": "9770dbf0183970b2c0dc1e7324529ec0",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274659,
+    "ast_hash": "db95a21e6a31f33a240ee03146501e82",
     "semantic_hash": ""
   },
   "tests/test_runner.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949296,
-    "ast_hash": "02a242ca9a6b8dc1f085356652761bb5",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.727467,
+    "ast_hash": "cd28ca81a107b143238128383ce98635",
     "semantic_hash": ""
   },
   "tests/test_runner_faults.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.694931,
-    "ast_hash": "30887f92be428f1c7586c294ce0a4b76",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.727468,
+    "ast_hash": "059d3c2336a4f84e7bb86a53240529b4",
     "semantic_hash": ""
   },
   "tests/test_runner_progress.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949325,
-    "ast_hash": "758565ed2838e8a7129f1ae22cdd1acb",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.727469,
+    "ast_hash": "154ca5732b238a806994f46b8ce56692",
     "semantic_hash": ""
   },
   "tests/test_runner_workers.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949341,
-    "ast_hash": "3db17d25628b72c4fcb00e68a8764f44",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274702,
+    "ast_hash": "69490037d495b20e5dc69155bef0d353",
     "semantic_hash": ""
   },
   "tests/test_smoke.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949353,
-    "ast_hash": "c51d061d37bc8b62c6e2d9e636cd4e32",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274709,
+    "ast_hash": "3063378ffa66b1af3b8b555712f5191a",
     "semantic_hash": ""
   },
   "tests/test_text.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949365,
-    "ast_hash": "fdee8624cf152fed76fd80ae33600295",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.727472,
+    "ast_hash": "5e3f48db73b6345e9707f7fb76d07cc6",
     "semantic_hash": ""
   },
   "tests/test_tiers.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949382,
-    "ast_hash": "294173a4e1e1c9e2f17b99942a0ed3b1",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274733,
+    "ast_hash": "33631d0de39e93305585184c53e1761a",
     "semantic_hash": ""
   },
   "tests/test_tool_error_coverage.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.6949396,
-    "ast_hash": "def7a3abdcf30a567f5083cd0f55d039",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.7274742,
+    "ast_hash": "703ad6a834e3e77ccdbb1412cf719e3d",
     "semantic_hash": ""
   },
   "tests/test_tree.py": {
-    "mtime": 1794812758.2533462,
-    "seen": 1794812921.694941,
-    "ast_hash": "bb83227615d5d8c993f98245503c91d6",
+    "mtime": 1794813190.393221,
+    "seen": 1794813205.727475,
+    "ast_hash": "43120288c3035510018fa278e0549de7",
     "semantic_hash": ""
   },
   ".github/ISSUE_TEMPLATE/epic.md": {
-    "mtime": 1794812758.127042,
-    "seen": 1794812921.6949425,
-    "ast_hash": "b0f708d030acc1f44b13d858b50c9490",
+    "mtime": 1794813190.3723648,
+    "seen": 1794813205.727476,
+    "ast_hash": "bbeca0c01b5079a64ad6773f0ce7edb9",
     "semantic_hash": ""
   },
   ".github/ISSUE_TEMPLATE/story.md": {
-    "mtime": 1794812758.1290507,
-    "seen": 1794812921.6949437,
-    "ast_hash": "3af0830df2a86353f1a76cd7bebcf6bd",
+    "mtime": 1794813190.3723834,
+    "seen": 1794813205.727477,
+    "ast_hash": "96a048157cca94d36f5e7036976ab059",
     "semantic_hash": ""
   },
   ".github/ISSUE_TEMPLATE/task.md": {
-    "mtime": 1794812758.1290507,
-    "seen": 1794812921.6949453,
-    "ast_hash": "ea4e3cc673eee93b1080f042d2a1683f",
+    "mtime": 1794813190.3723834,
+    "seen": 1794813205.7274778,
+    "ast_hash": "d8c223c31e4a8ca19fe57f7b103f7eb3",
     "semantic_hash": ""
   },
   ".github/PULL_REQUEST_TEMPLATE.md": {
-    "mtime": 1794812758.1290507,
-    "seen": 1794812921.6949465,
-    "ast_hash": "10ce668facc4297a8dcfad64d0ae4a46",
+    "mtime": 1794813190.3723834,
+    "seen": 1794813205.727479,
+    "ast_hash": "48f22d39f2599954534602068017ca7a",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949482,
-    "ast_hash": "791d7cf87ac8ee8153e952d224a6bfd9",
+    "mtime": 1794813190.37491,
+    "seen": 1794813205.7274797,
+    "ast_hash": "374ca01f477575e4c89460b9e4bae88a",
     "semantic_hash": ""
   },
   "docs/adrs/001-file-matching-by-tree-path.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949494,
-    "ast_hash": "762d60679f5fa3af0d8af6f22ad9701f",
+    "mtime": 1794813190.3749573,
+    "seen": 1794813205.727481,
+    "ast_hash": "00e5ae45ed324753937d90c8ed799838",
     "semantic_hash": ""
   },
   "docs/adrs/002-comparison-metrics.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949508,
-    "ast_hash": "6ff8c3b993852270188f428581e4e5c6",
+    "mtime": 1794813190.374986,
+    "seen": 1794813205.7274818,
+    "ast_hash": "174a395fb38a513fd7ac378819e90866",
     "semantic_hash": ""
   },
   "docs/adrs/003-buffered-text-comparison.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949522,
-    "ast_hash": "f8ac8aaddc2cf13cfe83bc2eb3fc6236",
+    "mtime": 1794813190.374986,
+    "seen": 1794813205.7274828,
+    "ast_hash": "5c176cd98cbe2a9fb9a3233eb7a96768",
     "semantic_hash": ""
   },
   "docs/adrs/004-report-format.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949537,
-    "ast_hash": "c893751f56fc704694e1c89842ce1180",
+    "mtime": 1794813190.374986,
+    "seen": 1794813205.727484,
+    "ast_hash": "add74e3b58708f0df026aa19ec01fc14",
     "semantic_hash": ""
   },
   "docs/adrs/005-compare-config.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.694955,
-    "ast_hash": "eba72b65ed34518e542bd41886fbf372",
+    "mtime": 1794813190.374986,
+    "seen": 1794813205.727485,
+    "ast_hash": "d957822443e0c6e94e195f262b7789f0",
     "semantic_hash": ""
   },
   "docs/adrs/006-tech-stack-and-scale.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949568,
-    "ast_hash": "3d9caede95cda37637ca95f2be6a0347",
+    "mtime": 1794813190.374986,
+    "seen": 1794813205.7274857,
+    "ast_hash": "f55f20eef7ab2cc98b6875d7d8afc692",
     "semantic_hash": ""
   },
   "docs/adrs/007-profiling.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.694958,
-    "ast_hash": "d5b0df830fff220bb7a5dcc75658e90b",
+    "mtime": 1794813190.374986,
+    "seen": 1794813205.7274866,
+    "ast_hash": "cf0f8f86a6915b59dbef7722b5b749ce",
     "semantic_hash": ""
   },
   "docs/adrs/008-skip-ignition.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949596,
-    "ast_hash": "f299e36b6c122bbd2597aad66ebba9c4",
+    "mtime": 1794813190.374986,
+    "seen": 1794813205.7275052,
+    "ast_hash": "e04a0a949c93ce06ddd264d6dac192a5",
     "semantic_hash": ""
   },
   "docs/adrs/009-dotnet-port.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.694961,
-    "ast_hash": "a6a30c70524e5a37c6a29643751b89ad",
+    "mtime": 1794813190.374986,
+    "seen": 1794813205.7275062,
+    "ast_hash": "640222f96a74ef33994390a3fd617bfd",
     "semantic_hash": ""
   },
   "docs/config-reference.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949625,
-    "ast_hash": "40bf0ac1ba067e6d4aad65518fe84479",
+    "mtime": 1794813190.374986,
+    "seen": 1794813205.727507,
+    "ast_hash": "a078aea880882f0ad5f5d39cf308aa3b",
     "semantic_hash": ""
   },
   "docs/dotnet.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.694964,
-    "ast_hash": "e4e0bfce22c21f041f12e2e79d4e6b63",
+    "mtime": 1794813190.374986,
+    "seen": 1794813205.7275085,
+    "ast_hash": "c4eb3b1396fea493b1876a6239ce870e",
     "semantic_hash": ""
   },
   "docs/plans/initial-plan-summary.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949656,
-    "ast_hash": "fe11d1703f15932ccc23efe30669da60",
+    "mtime": 1794813190.3752937,
+    "seen": 1794813205.7275095,
+    "ast_hash": "0b412928d30e14847622debba32aac6a",
     "semantic_hash": ""
   },
   "docs/project-rules.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949668,
-    "ast_hash": "039b58055528de2808499d8995af8a3e",
+    "mtime": 1794813190.3752937,
+    "seen": 1794813205.7275105,
+    "ast_hash": "9941e91669fec4320bf9902d2753e0ea",
     "semantic_hash": ""
   },
   "docs/report-format.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949682,
-    "ast_hash": "0c6b3e77399080efb5bd096d69cd6e84",
+    "mtime": 1794813190.3752937,
+    "seen": 1794813205.7275116,
+    "ast_hash": "080dcc388d1be7564fb53f134b769117",
     "semantic_hash": ""
   },
   "docs/research/text-compare-benchmark.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949697,
-    "ast_hash": "d5f07303936efa32acc19ed010bf2279",
+    "mtime": 1794813190.3752937,
+    "seen": 1794813205.7275126,
+    "ast_hash": "947e54a7d387729503043b14d2fc07c7",
     "semantic_hash": ""
   },
   "docs/specs/architecture.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.694971,
-    "ast_hash": "ce3c62e31c3bfdc45e68927692a1aaf2",
+    "mtime": 1794813190.3752937,
+    "seen": 1794813205.7275136,
+    "ast_hash": "c27543522b2988675aeb276518dd766f",
     "semantic_hash": ""
   },
   "docs/specs/config.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949728,
-    "ast_hash": "e3715ae540fc63d9118f1d19f1331433",
+    "mtime": 1794813190.3756123,
+    "seen": 1794813205.727515,
+    "ast_hash": "dedcdddeef4ce9a715b5d1f17022df3b",
     "semantic_hash": ""
   },
   "docs/specs/errors-and-edge-cases.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.694974,
-    "ast_hash": "c2682c7442ec66198516b9e9bc49c9a7",
+    "mtime": 1794813190.3756123,
+    "seen": 1794813205.727516,
+    "ast_hash": "ac9e89f8179ab9f7c76511fd4c5d9232",
     "semantic_hash": ""
   },
   "docs/specs/glossary.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949754,
-    "ast_hash": "0bcd45f64f9e222be0253484b939f19d",
+    "mtime": 1794813190.3756123,
+    "seen": 1794813205.7275167,
+    "ast_hash": "e73b993bc5f9bae02e19a190326d79ee",
     "semantic_hash": ""
   },
   "docs/specs/matching.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.694977,
-    "ast_hash": "eb22ae5f109c13e1552786c4f2159035",
+    "mtime": 1794813190.3756123,
+    "seen": 1794813205.7275176,
+    "ast_hash": "ef0283e8e2b27b3a1c981b6c55662321",
     "semantic_hash": ""
   },
   "docs/specs/metrics.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949782,
-    "ast_hash": "74e63c2d3cd21820f018b2b479cba059",
+    "mtime": 1794813190.3756123,
+    "seen": 1794813205.7275188,
+    "ast_hash": "442aced045f7b66974bcb0c33a041a7b",
     "semantic_hash": ""
   },
   "docs/specs/outputs.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.69498,
-    "ast_hash": "cf2b69bf9831381fb3c691df349599c3",
+    "mtime": 1794813190.3756123,
+    "seen": 1794813205.7275198,
+    "ast_hash": "4eb8400c8d075e41262e7b608080cf04",
     "semantic_hash": ""
   },
   "docs/specs/overview.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.694981,
-    "ast_hash": "4f6c963b1c4b3cc8018c59ead4f921c5",
+    "mtime": 1794813190.3756123,
+    "seen": 1794813205.7275205,
+    "ast_hash": "4293a5746af04df9d83ab3ccfd656727",
     "semantic_hash": ""
   },
   "docs/specs/scope.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.6949828,
-    "ast_hash": "f351f458d51b1b4c965e1a7dfa08b020",
+    "mtime": 1794813190.3756123,
+    "seen": 1794813205.727522,
+    "ast_hash": "e83d1dd36f84fdb193eced4a365cccb6",
     "semantic_hash": ""
   },
   "docs/specs/testing-strategy.md": {
-    "mtime": 1794812758.1747177,
-    "seen": 1794812921.694984,
-    "ast_hash": "5cf206caa640dab4187615cda0901c88",
+    "mtime": 1794813190.3756123,
+    "seen": 1794813205.7275226,
+    "ast_hash": "cda4fafe10821cc8f607be8ca8a4eff7",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Render/report-edge.golden.html": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6949854,
+    "mtime": 1794813190.378511,
+    "seen": 1794813205.7275236,
     "ast_hash": "b755ced04d230615dab54d143f1008be",
     "semantic_hash": ""
   },
   "dotnet/tests/ExtractorTester.Tests/Fixtures/Render/report.golden.html": {
-    "mtime": 1794812758.2092488,
-    "seen": 1794812921.6949868,
+    "mtime": 1794813190.3790672,
+    "seen": 1794813205.7275248,
     "ast_hash": "5f29a45d9430bbdc91eae9a6c9684188",
     "semantic_hash": ""
   },
   "tests/fixtures/report.golden.html": {
-    "mtime": 1794812758.2376497,
-    "seen": 1794812921.6949883,
-    "ast_hash": "40988a066a63c61be8ef65e1e63bd9f2",
+    "mtime": 1794813190.3930867,
+    "seen": 1794813205.727526,
+    "ast_hash": "5f29a45d9430bbdc91eae9a6c9684188",
+    "semantic_hash": ""
+  },
+  ".github/workflows/ydk-graphify.yml": {
+    "mtime": 1794813190.3724427,
+    "seen": 1794813205.7272797,
+    "ast_hash": "a91fefaaca1503b2ecde05fd5574da2f",
+    "semantic_hash": ""
+  },
+  "dotnet/tests/ExtractorTester.Tests/fixtures/parity.json": {
+    "mtime": 1794813190.3805454,
+    "seen": 1794813205.727383,
+    "ast_hash": "5966b68fe6790d7039a64e8ae9de5710",
     "semantic_hash": ""
   }
 }
